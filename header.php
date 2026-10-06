@@ -138,8 +138,8 @@ require_once __DIR__ . '/config.php';
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Admissions</a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">How to Apply</a></li>
-                                <li><a class="dropdown-item" href="#">Important Dates</a></li>
+                                <li><a class="dropdown-item" href="apply.php">How to Apply</a></li>
+                                <li><a class="dropdown-item" href="important_dates.php">Important Dates</a></li>
                             </ul>
                         </li>
 

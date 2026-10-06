@@ -17,6 +17,10 @@ $navigation = [
         'research.php' => 'Featured Research',
     ],
 
+    'Admissions' => [
+        'important_dates.php' => 'Important Dates',
+    ],
+
     'Organizational Structure' => [
         'committee.php' => 'Advisory Committee',
         'scc.php' => 'School Consultative Committee (SCC)',
@@ -117,6 +121,10 @@ $navigation = [
 
                 $section_open = array_key_exists($current_page, $pages);
 
+                if ($section === 'Admissions' && in_array($current_page, ['important_dates.php', 'add_important_date.php', 'edit_important_date.php'])) {
+                    $section_open = true;
+                }
+
                 $submenu_id = 'submenu-' . strtolower(
                     preg_replace('/[^a-zA-Z0-9]+/', '-', $section)
                 );
@@ -145,7 +153,12 @@ $navigation = [
 
                     <?php foreach ($pages as $page => $pageTitle): ?>
 
-                        <a href="<?= htmlspecialchars($page) ?>" class="<?= $current_page === $page ? 'active' : '' ?>">
+                        <?php
+                        $isActive = ($current_page === $page) ||
+                            ($page === 'important_dates.php' && in_array($current_page, ['add_important_date.php', 'edit_important_date.php']));
+                        ?>
+
+                        <a href="<?= htmlspecialchars($page) ?>" class="<?= $isActive ? 'active' : '' ?>">
 
                             <?= htmlspecialchars($pageTitle) ?>
 
