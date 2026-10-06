@@ -19,6 +19,7 @@ $navigation = [
 
     'Admissions' => [
         'important_dates.php' => 'Important Dates',
+        'how_to_apply.php' => 'How to Apply',
     ],
 
     'Organizational Structure' => [
@@ -121,7 +122,7 @@ $navigation = [
 
                 $section_open = array_key_exists($current_page, $pages);
 
-                if ($section === 'Admissions' && in_array($current_page, ['important_dates.php', 'add_important_date.php', 'edit_important_date.php'])) {
+                if ($section === 'Admissions' && in_array($current_page, ['important_dates.php', 'add_important_date.php', 'edit_important_date.php', 'how_to_apply.php', 'add_how_to_apply.php', 'edit_how_to_apply.php'])) {
                     $section_open = true;
                 }
 
@@ -155,7 +156,8 @@ $navigation = [
 
                         <?php
                         $isActive = ($current_page === $page) ||
-                            ($page === 'important_dates.php' && in_array($current_page, ['add_important_date.php', 'edit_important_date.php']));
+                            ($page === 'important_dates.php' && in_array($current_page, ['add_important_date.php', 'edit_important_date.php'])) ||
+                            ($page === 'how_to_apply.php' && in_array($current_page, ['add_how_to_apply.php', 'edit_how_to_apply.php']));
                         ?>
 
                         <a href="<?= htmlspecialchars($page) ?>" class="<?= $isActive ? 'active' : '' ?>">

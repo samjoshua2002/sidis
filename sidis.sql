@@ -1208,6 +1208,43 @@ ALTER TABLE `important_dates`
 --
 ALTER TABLE `important_dates`
   MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- Table structure for table `how_to_apply`
+--
+
+CREATE TABLE `how_to_apply` (
+  `id` int UNSIGNED NOT NULL,
+  `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `image` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `link_type` enum('link','attachment') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'link',
+  `link_url` varchar(500) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `attachment` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `display_order` int NOT NULL DEFAULT '0',
+  `status` tinyint(1) NOT NULL DEFAULT '1',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `how_to_apply`
+--
+
+INSERT INTO `how_to_apply` (`id`, `title`, `image`, `link_type`, `link_url`, `attachment`, `display_order`, `status`) VALUES
+(1, 'Research', 'Frame 150.png', 'link', 'clusters.php', NULL, 1, 1),
+(2, 'Guidelines', 'Frame 151.png', 'attachment', NULL, 'SIDiS-D3P_INVITATION.pdf', 2, 1);
+
+--
+-- Indexes for table `how_to_apply`
+--
+ALTER TABLE `how_to_apply`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- AUTO_INCREMENT for table `how_to_apply`
+--
+ALTER TABLE `how_to_apply`
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
