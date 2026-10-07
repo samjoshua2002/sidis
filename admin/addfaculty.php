@@ -24,6 +24,9 @@ $facultyEmail    = '';
 $facultyPage     = '';
 $topOrder        = '0';
 $selectedClusters = [];
+$coordinatorRole      = '';
+$coordinatorProgramme = '';
+$coordinatorOrder     = '0';
 
 
 /*
@@ -128,6 +131,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $facultyPage  = reconstructChunks('personal_page');
 
     $topOrder = isset($_POST['top_order']) ? (string)$_POST['top_order'] : '0';
+    $coordinatorRole      = null;
+    $coordinatorProgramme = null;
+    $coordinatorOrder     = 0;
 
 
     /*
@@ -299,8 +305,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $stmt = $pdo->prepare("
                 INSERT INTO faculty
-                (name, image, department, designation, email, personal_page, cluster_id, top_order)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                (name, image, department, designation, email, personal_page, cluster_id, top_order, coordinator_role, coordinator_programme, coordinator_order)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ");
 
             $stmt->execute([
@@ -311,7 +317,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $facultyEmail,
                 $facultyPage,
                 $clusterIds,
-                $topOrder
+                $topOrder,
+                $coordinatorRole,
+                $coordinatorProgramme,
+                $coordinatorOrder
             ]);
 
             header('Location: faculty.php?success=added');
@@ -584,6 +593,8 @@ include 'header.php';
 
                 </div>
 
+                
+
             </div>
 
 
@@ -631,6 +642,23 @@ include 'header.php';
 
 
 <script>
+function handleCoordinatorRoleChange(value) {
+    const wrapper = document.getElementById('customRoleWrapper');
+    const input = document.getElementById('custom_coordinator_role');
+    if (value === '__custom__') {
+        wrapper.style.display = 'block';
+        input.focus();
+    } else {
+        wrapper.style.display = 'none';
+    }
+}
+
+function enableCustomRole() {
+    const select = document.getElementById('coordinator_role');
+    select.value = '__custom__';
+    handleCoordinatorRoleChange('__custom__');
+}
+
 
 /* UTF-8-safe Base64 encoder */
 function b64EncodeUtf8(str) {

@@ -105,7 +105,7 @@ $clusters = $clusterStmt->fetchAll(PDO::FETCH_ASSOC);
 $stmt = $pdo->prepare("
     SELECT
         id, name, image, department, designation,
-        email, personal_page, cluster_id, top_order
+        email, personal_page, cluster_id, top_order, coordinator_role, coordinator_programme, coordinator_order
     FROM faculty
     WHERE id = ?
     LIMIT 1
@@ -132,6 +132,9 @@ $facultyEmail = $member['email'];
 $facultyPage  = $member['personal_page'];
 $image        = $member['image'];
 $topOrder     = (string)$member['top_order'];
+$coordinatorRole      = $member['coordinator_role'] ?? '';
+$coordinatorProgramme = $member['coordinator_programme'] ?? '';
+$coordinatorOrder     = $member['coordinator_order'] ?? 0;
 
 
 /*
@@ -175,6 +178,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $facultyPage  = reconstructChunks('personal_page');
 
     $topOrder = isset($_POST['top_order']) ? (string)$_POST['top_order'] : '0';
+    $coordinatorRole      = $member['coordinator_role'] ?? null;
+    $coordinatorProgramme = $member['coordinator_programme'] ?? null;
+    $coordinatorOrder     = (int)($member['coordinator_order'] ?? 0);
 
 
     /*
@@ -357,7 +363,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         email = ?,
                         personal_page = ?,
                         cluster_id = ?,
-                        top_order = ?
+                        top_order = ?,
+                        coordinator_role = ?,
+                        coordinator_programme = ?,
+                        coordinator_order = ?
                     WHERE id = ?
                 ");
 
@@ -370,6 +379,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $facultyPage,
                     $clusterIds,
                     $topOrder,
+                    $coordinatorRole,
+                    $coordinatorProgramme,
+                    $coordinatorOrder,
                     $id
                 ]);
 
@@ -392,7 +404,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         email = ?,
                         personal_page = ?,
                         cluster_id = ?,
-                        top_order = ?
+                        top_order = ?,
+                        coordinator_role = ?,
+                        coordinator_programme = ?,
+                        coordinator_order = ?
                     WHERE id = ?
                 ");
 
@@ -404,6 +419,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $facultyPage,
                     $clusterIds,
                     $topOrder,
+                    $coordinatorRole,
+                    $coordinatorProgramme,
+                    $coordinatorOrder,
                     $id
                 ]);
 
@@ -686,6 +704,8 @@ include 'header.php';
 
                 </div>
 
+                
+
             </div>
 
 
@@ -753,6 +773,23 @@ include 'header.php';
 
 
 <script>
+function handleCoordinatorRoleChange(value) {
+    const wrapper = document.getElementById('customRoleWrapper');
+    const input = document.getElementById('custom_coordinator_role');
+    if (value === '__custom__') {
+        wrapper.style.display = 'block';
+        input.focus();
+    } else {
+        wrapper.style.display = 'none';
+    }
+}
+
+function enableCustomRole() {
+    const select = document.getElementById('coordinator_role');
+    select.value = '__custom__';
+    handleCoordinatorRoleChange('__custom__');
+}
+
 
 /* UTF-8-safe Base64 encoder */
 function b64EncodeUtf8(str) {

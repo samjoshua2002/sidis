@@ -1,19 +1,49 @@
-<?php include 'header.php'; ?>
+<?php
+require_once __DIR__ . '/config.php';
+include 'header.php';
 
+$clusterSql = "
+    SELECT
+        id,
+        cluster_name,
+        card_image,
+        page_type,
+        website_url
+    FROM clusters
+    WHERE status = 1
+    ORDER BY display_order ASC, id ASC
+";
+$clusterStmt = $pdo->prepare($clusterSql);
+$clusterStmt->execute();
+$clustersList = $clusterStmt->fetchAll(PDO::FETCH_ASSOC);
+
+function resolveCardImage($path) {
+    if (empty($path)) return 'images/frame 3.png';
+    $path = trim($path);
+    if (strpos($path, 'images/') === 0 || strpos($path, '/') === 0) {
+        return $path;
+    }
+    if (file_exists(__DIR__ . '/images/clusters/' . $path)) {
+        return 'images/clusters/' . $path;
+    }
+    if (file_exists(__DIR__ . '/images/' . $path)) {
+        return 'images/' . $path;
+    }
+    return 'images/clusters/' . $path;
+}
+?>
 
 <!-- HERO SECTION -->
 <section class="hero">
-    <img src="images/about-banner.png" class="hero-img" style="height: auto;">
-
+    <img src="images/about-banner.png" class="hero-img" style="height: auto;" alt="Clusters Banner">
 
     <div class="container">
         <div class="hero-content about-section">
             <h2 style="color: #fff;">Clusters</h2>
         </div>
-
-
     </div>
 </section>
+
 <style>
     .hero-content {
         top: 35%;
@@ -25,15 +55,9 @@
         .hero-content h2 {
             font-size: 22px;
         }
-    }
-
-    @media (max-width: 768px) {
         .hero-img {
             height: 150px !important;
         }
-    }
-
-    @media (max-width: 768px) {
         .hero-content {
             top: 70% !important;
             background-color: #1F3C44;
@@ -43,105 +67,30 @@
     }
 </style>
 
-<section class="about-section" style="padding-top: 0;">
+<section class="about-section" style="padding-top: 0; padding-bottom: 60px;">
     <div class="container">
-
-
         <div class="row" style="padding-top: 50px;">
-
-            <!-- Cluster 1 -->
-            <div class="col-md-4">
-                <div class="cluster-card">
-                    <img src="images/frame 3.png" alt="Cluster 1">
-                    <!-- <span class="cluster-label">Cluster #1</span> -->
-                    <p>Advanced Materials and Quantum Initiative</p>
-                    <a href="#" class="btn btn-success" target="_blank">READ MORE</a>
+            <?php if (!empty($clustersList)): ?>
+                <?php foreach ($clustersList as $cluster): ?>
+                    <?php
+                    $cardImg = resolveCardImage($cluster['card_image']);
+                    $isExternal = ($cluster['page_type'] === 'website' && !empty($cluster['website_url']));
+                    $linkUrl = $isExternal ? $cluster['website_url'] : 'innercluster.php?id=' . (int)$cluster['id'];
+                    $targetAttr = $isExternal ? ' target="_blank" rel="noopener noreferrer"' : '';
+                    ?>
+                    <div class="col-md-4 mb-4">
+                        <div class="cluster-card">
+                            <img src="<?= htmlspecialchars($cardImg, ENT_QUOTES, 'UTF-8') ?>" alt="<?= htmlspecialchars($cluster['cluster_name'], ENT_QUOTES, 'UTF-8') ?>">
+                            <p><?= htmlspecialchars($cluster['cluster_name'], ENT_QUOTES, 'UTF-8') ?></p>
+                            <a href="<?= htmlspecialchars($linkUrl, ENT_QUOTES, 'UTF-8') ?>" class="btn btn-success"<?= $targetAttr ?>>READ MORE</a>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <div class="col-12 text-center py-5">
+                    <p>No clusters found.</p>
                 </div>
-            </div>
-
-            <!-- Cluster 2 -->
-            <div class="col-md-4">
-                <div class="cluster-card">
-                    <img src="images/frame 4.png" alt="Cluster 2">
-                    <!-- <span class="cluster-label">Cluster #2</span> -->
-                    <p>Blue Economy</p>
-                    <a href="#" class="btn btn-success" target="_blank">READ MORE</a>
-                </div>
-            </div>
-
-            <!-- Cluster 3 -->
-            <div class="col-md-4">
-                <div class="cluster-card">
-                    <img src="images/frame 5.png" alt="Cluster 3">
-                    <!-- <span class="cluster-label">Cluster #3</span> -->
-                    <p>Computational Engineering</p>
-                    <a href="#" class="btn btn-success" target="_blank">READ MORE</a>
-                </div>
-            </div>
-
-             <!-- Cluster 9 -->
-            <div class="col-md-4">
-                <div class="cluster-card">
-                    <img src="images/frame 11.png" alt="Cluster 9">
-                    <!-- <span class="cluster-label">Cluster #9</span> -->
-                    <p>Centre for Sports Science & Analytics</p>
-                    <a href="#" class="btn btn-success" target="_blank">READ
-                        MORE</a>
-                </div>
-            </div>
-
-            <!-- Cluster 4 -->
-            <div class="col-md-4">
-                <div class="cluster-card">
-                    <img src="images/frame 6.png" alt="Cluster 4">
-                    <!-- <span class="cluster-label">Cluster #4</span> -->
-                    <p>Management and Public Policy</p>
-                    <a href="#" class="btn btn-success" target="_blank">READ MORE</a>
-                </div>
-            </div>
-
-            <!-- Cluster 5 -->
-            <div class="col-md-4">
-                <div class="cluster-card">
-                    <img src="images/frame 7.png" alt="Cluster 5">
-                    <!-- <span class="cluster-label">Cluster #5</span> -->
-                    <p>Power Conversion Systems</p>
-                    <a href="#" class="btn btn-success" target="_blank">READ MORE</a>
-                </div>
-            </div>
-
-            <!-- Cluster 6 -->
-            <div class="col-md-4">
-                <div class="cluster-card">
-                    <img src="images/frame 8.png" alt="Cluster 6">
-                    <!-- <span class="cluster-label">Cluster #6</span> -->
-                    <p>Robotics and Cyber-physical Systems</p>
-                    <a href="#" class="btn btn-success" target="_blank">READ MORE</a>
-                </div>
-            </div>
-
-           
-
-            <!-- Cluster 8 -->
-            <div class="col-md-4">
-                <div class="cluster-card">
-                    <img src="images/frame 10.png" alt="Cluster 8">
-                    <!-- <span class="cluster-label">Cluster #8</span> -->
-                    <p>School of Innovation and Entrepreneurship</p>
-                    <a href="#" class="btn btn-success" target="_blank">READ MORE</a>
-                </div>
-            </div>
-
-            <!-- Cluster 7 -->
-            <div class="col-md-4">
-                <div class="cluster-card">
-                    <img src="images/frame 9.png" alt="Cluster 7">
-                    <!-- <span class="cluster-label">Cluster #7</span> -->
-                    <p>School of Sustainability</p>
-                    <a href="#" class="btn btn-success" target="_blank">READ MORE</a>
-                </div>
-            </div>
-
+            <?php endif; ?>
         </div>
     </div>
 </section>

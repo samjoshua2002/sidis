@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Sep 23, 2026 at 05:57 AM
+-- Generation Time: Oct 07, 2026 at 11:41 AM
 -- Server version: 8.0.46-0ubuntu0.24.04.4
 -- PHP Version: 8.3.6
 
@@ -86,6 +86,11 @@ INSERT INTO `announcements` (`id`, `title`, `date_text`, `link`, `image`, `statu
 CREATE TABLE `clusters` (
   `id` int UNSIGNED NOT NULL,
   `cluster_name` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `card_image` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `banner_image` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `page_type` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'inner',
+  `website_url` varchar(500) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `sections` longtext COLLATE utf8mb4_unicode_ci,
   `display_order` int NOT NULL DEFAULT '0',
   `status` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -96,16 +101,16 @@ CREATE TABLE `clusters` (
 -- Dumping data for table `clusters`
 --
 
-INSERT INTO `clusters` (`id`, `cluster_name`, `display_order`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'Advanced Materials and Quantum Initiative', 1, 1, '2026-08-24 09:51:35', '2026-08-24 09:51:35'),
-(2, 'Blue Economy', 2, 1, '2026-08-24 09:51:35', '2026-08-24 09:59:04'),
-(3, 'Computational Engineering', 3, 1, '2026-08-24 09:51:35', '2026-08-24 09:59:15'),
-(4, 'Sports Science & Analytics', 4, 1, '2026-08-24 09:51:35', '2026-08-24 10:15:16'),
-(5, 'Management and Public Policy', 5, 1, '2026-08-24 09:51:35', '2026-08-24 09:59:28'),
-(6, 'Power Conversion Systems', 6, 1, '2026-08-24 09:51:35', '2026-08-24 10:00:22'),
-(7, 'Robotics and Cyber-physical Systems', 7, 1, '2026-08-24 09:51:35', '2026-08-24 10:00:26'),
-(8, 'School of Innovation and Entrepreneurship', 8, 1, '2026-08-24 09:51:35', '2026-08-24 10:00:30'),
-(9, 'School of Sustainability', 9, 1, '2026-08-24 09:51:35', '2026-08-24 10:00:32');
+INSERT INTO `clusters` (`id`, `cluster_name`, `card_image`, `banner_image`, `page_type`, `website_url`, `sections`, `display_order`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'Advanced Materials and Quantum Initiative', 'images/frame 3.png', 'images/amqi-banner.png', 'inner', '', '[{\"title\":\"Academic programmes\",\"subtitle\":\"Interdisciplinary Dual Degree (IDDD) & International Interdisciplinary Masters Programme (I2MP)\",\"description\":\"\",\"points\":\"Advanced Materials and Nanotechnology (IDDD+I2MP)\\nQuantum Science and Technology (IDDD+I2MP)\",\"image\":\"\"},{\"title\":\"Research topics:\",\"subtitle\":\"QuST: Quantum Machine Learning\",\"description\":\"Advanced Materials: Semiconductors, quantum materials, advanced functional materials, thin film technology, emerging memory technologies and neuromorphic computing, nanomaterials, oxide semiconductors, flexible electronics, TFTs and display technology, Biomaterials\",\"points\":\"\",\"image\":\"sec_1_1791358389_89eaf756b2c2.png\"}]', 1, 1, '2026-10-07 10:32:33', '2026-10-07 11:15:41'),
+(2, 'Blue Economy', 'images/frame 4.png', 'images/be-banner.png', 'inner', '', '[{\"title\":\"Thrust areas\",\"subtitle\":\"\",\"description\":\"\",\"points\":\"Blue Technology: Remotely operated underwater vehicle, Autonomous Underwater Vehicle, Deep ocean mission and Sensors related to Ocean Engineering.\\r\\nDeep Sea Technology: Deep Ocean Mining, Deep Ocean Mission.\\r\\nSustainable Coastal Engineering: Marine Spatial Planning, Climate Change modelling, Wave - Vegetation interactions in coastal engineering, Coastal Protections and Adaptation.\\r\\nMarine Renewable Energy: Offshore Wind Energy, Wave Energy, Tide Energy. Integrated coastal structure with renewable energy.\\r\\nMarine Constructions: Technology for the development of innovative and sustainable coastal protection, such as breakwaters and seawalls.\\r\\nShipping, port and maritime logistics.\\r\\nInland waterways and river morphodynamics.\\r\\nIntegrated Coastal Zone Management.\\r\\nOcean Observation Systems using AI/ML: weather forecasting, cyclone-related predictions, hazard warnings (such as tsunami alerts), climate monitoring, and maritime safety.\\r\\nSmart ports through Digital Twins.\\r\\nBlue Carbon potential along the coast.\\r\\nEnvironmental Monitoring and Management in Ports.\",\"image\":\"\"},{\"title\":\"Academic programmes\",\"subtitle\":\"MS & PhD\",\"description\":\"We are seeking interested scholars and students in the above thrust areas. For details on how to apply, please visit this page.\",\"points\":\"\",\"image\":\"\"},{\"title\":\"Research topics:\",\"subtitle\":\"\",\"description\":\"\",\"points\":\"Oceanographic instruments\\r\\nRemote sensing of oceans (satellite altimetry, scatterometry, ocean color) Underwater wireless sensor networks (UWSN) and lot in marine monitoring\\r\\nData assimilation and ocean forecasting models\\r\\nROV\'s (Remotely Operated Vehicles) and AUVs (Autonomous Underwater Vehicles) Design principles\\r\\nUnderwater navigation, and communication in underwater vehicles\\r\\nMachine learning, edge computing  in ocean exploration\\r\\nOcean Renewable Energy:Wave, tidal, and offshore wind energy technologies Ocean thermal energy conversion (OTEC)\\r\\nMarine biotechnology and bioresources (biopolymers, enzymes, drugs)\\r\\nDeep-sea minerals: Exploration and exploitation. Rise technologies\\r\\nCoastal engineering and protection\\r\\nPort and harbor technologies\\r\\nOffshore platforms\\r\\nSmart coastal cities and climate resilience\\r\\nMarine litter detection\\r\\nDigital Twins\",\"image\":\"sec_3_1791364096_d980a85a0402.png\"}]', 2, 1, '2026-10-07 10:32:33', '2026-10-07 10:32:33'),
+(3, 'Computational Engineering', 'images/frame 5.png', 'images/ce-banner.png', 'inner', '', '[{\"title\":\"Academic programmes\",\"subtitle\":\"Interdisciplinary Dual Degree (IDDD) & International Interdisciplinary Masters Programme (I2MP)\",\"description\":\"\",\"points\":\"Computational Engineering (IDDD+I2MP)\\r\\nComplex systems and Dynamics (IDDD+I2MP)\",\"image\":\"\"},{\"title\":\"Research topics:\",\"subtitle\":\"\",\"description\":\"Parallel Scientific Computing, Computational Fluid Dynamics (CFD); Turbulence Modeling; Computational Material Science; Multi-Physics Computations; Computational Structural Mechanics; Computational Biological/Biomedical Simulations; Computational Heat Transfer; Compute Intensive Simulations (both CPU and/or GPU intensive).\",\"points\":\"\",\"image\":\"sec_1_1791364660_68b5e0484749.png\"},{\"title\":\"\",\"subtitle\":\"Complex Systems & Dynamics group:\",\"description\":\"\",\"points\":\"Neural-operator based surrogates for bioinspired aerodynamics and Multiphysics with uncertainty quantification.\\r\\nEarly warning of regime transitions in nonlinear systems: a combination of physics informed NN and time-series tools.\\r\\nEmergent behaviour in communication-limited drone swarms.\\r\\nAerodynamically aware drone swarm models.\\r\\nCollective intelligence in multi-agent systems.\\r\\nComplex traffic and pedestrian dynamics.\\r\\nOpinion dynamics.\\r\\nAutonomous control of swarms.\\r\\nInterpretable machine learning models.\\r\\nInverse problems.\\r\\nBrain dynamics and connectivity analysis.\\r\\nNeuromorphic computing.\",\"image\":\"sec_2_1791364660_501044f8c6e1.png\"}]', 3, 1, '2026-10-07 10:32:33', '2026-10-07 10:32:33'),
+(4, 'Centre of Excellence in Sports Science & Analytics', 'images/frame 11.png', 'images/cessa-banner.png', 'inner', 'https://cessa.iitm.ac.in/', '[{\"title\":\"Academic programmes\",\"subtitle\":\"\",\"description\":\"M.S Entrepreneurship\",\"points\":\"\",\"image\":\"\"},{\"title\":\"Research topics:\",\"subtitle\":\"\",\"description\":\"Computer Vision, biomechanics, IoT and sensors, sports aerodynamics, sports analytics, AI and ML applied to sporting problems\",\"points\":\"\",\"image\":\"sec_1_1791367677_e8cc2b993b95.png\"}]', 4, 1, '2026-10-07 10:32:33', '2026-10-07 10:32:33'),
+(5, 'Management and Public Policy', 'images/frame 6.png', 'images/mpp-banner.png', 'inner', '', '[{\"title\":\"Academic programmes\",\"subtitle\":\"Interdisciplinary Dual Degree (IDDD) & International Interdisciplinary Masters Programme (I2MP)\",\"description\":\"\",\"points\":\"Quantitative Finance (IDDD)\\r\\nTech MBA (IDDD)\\r\\nPublic Policy (IDDD)\",\"image\":\"\"},{\"title\":\"Research topics:\",\"subtitle\":\"\",\"description\":\"Machine learning approaches to clinical decision support; AI-assisted tools for shared decision-making in cancer care resulting in medical policy. AI applications in finance\",\"points\":\"\",\"image\":\"sec_1_1791365614_7fe89cfcd859.png\"}]', 5, 1, '2026-10-07 10:32:33', '2026-10-07 10:32:33'),
+(6, 'Power Conversion Systems', 'images/frame 7.png', 'images/pcs-banner.png', 'inner', '', '[{\"title\":\"Academic programmes\",\"subtitle\":\"Interdisciplinary Dual Degree (IDDD) & International Interdisciplinary Masters Programme (I2MP)\",\"description\":\"Electric Vehicles (IDDD)\",\"points\":\"\",\"image\":\"\"},{\"title\":\"Research topics:\",\"subtitle\":\"\",\"description\":\"\",\"points\":\"Power Conversion Systems\\r\\nElectric Vehicles\",\"image\":\"sec_1_1791365862_5a570edd478f.png\"}]', 6, 1, '2026-10-07 10:32:33', '2026-10-07 10:32:33'),
+(7, 'Robotics and Cyber-physical Systems', 'images/frame 8.png', 'images/rc-banner.png', 'inner', '', '[{\"title\":\"Academic programmes\",\"subtitle\":\"Interdisciplinary Dual Degree (IDDD) & International Interdisciplinary Masters Programme (I2MP)\",\"description\":\"\",\"points\":\"Robotics (IDDD+I2MP)\\r\\nCyber-Physical Systems (IDDD+I2MP)\",\"image\":\"\"},{\"title\":\"Research topics:\",\"subtitle\":\"\",\"description\":\"Medical Robotics; Image-Guided Surgery; Motion Planning; Manipulation; Underwater Robotics; Reinforcement Learning-Based Control; Pursuit-Evasion Games; Game Theory; Multi-agent System; Hydrodynamic System Identification; Gaussian Splatting for Underwater Environments; Feedback Optimization; Mobile Robotics and Autonomous Mobile Robots; Autonomous Navigation; Navigation in Dynamic and Cluttered Environments; Legged Locomotion; Driver Assistance Systems; Dynamical Systems and Control Theory; Autonomous Space Systems and Spacecraft GNC; Data-Driven Modeling and Control; Scientific Machine Learning for Aerospace Systems; Cyber-Physical Systems Security; Resilient Autonomy; Construction Robotics; Construction and Deconstruction Manipulators; Navigation, Guidance and Control (GNC).\\r\\nAI for Hardware Security and Trust: AI guided Reverse Engineering of ICs, Hardware Security\",\"points\":\"\",\"image\":\"sec_1_1791366026_59c5f1ac935c.png\"}]', 7, 1, '2026-10-07 10:32:33', '2026-10-07 10:32:33'),
+(8, 'School of Innovation and Entrepreneurship', 'images/frame 10.png', 'images/sie-banner.png', 'inner', 'https://sie.iitm.ac.in/', '[{\"title\":\"Academic programmes\",\"subtitle\":\"M.S Entrepreneurship\",\"description\":\"\",\"points\":\"\",\"image\":\"\"},{\"title\":\"\",\"subtitle\":\"Research Areas for PhD:\",\"description\":\"\",\"points\":\"Entrepreneurship: Venture Science, Entrepreneurship Management, Network effects in Entrepreneurship Development, Capital structure for Early-Stage Deep Tech ventures from lab to market, Venture studios and venture builders\\r\\nInnovation: Design innovation for a creator economy in engineering hardware goods, AI in Innovation applied to medium- and small-scale manufacturing, Open innovation for scaling academic R&D in supporting MSMEs\",\"image\":\"\"},{\"title\":\"Research topics:\",\"subtitle\":\"\",\"description\":\"\",\"points\":\"A failure taxonomy of Indian deep-tech ventures: a longitudinal study of shutdowns between founding and Series A\\r\\nFounder prior experience and venture survival in Indian hardware startups: an event-history analysis\\r\\nDo technical co-founders matter? Team composition and technical milestone attainment in deep-tech ventures\\r\\nPredictive models of deep-tech venture survival built from incubator-stage application and review data\\r\\nAlumni network structure and deep-tech venture formation: a network-analytic study of IIT ecosystems\\r\\nDo co-investment networks determine which Indian deep-tech ventures get funded?\\r\\nMentor networks in pre-incubation: measuring the marginal value of an advisory tie\\r\\nGrant-to-equity transitions: how non-dilutive funding shapes later capital structure in deep-tech\\r\\nOptimal sequencing of public grants and private equity for hardware ventures: a modelling study\\r\\nCo-design with users in low-margin markets: methods for frugal product differentiation\\r\\nGenerative design tools in small-scale manufacturing: adoption barriers and productivity effects\\r\\nLarge language models as design assistants: measuring their effect on engineering iteration speed\\r\\nBarriers to AI adoption in Indian medium-scale manufacturing: a multi-case study\\r\\nShared research infrastructure for MSME clusters: design options and economic evaluation\\r\\nComparative performance of IIT-linked innovation ecosystems: inputs, outputs, and institutional design\\r\\nInstitutional autonomy and spinout rates: a cross-national comparison of technical universities\\r\\nScale-up engineering as the real bottleneck: from laboratory prototype to pilot plant in Indian conditions\\r\\nA stage-gate protocol linking technology readiness, market readiness, and investment decisions\\r\\nAcademic inventor involvement after licensing and its effect on commercialisation success\",\"image\":\"\"},{\"title\":\"\",\"subtitle\":\"\",\"description\":\"\",\"points\":\"\",\"image\":\"sec_3_1791368238_b70e36e7d716.png\"}]', 8, 1, '2026-10-07 10:32:33', '2026-10-07 10:32:33'),
+(9, 'School of Sustainability', 'images/frame 9.png', 'images/ss-banner.png', 'inner', 'https://sustainability.iitm.ac.in/', '[{\"title\":\"Academic programmes\",\"subtitle\":\"Interdisciplinary Dual Degree (IDDD) & International Interdisciplinary Masters Programme (I2MP)\",\"description\":\"\",\"points\":\"Energy Systems (IDDD+I2MP)\\r\\nAtmospheric and Climate Sciences (IDDD)\",\"image\":\"\"},{\"title\":\"Research topics:\",\"subtitle\":\"\",\"description\":\"Hybrid cooling system (VCR + Evaporative) for high efficiency cooling. Novel materials for high efficiency and colid state cooling, Pathways for electrification of industrial heating, Agentbased modeling and energy systems decarbonisation, Waste heat recovery using sCO2 - Turbomachinery develpoment, Additively manufactured turbine and compresssor development\",\"points\":\"\",\"image\":\"sec_1_1791367323_a0f973ebc0b7.png\"}]', 9, 1, '2026-10-07 10:32:33', '2026-10-07 10:32:33');
 
 -- --------------------------------------------------------
 
@@ -139,6 +144,9 @@ INSERT INTO `contact` (`id`, `school_name`, `institution_name`, `address`, `emai
 CREATE TABLE `faculty` (
   `id` int UNSIGNED NOT NULL,
   `cluster_id` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `coordinator_role` varchar(150) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `coordinator_programme` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `coordinator_order` int NOT NULL DEFAULT '0',
   `name` varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL,
   `image` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `department` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -157,151 +165,151 @@ CREATE TABLE `faculty` (
 -- Dumping data for table `faculty`
 --
 
-INSERT INTO `faculty` (`id`, `cluster_id`, `name`, `image`, `department`, `designation`, `email`, `personal_page`, `display_order`, `status`, `created_at`, `updated_at`, `top_section`, `top_order`) VALUES
-(4, '1', 'Prashant Rawat', 'Prashant Rawat.webp', 'Aerospace Engineering', 'Faculty', 'prashant[.]rawat[at]smail[.]iitm[.]ac[.]in', 'https://www.prashantiitm.com/', 1, 1, '2026-08-24 10:02:18', '2026-09-05 07:47:54', 0, 0),
-(5, '1', 'M S Sivakumar', 'm-s-sivakumar.ILElJ9wI_Z22UwSV.webp', 'Applied Mechanics and Biomedical Engineering', 'Faculty', 'mssiva[at]smail[.]iitm[.]ac[.]in', 'https://home.iitm.ac.in/mssiva/', 2, 1, '2026-08-24 10:02:18', '2026-08-27 07:33:43', 0, 0),
-(6, '1', 'V V Raghavendra Sai', 'v-v-raghavendra-sai.7li7eJw4_9lRU7.webp', 'Applied Mechanics and Biomedical Engineering', 'Faculty', 'vvrsai[at]smail[.]iitm[.]ac[.]in', 'https://sites.google.com/smail.iitm.ac.in/biosensors/home', 3, 1, '2026-08-24 10:02:18', '2026-08-27 07:36:32', 0, 0),
-(7, '1', 'Amit Nain', 'dummy.png', 'Applied Mechanics and Biomedical Engineering', 'Faculty', 'amit[at]smail[.]iitm[.]ac[.]in', '#', 4, 1, '2026-08-24 10:02:18', '2026-08-24 10:47:25', 0, 0),
-(8, '1', 'S. VIMALRAJ', 'dummy.png', 'Applied Mechanics and Biomedical Enigineering', 'Faculty', 'vimalraj[at]smail[.]iitm[.]ac[.]in', '#', 5, 1, '2026-08-24 10:02:18', '2026-08-24 10:47:25', 0, 0),
-(9, '1', 'Greeshma Thrivikraman', 'Greeshma Thrivikraman.png', 'Biotechnology', 'Faculty', 'greeshma[at]smail[.]iitm[.]ac[.]in', 'https://biotech.iitm.ac.in/innerfaculty.php?fname=Greeshma+Thrivikraman', 6, 1, '2026-08-24 10:02:18', '2026-08-27 07:55:14', 0, 0),
-(10, '1', 'Sanjib Senapati', 'Sanjib Senapati.png', 'Biotechnology', 'Faculty', 'sanjibs[at]smail[.]iitm[.]ac[.]in', 'https://biotech.iitm.ac.in/innerfaculty.php?fname=Sanjib+Senapati', 7, 1, '2026-08-24 10:02:18', '2026-08-27 07:55:55', 0, 0),
-(11, '1', 'Madivala G. Basavaraj', 'basavaraj.png', 'Chemical Engineering', 'Faculty', 'basa[at]smail[.]iitm[.]ac[.]in', 'https://che.iitm.ac.in/faculty.php?fname=Dr.+Basavaraj+M.+Gurappa', 8, 1, '2026-08-24 10:02:18', '2026-08-27 08:02:16', 0, 0),
-(12, '1', 'S. R. K. Chaitanya Sharma Yamijala', '1772718815_715520dede.jpg', 'Chemistry', 'Faculty', 'yamijala[at]smail[.]iitm[.]ac[.]in', 'https://chem.iitm.ac.in/faculty-inner.php?id=9', 9, 1, '2026-08-24 10:02:18', '2026-08-27 10:59:30', 0, 0),
-(13, '1', 'Krishna Reddy Nandipati', '1772729088_340420547a.jpg', 'Chemistry', 'Faculty', 'knandipati[at]smail[.]iitm[.]ac[.]in', 'https://chem.iitm.ac.in/faculty-inner.php?id=20', 10, 1, '2026-08-24 10:02:18', '2026-08-27 10:59:33', 0, 0),
-(14, '1', 'Soumen Ghosh', '1772783552_db664e0fe2.jpg', 'Chemistry', 'Faculty', 'chemsghosh[at]smail[.]iitm[.]ac[.]in', 'https://chem.iitm.ac.in/faculty-inner.php?id=33', 11, 1, '2026-08-24 10:02:18', '2026-08-27 11:00:03', 0, 0),
-(15, '1', 'Aslam Kunhi Mohamed', 'ASLAM.jpg', 'Civil Engineering', 'Faculty', 'akm[at]smail[.]iitm[.]ac[.]in', 'https://civil.iitm.ac.in/faculty/aslam/', 12, 1, '2026-08-24 10:02:18', '2026-08-27 11:03:45', 0, 0),
-(16, '1', 'SOUMYA DUTTA', 'citations.jpg', 'Electrical Engineering', 'Faculty', 's[.]dutta[at]ee[.]iitm[.]ac[.]in', 'https://ee.iitm.ac.in/people/soumya-dutta/', 13, 1, '2026-08-24 10:02:18', '2026-08-28 05:37:09', 0, 0),
-(17, '1', 'Shivananju B N', 'shivananju-bn.png', 'Electrical Engineering', 'Faculty', 'shivananju[at]smail[.]iitm[.]ac[.]in', 'https://ee.iitm.ac.in/people/shivananju-bn/', 14, 1, '2026-08-24 10:02:18', '2026-08-28 05:37:51', 0, 0),
-(18, '1', 'Sudharsanan S', 'sudharsanan-srinivasan.png', 'Electrical Engineering', 'Faculty', 'sudharsanan[at]ee[.]iitm[.]ac[.]in', 'https://ee.iitm.ac.in/people/sudharsanan-srinivasan/', 15, 1, '2026-08-24 10:02:18', '2026-08-28 06:43:30', 0, 0),
-(19, '1', 'Bhaswar Chakrabarti', 'bhaswar-chakrabarti.png', 'Electrical Engineering', 'Faculty', 'bchakrabarti[at]smail[.]iitm[.]ac[.]in', 'https://ee.iitm.ac.in/people/bhaswar-chakrabarti/', 16, 1, '2026-08-24 10:02:18', '2026-08-28 07:22:34', 0, 0),
-(20, '1', 'Anil Prabhakar', 'anil-prabhakar.png', 'Electrical Engineering', 'Faculty', 'anilpr[at]smail[.]iitm[.]ac[.]in', 'https://ee.iitm.ac.in/people/anil-prabhakar/', 17, 1, '2026-08-24 10:02:18', '2026-08-28 07:23:02', 0, 0),
-(21, '1', 'Tuhin Subhra Santra', 'TSubhraSantra.jpg', 'Engineering Design', 'Faculty', 'tuhin[at]smail[.]iitm[.]ac[.]in', 'https://ed.iitm.ac.in/faculty.html?id=Tuhin_Subhra_Santra', 18, 1, '2026-08-24 10:02:18', '2026-08-28 07:38:17', 0, 0),
-(22, '1', 'Anirudh Udupa', 'audupa.png', 'Mechanical Engineering', 'Faculty', 'audupa[at]smail[.]iitm[.]ac[.]in', 'https://mech.iitm.ac.in/profile.php?fname=audupa', 19, 1, '2026-08-24 10:02:18', '2026-08-28 08:18:39', 0, 0),
-(23, '1', 'Ranjit Bauri', 'ranjit.png', 'Metallurgical and Materials Engineering', 'Faculty', 'rbauri[at]smail[.]iitm[.]ac[.]in', 'https://mme.iitm.ac.in/innerfaculty.php?fname=Ranjit%20Bauri', 20, 1, '2026-08-24 10:02:18', '2026-08-28 08:25:58', 0, 0),
-(24, '1', 'Ravi Kumar N V', 'WhatsApp Image 2025-08-07 at 12.18.50 PM.jpeg', 'Metallurgical and Materials Engineering', 'Faculty', 'nvrk[at]smail[.]iitm[.]ac[.]in', 'https://mme.iitm.ac.in/innerfaculty.php?fname=Ravi%20Kumar%20NV', 21, 1, '2026-08-24 10:02:18', '2026-08-28 08:32:19', 0, 0),
-(25, '1', 'Surendra B. Anantharaman', 'surendra.png', 'Metallurgical and Materials Engineering', 'Faculty', 'sba[at]smail[.]iitm[.]ac[.]in', 'https://mme.iitm.ac.in/innerfaculty.php?fname=Surendra%20B%20Anantharaman', 22, 1, '2026-08-24 10:02:18', '2026-08-28 08:32:54', 0, 0),
-(26, '1', 'Rohit Batra', 'rohit.png', 'Metallurgical and Materials Engineering', 'Faculty', 'rbatra[at]smail[.]iitm[.]ac[.]in', 'https://mme.iitm.ac.in/innerfaculty.php?fname=Rohit%20Batra', 23, 1, '2026-08-24 10:02:18', '2026-08-28 08:33:16', 0, 0),
-(27, '1', 'Satyesh Kumar Yadav', 'satyesh.png', 'Metallurgical and Materials Engineering', 'Faculty', 'satyesh[at]smail[.]iitm[.]ac[.]in', 'https://mme.iitm.ac.in/innerfaculty.php?fname=Satyesh%20Kumar%20Yadav', 24, 1, '2026-08-24 10:02:18', '2026-08-28 08:33:39', 0, 0),
-(28, '1', 'Prem Bisht', 'bisht.jpg', 'Physics', 'Faculty', 'bisht[at]smail[.]iitm[.]ac[.]in', 'https://physics.iitm.ac.in/people/facultyinfo/bisht.html', 25, 1, '2026-08-24 10:02:18', '2026-08-28 08:46:59', 0, 0),
-(29, '1', 'Basudev Roy', 'basudev.jpg', 'Physics', 'Faculty', 'basudev[at]smail[.]iitm[.]ac[.]in', 'https://physics.iitm.ac.in/people/facultyinfo/basudev.html', 26, 1, '2026-08-24 10:02:18', '2026-08-28 08:47:35', 0, 0),
-(30, '1', 'Rahul Sawant', 'rahul_sawant.jpg', 'Physics', 'Faculty', 'rahul[.]sawant[at]smail[.]iitm[.]ac[.]in', 'https://physics.iitm.ac.in/people/facultyinfo/rahul_sawant.html', 27, 1, '2026-08-24 10:02:18', '2026-08-28 08:48:56', 0, 0),
-(31, '1', 'Panchanana Khuntia', 'pkhuntia.jpg', 'Physics', 'Faculty', 'pkhuntia[at]smail[.]iitm[.]ac[.]in', 'https://physics.iitm.ac.in/people/facultyinfo/pkhuntia.html', 28, 1, '2026-08-24 10:02:18', '2026-08-28 08:49:29', 0, 0),
-(32, '1', 'P Murugavel', 'muruga.jpg', 'Physics', 'Faculty', 'muruga[at]smail[.]iitm[.]ac[.]in', 'https://physics.iitm.ac.in/people/facultyinfo/muruga.html', 29, 1, '2026-08-24 10:02:18', '2026-08-28 08:50:50', 0, 0),
-(33, '1', 'Abhishek Misra', 'abhishek_misra.jpg', 'Physics', 'Faculty', 'abhishek[.]misra[at]smail[.]iitm[.]ac[.]in', 'https://physics.iitm.ac.in/people/facultyinfo/abhishek_misra.html', 30, 1, '2026-08-24 10:02:18', '2026-08-28 08:52:42', 0, 0),
-(34, '1', 'Sudakar Chandran', 'csudakar.jpg', 'Physics', 'Faculty', 'csudakar[at]smail[.]iitm[.]ac[.]in', 'https://physics.iitm.ac.in/people/facultyinfo/csudakar.html', 31, 1, '2026-08-24 10:02:18', '2026-08-28 08:53:05', 0, 0),
-(35, '1', 'V Praveen Bhallamudi', 'praveen_bhallamudi.jpg', 'Physics', 'Faculty', 'praveen[.]bhallamudi[at]smail[.]iitm[.]ac[.]in', 'https://physics.iitm.ac.in/people/facultyinfo/praveen_bhallamudi.html', 32, 1, '2026-08-24 10:02:18', '2026-08-28 08:54:35', 0, 0),
-(36, '1', 'Sivarama Krishnan', 'srkrishnan.jpg', 'Physics', 'Faculty', 'srkrishnan[at]smail[.]iitm[.]ac[.]in', 'https://physics.iitm.ac.in/people/facultyinfo/srkrishnan.html', 33, 1, '2026-08-24 10:02:18', '2026-08-28 08:55:01', 0, 0),
-(37, '1', 'Vaibhav Madhok', 'madhok.jpg', 'Physics', 'Faculty', 'madhok[at]physics[.]iitm[.]ac[.]in', 'https://physics.iitm.ac.in/people/facultyinfo/madhok.html', 34, 1, '2026-08-24 10:02:18', '2026-08-28 08:55:25', 0, 0),
-(38, '1', 'Dillip Kumar Satapathy', 'dks.jpg', 'Physics', 'Faculty', 'dks[at]smail[.]iitm[.]ac[.]in', 'https://physics.iitm.ac.in/people/facultyinfo/dks.html', 35, 1, '2026-08-24 10:02:18', '2026-08-28 08:55:53', 0, 0),
-(39, '1', 'Ayana Ghosh', 'ghosha.jpg', 'Physics', 'Faculty', 'research[.]aghosh[at]gmail[.]com', 'https://physics.iitm.ac.in/people/facultyinfo/ghosha.html', 36, 1, '2026-08-24 10:02:18', '2026-08-28 08:56:19', 0, 0),
-(40, '2', 'K. Murali', 'faculty_1751358968_68639df8a71f1.png', 'Ocean Engineering', 'Faculty', 'murali[at]smail[.]iitm[.]ac[.]in', 'https://doe.iitm.ac.in/muralik', 1, 1, '2026-08-24 10:12:59', '2026-08-28 08:39:01', 0, 0),
-(41, '2', 'V. Sriram', 'faculty_1754900673_6899a8c19a60f.png', 'Ocean Engineering', 'Faculty', 'vsriram[at]smail[.]iitm[.]ac[.]in', 'https://doe.iitm.ac.in/sriramvenkatachalam', 2, 1, '2026-08-24 10:12:59', '2026-08-28 08:39:37', 0, 0),
-(42, '2', 'Debashis Chakraborty', '1772719541_7586731c39.jpg', 'Chemistry', 'Faculty', 'dchakraborty[at]smail[.]iitm[.]ac[.]in', 'https://chem.iitm.ac.in/faculty-inner.php?id=10', 3, 1, '2026-08-24 10:12:59', '2026-08-27 11:00:28', 0, 0),
-(43, '2', 'Soumendra Nath Kuiry', 'snkuiry-SoumendraKui.jpg', 'Civil Engineering', 'Faculty', 'snkuiry[at]smail[.]iitm[.]ac[.]in', 'https://civil.iitm.ac.in/faculty/snkuiry/', 4, 1, '2026-08-24 10:12:59', '2026-08-27 11:08:40', 0, 0),
-(44, '2,5,9', 'Krishna Malakar', 'krishna-qog0yqe83mryaiy1797o3solt84dkuui61vk8ou5dk.png', 'Humanities and Social Sciences', 'Faculty', 'krishnamalakar[at]smail[.]iitm[.]ac[.]in', 'https://hss.iitm.ac.in/krishna-malakar/', 5, 1, '2026-08-24 10:12:59', '2026-09-10 06:47:57', 0, 0),
-(45, '2,9', 'Santosh Kumar Sahu', 'santosh_sahu-qweyxu9upf8mslsjejnurwdg45c0y64l4qnzsxz6wo.jpg', 'Humanities and Social Sciences', 'Faculty', 'santosh[at]smail[.]iitm[.]ac[.]in', 'https://hss.iitm.ac.in/santosh-kumar-sahu', 6, 1, '2026-08-24 10:12:59', '2026-09-10 06:48:20', 0, 0),
-(46, '2', 'Abdus Samad', 'img_6899b5b4afa733.69416491.jpg', 'Ocean Engineering', 'Faculty', 'samad[at]smail[.]iitm[.]ac[.]in', 'https://doe.iitm.ac.in/samad', 7, 1, '2026-08-24 10:12:59', '2026-08-28 08:40:56', 0, 0),
-(47, '2', 'Thejesh Kumar Garala', 'faculty_1754900713_6899a8e990b32.png', 'Ocean Engineering', 'Faculty', 'tkgarala[at]smail[.]iitm[.]ac[.]in', 'https://doe.iitm.ac.in/tkgarala', 8, 1, '2026-08-24 10:12:59', '2026-08-28 08:41:27', 0, 0),
-(48, '2', 'M. A. Atmanand', 'atmanand.png', 'Ocean Engineering', 'Faculty', 'atma[at]smail[.]iitm[.]ac[.]in', 'https://doe.iitm.ac.in/atmanand', 9, 1, '2026-08-24 10:12:59', '2026-08-28 08:42:15', 0, 0),
-(49, '3', 'A. Sameen', 'Sameen.webp', 'Aerospace Engineering', 'Faculty', 'sameen[at]smail[.]iitm[.]ac[.]in', 'https://home.iitm.ac.in/sameen/index.html', 1, 1, '2026-08-24 10:13:59', '2026-08-27 07:27:48', 0, 0),
-(50, '3', 'Sunetra Sarkar', 'Sunetra Sarkar.webp', 'Aerospace Engineering', 'Faculty', 'sunetra[at]smail[.]iitm[.]ac[.]in', 'https://home.iitm.ac.in/sunetra/', 2, 1, '2026-08-24 10:13:59', '2026-08-27 07:28:18', 0, 0),
-(51, '3', 'Aniketh Kalur', 'Aniketh_Kalur.jpg', 'Aerospace Engineering', 'Faculty', 'aniketh[.]kalur[at]smail[.]iitm[.]ac[.]in', 'https://ae.iitm.ac.in/~aniketh.kalur/', 3, 1, '2026-08-24 10:13:59', '2026-08-27 07:29:01', 0, 0),
-(52, '3', 'Vagesh D. Narasimhamurthy', 'vagesh-d-narasimhamurthy.B0IDFXH2_zsFBC.webp', 'Applied Mechanics and Biomedical Engineering', 'Faculty', 'vagesh[at]smail[.]iitm[.]ac[.]in', 'https://home.iitm.ac.in/vagesh/', 4, 1, '2026-08-24 10:13:59', '2026-08-27 07:46:51', 0, 0),
-(53, '3', 'Sayan Gupta', '20231130-1527512-690x1227.jpeg', 'Applied Mechanics and Biomedical Engineering', 'Faculty', 'sayangupta[at]smail[.]iitm[.]ac[.]in', 'https://home.iitm.ac.in/sayan/', 5, 1, '2026-08-24 10:13:59', '2026-08-27 07:47:36', 0, 0),
-(54, '3', 'Prasad Patnaik B S V', 'b-s-v-prasad-patnaik.WEaEneeQ_Ze4SuK.webp', 'Applied Mechanics and Biomedical Engineering', 'Faculty', 'bsvp[at]smail[.]iitm[.]ac[.]in', 'https://simbiotsiitm.github.io/Simbiots-Lab/', 6, 1, '2026-08-24 10:13:59', '2026-08-27 07:48:13', 0, 0),
-(55, '3', 'Sarith P Sathian', 'sarith-p-sathian.Cp2bKUVo_rly1X.webp', 'Applied Mechanics and Biomedical Engineering', 'Faculty', 'sarith[at]smail[.]iitm[.]ac[.]in', 'https://sites.google.com/site/sarithshomepage', 7, 1, '2026-08-24 10:13:59', '2026-08-27 07:48:57', 0, 0),
-(56, '3', 'Aditi Kathpalia', 'aditi-kathpalia.DRa-ryD6_1cDCA8.webp', 'Applied Mechanics and Biomedical Engineering', 'Faculty', 'aditi[at]smail[.]iitm[.]ac[.]in', 'https://aditikathpalia.wordpress.com/', 8, 1, '2026-08-24 10:13:59', '2026-08-27 07:49:24', 0, 0),
-(57, '3', 'Danny Raj M', 'danny-apm.D3hQ6GP-_2bA5ET.webp', 'Applied Mechanics and Biomedical Engineering', 'Faculty', 'danny[at]smail[.]iitm[.]ac[.]in', 'https://www.dannyraj.com/', 9, 1, '2026-08-24 10:13:59', '2026-08-27 07:49:47', 0, 0),
-(58, '3', 'M. Hamsa Priya', 'faculty_6995e2470aab36.89472653.jpeg', 'Biotechnology', 'Faculty', 'hamsa[at]smail[.]iitm[.]ac[.]in', 'https://biotech.iitm.ac.in/innerfaculty.php?fname=M+Hamsa+Priya', 10, 1, '2026-08-24 10:13:59', '2026-08-27 07:56:50', 0, 0),
-(59, '3', 'Abhinav S. Raman', 'ASR_photo.jpg', 'Chemical Engineering', 'Faculty', 'asraman[at]smail[.]iitm[.]ac[.]in', 'https://che.iitm.ac.in/faculty.php?fname=Dr.+Abhinav+S.+Raman', 11, 1, '2026-08-24 10:13:59', '2026-08-27 08:12:48', 0, 0),
-(60, '3', 'Parul Verma', 'Parul.png', 'Chemical Engineering', 'Faculty', 'parulv[at]smail[.]iitm[.]ac[.]in', 'https://che.iitm.ac.in/faculty.php?fname=Dr.+Parul+Verma', 12, 1, '2026-08-24 10:13:59', '2026-08-27 08:15:07', 0, 0),
-(61, '3,9', 'Sreeparvathy Vijay', 'Sreeparvathy Photo1.jpg', 'Civil Engineering', 'Faculty', 'sreeparvathyvijay[at]smail[.]iitm[.]ac[.]in', 'https://civil.iitm.ac.in/faculty/sreeparvathyvijay/', 13, 1, '2026-08-24 10:13:59', '2026-09-10 06:46:33', 0, 0),
-(62, '3', 'Saravanan U', 'saran-SaravananUIITM.jpg', 'Civil Engineering', 'Faculty', 'saran[at]smail[.]iitm[.]ac[.]in', 'https://civil.iitm.ac.in/faculty/saran/', 14, 1, '2026-08-24 10:13:59', '2026-08-27 11:10:05', 0, 0),
-(63, '3', 'Sivaram Ambikasaran', 'dummy.png', 'Mathematics', 'Faculty', 'sivaambi[at]smail[.]iitm[.]ac[.]in', 'https://math.iitm.ac.in/innerfaculty.php?fname=Sivaram', 15, 1, '2026-08-24 10:13:59', '2026-08-28 08:13:58', 0, 0),
-(64, '3', 'Barun Sarkar', 'barunsarkar.png', 'Mathematics', 'Faculty', 'barun[at]smail[.]iitm[.]ac[.]in', 'https://math.iitm.ac.in/innerfaculty.php?fname=Barun%20Sarkar', 16, 1, '2026-08-24 10:13:59', '2026-08-28 08:14:52', 0, 0),
-(65, '3', 'Rakhi Singh', 'WhatsApp Image 2025-01-13 at 9.12.00 AM.jpeg', 'Mathematics', 'Faculty', 'rakhi[at]smail[.]iitm[.]ac[.]in', 'https://math.iitm.ac.in/innerfaculty.php?fname=Rakhi%20Singh', 17, 1, '2026-08-24 10:13:59', '2026-08-28 08:16:30', 0, 0),
-(66, '3', 'Balaji Srinivasan', 'sbalaji.png', 'Mechanical Engineering', 'Faculty', 'sbalaji[at]smail[.]iitm[.]ac[.]in', 'https://mech.iitm.ac.in/profile.php?fname=sbalaji', 18, 1, '2026-08-24 10:13:59', '2026-08-28 08:20:29', 0, 0),
-(67, '3', 'Gandham Phanikumar', 'gandham.png', 'Metallurgical and Materials Engineering', 'Faculty', 'gphani[at]smail[.]iitm[.]ac[.]in', 'https://mme.iitm.ac.in/innerfaculty.php?fname=Gandham%20Phanikumar', 19, 1, '2026-08-24 10:13:59', '2026-08-28 08:34:18', 0, 0),
-(68, '3', 'Neelima M Gupte', 'gupte.jpg', 'Physics', 'Faculty', 'gupte[at]physics[.]iitm[.]ac[.]in', 'https://physics.iitm.ac.in/people/facultyinfo/gupte.html', 20, 1, '2026-08-24 10:13:59', '2026-08-28 08:56:49', 0, 0),
-(69, '4', 'Mahesh V Panchagnula', 'mahesh-panchagnula.CDvs0crw_2vvUx9.webp', 'Applied Mechanics and Biomedical Engineering', 'Faculty', 'mvp[at]smail[.]iitm[.]ac[.]in', 'https://home.iitm.ac.in/mvp/', 1, 1, '2026-08-24 10:15:50', '2026-08-27 07:50:24', 0, 0),
-(70, '4', 'A N Rajagopalan', 'rajagopalan-an.png', 'Electrical Engineering', 'Faculty', 'raju[at]ee[.]iitm[.]ac[.]in', 'https://ee.iitm.ac.in/people/rajagopalan-an/', 2, 1, '2026-08-24 10:15:50', '2026-08-28 07:29:58', 0, 0),
-(71, '4', 'Babji Srinivasan', 'profile.jpeg', 'Applied Mechanics & Biomedical Engineering', 'Faculty', 'babji[.]srinivasan[at]iitm[.]ac[.]in', 'https://home.iitm.ac.in/babji.srinivasan/', 3, 1, '2026-08-24 10:15:50', '2026-08-27 07:44:34', 0, 0),
-(72, '4', 'Raghunathan Rengaswamy', 'prof-raghu.png', 'Chemical Engineering', 'Faculty', 'raghur[at]iitm[.]ac[.]in', 'https://che.iitm.ac.in/faculty.php?fname=Dr.+Ragunathan+Rengasamy', 4, 1, '2026-08-24 10:15:50', '2026-08-27 08:16:59', 0, 0),
-(73, '4', 'Nandan Sudarsanam', 'nandan.jpg.webp', 'Data Science & AI', 'Faculty', 'nandan[at]dsai[.]iitm[.]ac[.]in', 'https://doms.iitm.ac.in/index.php/people/new-profile/nandan-sudarsanam-profile/', 5, 1, '2026-08-24 10:15:50', '2026-08-27 11:33:09', 0, 0),
-(74, '4', 'Arunkumar Thittai', 'arun-kumar-thittai.D_sDbPte_ZVnr7O.webp', 'Applied Mechanics & Biomedical Engineering', 'Faculty', 'akthittai[at]iitm[.]ac[.]in', 'https://sites.google.com/view/arunthittai', 6, 1, '2026-08-24 10:15:50', '2026-08-27 07:45:57', 0, 0),
-(75, '4', 'Sivaram Ambikasaran', 'dummy.png', 'Data Science & AI', 'Faculty', 'sivaambi[at]dsai[.]iitm[.]ac[.]in', 'https://math.iitm.ac.in/innerfaculty.php?fname=Sivaram', 7, 1, '2026-08-24 10:15:50', '2026-08-27 11:33:59', 0, 0),
-(76, '4', 'Manish Anand', 'manand.png', 'Mechanical Engineering', 'Faculty', 'manand[at]iitm[.]ac[.]in', 'https://mech.iitm.ac.in/profile.php?fname=manand', 8, 1, '2026-08-24 10:15:50', '2026-08-28 08:21:18', 0, 0),
-(77, '5', 'M. Thenmozhi', '2U2A0852-scaled.jpg-1-e1771587104861.webp', 'Department of Management Studies (DoMS)', 'Faculty', 'mtm[at]iitm[.]ac[.]in', 'https://doms.iitm.ac.in/index.php/people/faculty/thenmozhim/', 1, 1, '2026-08-24 10:16:42', '2026-08-27 11:39:55', 0, 0),
-(78, '5', 'Hitika Tiwari', 'image.webp', 'Data Science and AI', 'Faculty', 'hitika[at]iitmz[.]ac[.]in', 'https://www.iitmz.ac.in/schools/engineering-and-science/faculty/prof-hitika-tiwari', 2, 1, '2026-08-24 10:16:42', '2026-08-27 11:34:59', 0, 0),
-(79, '5', 'Lata Dyaram', 'lata_dyaram1-2.jpg.webp', 'Department of Management Studies', 'Faculty', 'lata[.]dyaram[at]smail[.]iitm[.]ac[.]in', 'https://doms.iitm.ac.in/index.php/people/faculty/latadayaram/', 3, 1, '2026-08-24 10:16:42', '2026-08-27 11:38:36', 0, 0),
-(80, '5', 'Sudhir Chella Rajan', 'prof_chella_rajan-qxk7hm1au5qeodqeberr71shttsdw56zyujfgyd5fc.jpg', 'Humanities and Social Sciences', 'Faculty', 'scrajan[at]smail[.]iitm[.]ac[.]in', 'https://hss.iitm.ac.in/sudhir-chella-rajan', 4, 1, '2026-08-24 10:16:42', '2026-08-28 07:53:45', 0, 0),
-(81, '5', 'Subash S', 'Subash_300-r1s0s1f5h88hvkrd0d50i9j439z43jr3n1qm2cjmwo.jpg', 'Humanities and Social Sciences', 'Faculty', 'subash[at]smail[.]iitm[.]ac[.]in', 'https://hss.iitm.ac.in/subash-s', 5, 1, '2026-08-24 10:16:42', '2026-08-28 07:54:26', 0, 0),
-(83, '5', 'Pramod Kumar Naik', 'pramod-qog10tlbadmw3bwt05ptn9phc1tqon514e2emtqnjs.png', 'Humanities and Social Sciences', 'Faculty', 'pramod[at]smail[.]iitm[.]ac[.]in', 'https://hss.iitm.ac.in/pramod-kumar-naik', 7, 1, '2026-08-24 10:16:42', '2026-08-28 07:57:18', 0, 0),
-(84, '5', 'V.R. Muraleedharan', 'murali.png', 'Humanities and Social Sciences', 'Faculty', 'vrm[at]smail[.]iitm[.]ac[.]in', 'https://hss.iitm.ac.in/muraleedharan-vr/', 8, 1, '2026-08-24 10:16:42', '2026-08-28 08:01:20', 0, 0),
-(85, '5', 'Sandeep Kumar Kujur', 'sandeep-qog13bttih2f1w9qd8q0amxqd1gz7l39gsp0pe0uyg.png', 'Humanities and Social Sciences', 'Faculty', 'sandeep[at]smail[.]iitm[.]ac[.]in', 'https://hss.iitm.ac.in/sandeep-kumar-kujur', 9, 1, '2026-08-24 10:16:42', '2026-08-28 08:03:15', 0, 0),
-(86, '5', 'Neelesh S Upadhye', 'neelesh.png', 'Mathematics', 'Faculty', 'neelesh[at]smail[.]iitm[.]ac[.]in', 'https://math.iitm.ac.in/innerfaculty.php?fname=Neelesh%20Shankar', 10, 1, '2026-08-24 10:16:42', '2026-08-28 08:16:20', 0, 0),
-(87, '6', 'Kothandaraman Ramanujam', '1772728376_3ca6b85bde.jpg', 'Chemistry', 'Faculty', 'rkraman[at]smail[.]iitm[.]ac[.]in', 'https://chem.iitm.ac.in/faculty-inner.php?id=19', 1, 1, '2026-08-24 10:17:19', '2026-08-27 11:00:54', 0, 0),
-(88, '6', 'Arun Karuppaswamy B', 'arun-karuppaswamy-b.png', 'Electrical Engineering', 'Faculty', 'akp[at]smail[.]iitm[.]ac[.]in', 'https://ee.iitm.ac.in/people/arun-karuppaswamy-b/', 2, 1, '2026-08-24 10:17:19', '2026-08-28 07:30:29', 0, 0),
-(89, '6', 'Kamalesh Hatua', 'kamalesh-hatua.png', 'Electrical Engineering', 'Faculty', 'kamalesh[at]ee[.]iitm[.]ac[.]in', 'https://ee.iitm.ac.in/people/kamalesh-hatua/', 3, 1, '2026-08-24 10:17:19', '2026-08-28 07:30:57', 0, 0),
-(90, '6', 'K Shanti Swarup', 'k-swarup.png', 'Electrical Engineering', 'Faculty', 'swarup[at]ee[.]iitm[.]ac[.]in', 'https://ee.iitm.ac.in/people/shanti-k/', 4, 1, '2026-08-24 10:17:19', '2026-08-28 07:32:18', 0, 0),
-(91, '6', 'R Sarathi', 'sarathi-r.png', 'Electrical Engineering', 'Faculty', 'rsarathi[at]smail[.]iitm[.]ac[.]in', 'https://ee.iitm.ac.in/people/sarathi-r/', 5, 1, '2026-08-24 10:17:19', '2026-08-28 07:32:52', 0, 0),
-(92, '6', 'Mahesh Kumar', 'mahesh-kumar.png', 'Electrical Engineering', 'Faculty', 'maheshk[at]smail[.]iitm[.]ac[.]in', 'https://ee.iitm.ac.in/people/mahesh-kumar/', 6, 1, '2026-08-24 10:17:19', '2026-08-28 07:33:34', 0, 0),
-(93, '6', 'Lakshminarasamma N', 'lakshminarasamma-n.png', 'Electrical Engineering', 'Faculty', 'lakshmin[at]smail[.]iitm[.]ac[.]in', 'https://ee.iitm.ac.in/people/lakshminarasamma-n/', 7, 1, '2026-08-24 10:17:19', '2026-08-28 07:34:03', 0, 0),
-(94, '6', 'Srikanthan Sridharan', 'SSrikanthan.jpg', 'Engineering Design', 'Faculty', 'srikanthan[at]smail[.]iitm[.]ac[.]in', 'https://ed.iitm.ac.in/faculty.html?id=Srikanthan_S', 8, 1, '2026-08-24 10:17:19', '2026-08-28 07:39:14', 0, 0),
-(95, '6', 'Deepak Ronanki', 'deepak.jpg', 'Engineering Design', 'Faculty', 'dronanki[at]smail[.]iitm[.]ac[.]in', 'https://ed.iitm.ac.in/faculty.html?id=Deepak_Ronanki', 9, 1, '2026-08-24 10:17:19', '2026-08-28 07:40:04', 0, 0),
-(96, '7', 'Satadal Ghosh', 'Satadal Ghosh.webp', 'Aerospace Engineering', 'Faculty', 'satadal[at]smail[.]iitm[.]ac[.]in', 'https://sites.google.com/smail.iitm.ac.in/satadalghosh', 1, 1, '2026-08-24 10:17:43', '2026-08-27 07:30:37', 0, 0),
-(97, '7', 'Devaprakash Muniraj', 'Devaprakash Muniraj.webp', 'Aerospace Engineering', 'Faculty', 'deva[at]smail[.]iitm[.]ac[.]in', 'https://sites.google.com/view/rasas-lab/home', 2, 1, '2026-08-24 10:17:43', '2026-08-27 07:30:01', 0, 0),
-(98, '7', 'M Manivannan', 'm-manivannan.BI-MCDrb_RKTXF.webp', 'Applied Mechanics and Biomedical Engineering', 'Faculty', 'mani[at]smail[.]iitm[.]ac[.]in', 'https://home.iitm.ac.in/mani/', 3, 1, '2026-08-24 10:17:43', '2026-08-27 07:51:53', 0, 0),
-(99, '7', 'Aritra Pal', '1729461288969.jpg', 'Civil Engineering', 'Faculty', 'aritrapal[at]smail[.]iitm[.]ac[.]in', 'https://civil.iitm.ac.in/faculty/aritrap/', 4, 1, '2026-08-24 10:17:43', '2026-08-27 11:10:38', 0, 0),
-(100, '7', 'Ayon Chakraborty', 'ayon.jpg', 'Computer Science and Engineering', 'Faculty', 'ayon[at]cse[.]iitm[.]ac[.]in', 'https://cse.iitm.ac.in/innerfaculty.php?fname=Ayon%20Chakraborty', 5, 1, '2026-08-24 10:17:43', '2026-08-27 11:30:48', 0, 0),
-(101, '7', 'Gopalakrishnan Srinivasan', 'gopal.png', 'Computer Science and Engineering', 'Faculty', 'sgopal[at]cse[.]iitm[.]ac[.]in', 'https://cse.iitm.ac.in/innerfaculty.php?fname=Gopalakrishnan%20Srinivasan', 6, 1, '2026-08-24 10:17:43', '2026-08-27 11:31:22', 0, 0),
-(102, '7', 'Chester Rebeiro', 'chester.png', 'Computer Science and Engineering', 'Faculty', 'chester[at]cse[.]iitm[.]ac[.]in', 'https://cse.iitm.ac.in/innerfaculty.php?fname=Chester%20Rebeiro', 7, 1, '2026-08-24 10:17:43', '2026-08-27 11:31:56', 0, 0),
-(103, '7', 'Patanjali', 'dummy.png', 'Data Science and AI', 'Faculty', 'patanjali[at]dsai[.]iitm[.]ac[.]in', '#', 8, 1, '2026-08-24 10:17:43', '2026-08-24 10:47:25', 0, 0),
-(104, '7', 'Arunkumar D Mahindrakar', 'arun-d-mahindrakar.png', 'Electrical Engineering', 'Faculty', 'arun_dm[at]ee[.]iitm[.]ac[.]in', 'https://ee.iitm.ac.in/people/arun-d-mahindrakar/', 9, 1, '2026-08-24 10:17:43', '2026-08-28 07:35:46', 0, 0),
-(105, '7', 'Puduru Viswanadha Reddy', 'puduru-reddy.png', 'Electrical Engineering', 'Faculty', 'vishwa[at]smail[.]iitm[.]ac[.]in', 'https://ee.iitm.ac.in/people/puduru-reddy/', 10, 1, '2026-08-24 10:17:43', '2026-08-28 07:36:12', 0, 0),
-(106, '7', 'Bijo Sebastian', 'bijo.jpg', 'Engineering Design', 'Faculty', 'bijo[.]sebastian[at]smail[.]iitm[.]ac[.]in', 'https://ed.iitm.ac.in/faculty.html?id=Bijo_Sebastian', 11, 1, '2026-08-24 10:17:43', '2026-08-28 07:40:33', 0, 0),
-(107, '7', 'Niravkumar Patel', 'Nirav_Patel.jpg', 'Engineering Design', 'Faculty', 'niravpatel[at]smail[.]iitm[.]ac[.]in', 'https://ed.iitm.ac.in/faculty.html?id=Nirav_Patel', 12, 1, '2026-08-24 10:17:43', '2026-08-28 07:40:56', 0, 0),
-(108, '7', 'Sandipan Bandyopadhyay', 'SBandyopadhyay.jpg', 'Engineering Design', 'Faculty', 'sandipan[at]smail[.]iitm[.]ac[.]in', 'https://ed.iitm.ac.in/faculty.html?id=Sandipan_Bandyopadhyay', 13, 1, '2026-08-24 10:17:43', '2026-08-28 07:41:19', 0, 0),
-(109, '7', 'Santanu Sarkar', '1749709804_2e344f9d6954da9d.jpg', 'Mathematics', 'Faculty', 'santanu[at]smail[.]iitm[.]ac[.]in', 'https://math.iitm.ac.in/innerfaculty.php?fname=Santanu%20Sarkar', 14, 1, '2026-08-24 10:17:43', '2026-08-28 08:17:21', 0, 0),
-(110, '7', 'Krishnan Balasubramanian', 'balas.png', 'Mechanical Engineering', 'Faculty', 'balas[at]smail[.]iitm[.]ac[.]in', 'https://mech.iitm.ac.in/profile.php?fname=balas', 15, 1, '2026-08-24 10:17:43', '2026-08-28 08:22:16', 0, 0),
-(111, '7', 'Anuj Kumar Tiwari', 'anujt.png', 'Mechanical Engineering', 'Faculty', 'anujt[at]smail[.]iitm[.]ac[.]in', 'https://mech.iitm.ac.in/profile.php?fname=anujt', 16, 1, '2026-08-24 10:17:43', '2026-08-28 08:22:44', 0, 0),
-(112, '7', 'Abhilash Somayajula', 'img_6938ae6358bb98.66689705.jpg', 'Ocean Engineering', 'Faculty', 'abhilash[at]smail[.]iitm[.]ac[.]in', 'https://doe.iitm.ac.in/abhilash', 17, 1, '2026-08-24 10:17:43', '2026-08-28 08:44:21', 0, 0),
-(113, '8', 'Satyanarayanan Seshadri', 'satyanarayanan-seshadri.C3EpzFCj_1TxrGS.webp', 'Applied Mechanics and Biomedical Engineering', 'Faculty', 'satya[at]iitm[.]ac[.]in', 'https://energlab.com/', 1, 1, '2026-08-24 10:18:26', '2026-08-27 07:52:37', 0, 0),
-(114, '9', 'Ashwin Mahalingam', 'ashwin.jpg', 'Civil Engineering', 'Faculty', 'mash[at]iitm[.]ac[.]in', 'https://civil.iitm.ac.in/faculty/mash/', 1, 1, '2026-08-24 10:19:09', '2026-08-27 11:11:19', 0, 0),
-(115, '9', 'Manikandan Mathur Sankaranarayanan', 'Manikandan Mathur.webp', 'Aerospace Engineering', 'Faculty', 'manims[at]smail[.]iitm[.]ac[.]in', 'https://sites.google.com/site/mathur2m/home', 2, 1, '2026-08-24 10:19:09', '2026-08-27 07:31:20', 0, 0),
-(116, '9', 'Saumendra K. Bajpai', 'saumendra-kumar-bajpai.B1vrE_8x_1PgEy3.webp', 'Applied Mechanics and Biomedical Engineering', 'Faculty', 'sbajpai[at]smail[.]iitm[.]ac[.]in', 'https://cellmechanics.blogspot.com/', 3, 1, '2026-08-24 10:19:09', '2026-08-27 07:53:08', 0, 0),
-(117, '9', 'Guhan Jayaraman', 'Guhan Jayaraman.png', 'Biotechnology', 'Faculty', 'guhanj[at]smail[.]iitm[.]ac[.]in', 'https://biotech.iitm.ac.in/innerfaculty.php?fname=Guhan+Jayaraman', 4, 1, '2026-08-24 10:19:09', '2026-08-27 07:58:37', 0, 0),
-(118, '9', 'Rayala Suresh Kumar', 'Suresh Rayala.png', 'Biotechnology', 'Faculty', 'rayala[at]smail[.]iitm[.]ac[.]in', 'https://biotech.iitm.ac.in/innerfaculty.php?fname=Suresh+Kumar+', 5, 1, '2026-08-24 10:19:09', '2026-08-27 07:59:10', 0, 0),
-(119, '9', 'Sathyanarayana N. Gummadi', 'sathya.png', 'Biotechnology', 'Faculty', 'gummadi[at]smail[.]iitm[.]ac[.]in', 'https://biotech.iitm.ac.in/innerfaculty.php?fname=Sathyanarayana+N+Gummadi', 6, 1, '2026-08-24 10:19:09', '2026-08-27 07:59:36', 0, 0),
-(120, '9', 'Rajnish Kumar', 'rajnish.png', 'Chemical Engineering', 'Faculty', 'rajnish[at]smail[.]iitm[.]ac[.]in', 'https://che.iitm.ac.in/faculty.php?fname=Dr.+Rajnish+Kumar', 7, 1, '2026-08-24 10:19:09', '2026-08-27 08:19:23', 0, 0),
-(121, '9', 'Sankha Karmakar', 'sanka.png', 'Chemical Engineering', 'Faculty', 'skarmakar[at]smail[.]iitm[.]ac[.]in', 'https://che.iitm.ac.in/faculty.php?fname=Dr.+Sankha+Karmakar', 8, 1, '2026-08-24 10:19:09', '2026-08-27 08:19:54', 0, 0),
-(122, '9', 'Jithin John Varghese', 'jithin.png', 'Chemical Engineering', 'Faculty', 'jithinjv[at]smail[.]iitm[.]ac[.]in', 'https://che.iitm.ac.in/faculty.php?fname=Dr.+Jithin+John+Varghese', 9, 1, '2026-08-24 10:19:09', '2026-08-27 08:20:22', 0, 0),
-(123, '9', 'NITIN MURALIDHARAN', 'WhatsApp Image 2024-11-05 at 2.43.21 PM.jpg', 'Chemical Engineering', 'Faculty', 'muralidharan[at]smail[.]iitm[.]ac[.]in', 'https://che.iitm.ac.in/faculty.php?fname=Dr.+Nitin+Muralidharan', 10, 1, '2026-08-24 10:19:09', '2026-08-27 08:20:56', 0, 0),
-(124, '9', 'Ramesh L. Gardas', '1772778304_fda6f5d870.jpg', 'Chemistry', 'Faculty', 'gardas[at]smail[.]iitm[.]ac[.]in', 'https://chem.iitm.ac.in/faculty-inner.php?id=28', 11, 1, '2026-08-24 10:19:09', '2026-08-27 11:01:20', 0, 0),
-(125, '9', 'Sachin S. Gunthe', 'SachinSGunthe(2) - Sachin S Gunthe II.jpg', 'Civil Engineering', 'Faculty', 's[.]gunthe[at]smail[.]iitm[.]ac[.]in', 'https://civil.iitm.ac.in/faculty/sgunthe/', 12, 1, '2026-08-24 10:19:09', '2026-08-27 11:11:55', 0, 0),
-(126, '9', 'Chandan Sarangi', 'Chandan_Sarangi.jpg', 'Civil Engineering', 'Faculty', 'chandansarangi[at]civil[.]iitm[.]ac[.]in', 'https://civil.iitm.ac.in/faculty/chandansarangi/', 13, 1, '2026-08-24 10:19:09', '2026-08-27 11:12:41', 0, 0),
-(127, '9', 'Indumathi Nambi', 'IMN-IndumathiNambi.jpg', 'Civil Engineering', 'Faculty', 'indunambi[at]smail[.]iitm[.]ac[.]in', 'https://civil.iitm.ac.in/faculty/indunambi/', 14, 1, '2026-08-24 10:19:09', '2026-08-27 11:13:08', 0, 0),
-(128, '9', 'Mathava Kumar S', 'Mathava Kumar S - EWRE-CE - Mathava Kumar S IITM.jpg', 'Civil Engineering', 'Faculty', 'mathav[at]smail[.]iitm[.]ac[.]in', 'https://civil.iitm.ac.in/faculty/mathava/', 15, 1, '2026-08-24 10:19:09', '2026-08-27 11:13:39', 0, 0),
-(129, '9', 'Prakash Singh Badal', 'Psbimage.jpg', 'Civil Engineering', 'Faculty', 'psb[at]smail[.]iitm[.]ac[.]in', 'https://civil.iitm.ac.in/faculty/prakash/', 16, 1, '2026-08-24 10:19:09', '2026-08-27 11:14:15', 0, 0),
-(130, '9', 'Anmol Pahwa', 'Profile Photo.jpg', 'Civil Engineering', 'Faculty', 'anmpahwa[at]smail[.]iitm[.]ac[.]in', 'https://civil.iitm.ac.in/faculty/anmpahwa/', 17, 1, '2026-08-24 10:19:09', '2026-08-27 11:14:48', 0, 0),
-(132, '9', 'Ligy Philip', 'DSC_1084.jpg', 'Civil Engineering', 'Faculty', 'ligy[at]smail[.]iitm[.]ac[.]in', 'https://civil.iitm.ac.in/faculty/ligy/', 19, 1, '2026-08-24 10:19:09', '2026-08-27 11:16:02', 0, 0),
-(133, '9', 'Venkatraman Srinivasan', 'venkatram.jpg', 'Civil Engineering', 'Faculty', 'venkatraman[at]smail[.]iitm[.]ac[.]in', 'https://civil.iitm.ac.in/faculty/venkatraman/', 20, 1, '2026-08-24 10:19:09', '2026-08-27 11:16:47', 0, 0),
-(134, '9', 'Nikhil Bugalia', '20.jpg', 'Civil Engineering', 'Faculty', 'nbugalia[at]smail[.]iitm[.]ac[.]in', 'https://civil.iitm.ac.in/faculty/nbugalia/', 21, 1, '2026-08-24 10:19:09', '2026-08-27 11:17:12', 0, 0),
-(135, '9', 'Shiva Nagendra SM', 'Shiva Nagendra SM - Shiva Nagendra.jpg', 'Civil Engineering', 'Faculty', 'snagendra[at]smail[.]iitm[.]ac[.]in', 'https://civil.iitm.ac.in/faculty/snagendra/', 22, 1, '2026-08-24 10:19:09', '2026-08-27 11:19:26', 0, 0),
-(136, '9', 'Balaji Srinivasan', 'balaji-srinivasan.png', 'Electrical Engineering', 'Faculty', 'balajis[at]ee[.]iitm[.]ac[.]in', 'https://ee.iitm.ac.in/people/balaji-srinivasan/', 23, 1, '2026-08-24 10:19:09', '2026-08-28 07:36:47', 0, 0),
-(137, '9', 'Harikrishna', 'dummy.png', 'Engineering Design', 'Faculty', 'ed17d009[at]smail[.]iitm[.]ac[.]in', '#', 24, 1, '2026-08-24 10:19:09', '2026-08-24 10:47:25', 0, 0),
-(138, '9', 'Atriya Biswas', 'ABiswas.jpg', 'Engineering Design', 'Faculty', 'abiswas[at]smail[.]iitm[.]ac[.]in', 'https://ed.iitm.ac.in/faculty.html?id=Atriya_Biswas', 25, 1, '2026-08-24 10:19:09', '2026-08-28 07:43:46', 0, 0),
-(139, '9', 'Kavitha Arunachalam', 'Kavitha_Arunachalam.jpg', 'Engineering Design', 'Faculty', 'akavitha[at]smail[.]iitm[.]ac[.]in', 'https://ed.iitm.ac.in/faculty.html?id=Kavitha_Arunachalam', 26, 1, '2026-08-24 10:19:09', '2026-08-28 07:46:42', 0, 0),
-(140, '9', 'Sabuj Kumar Mandal', 'SabujKumar1-qog11140t1x6o7lvs8yu77t634soe7yvtfaah1fi60.png', 'Humanities and Social Sciences', 'Faculty', 'sabuj[at]smail[.]iitm[.]ac[.]in', 'https://hss.iitm.ac.in/sabuj-kumar-mandal', 27, 1, '2026-08-24 10:19:09', '2026-08-28 08:04:23', 0, 0),
-(143, '9', 'GL Samuel', 'samuelgl.png', 'Mechanical Engineering', 'Faculty', 'samuelgl[at]smail[.]iitm[.]ac[.]in', 'https://mech.iitm.ac.in/profile.php?fname=samuelgl', 30, 1, '2026-08-24 10:19:09', '2026-08-28 08:23:07', 0, 0),
-(144, '9', 'Bhuvanesh Srinivasan', 'bhuvan.png', 'Metallurgical and Materials Engineering', 'Faculty', 'bhuvanesh[.]srini[at]smail[.]iitm[.]ac[.]in', 'https://mme.iitm.ac.in/innerfaculty.php?fname=Bhuvanesh%20Srinivasan', 31, 1, '2026-08-24 10:19:09', '2026-08-28 08:35:12', 0, 0),
-(145, '9', 'Lakshman Neelakantan', 'lakshman.png', 'Metallurgical and Materials Engineering', 'Faculty', 'nlakshman[at]smail[.]iitm[.]ac[.]in', 'https://mme.iitm.ac.in/innerfaculty.php?fname=Lakshman%20Neelakantan', 32, 1, '2026-08-24 10:19:09', '2026-08-28 08:36:50', 0, 0),
-(146, '9', 'Ajay Kumar Shukla', 'shukla.png', 'Metallurgical and Materials Engineering', 'Faculty', 'shukla[at]smail[.]iitm[.]ac[.]in', 'https://mme.iitm.ac.in/innerfaculty.php?fname=Shukla%20Ajay%20Kumar', 33, 1, '2026-08-24 10:19:09', '2026-08-28 08:37:13', 0, 0),
-(147, '9', 'Tiju Thomas', 'tiju.png', 'Metallurgical and Materials Engineering', 'Faculty', 'tijuthomas[at]smail[.]iitm[.]ac[.]in', 'https://mme.iitm.ac.in/innerfaculty.php?fname=Tiju%20Thomas', 34, 1, '2026-08-24 10:19:09', '2026-08-28 08:37:36', 0, 0),
-(148, '9', 'S. Sankaran', 'sankaran.png', 'Metallurgical and Materials Engineering', 'Faculty', 'ssankaran[at]smail[.]iitm[.]ac[.]in', 'https://mme.iitm.ac.in/innerfaculty.php?fname=Sankaran%20S', 35, 1, '2026-08-24 10:19:09', '2026-08-28 08:37:57', 0, 0),
-(149, '9', 'Somnath C Roy', 'somnath.jpg', 'Physics', 'Faculty', 'somnath[at]smail[.]iitm[.]ac[.]in', 'https://physics.iitm.ac.in/people/facultyinfo/somnath.html', 36, 1, '2026-08-24 10:19:09', '2026-08-28 08:57:37', 0, 0),
-(152, '', 'Anbarasu Manivannan', 'anbu.jpg', 'Department of Electrical Engineering', 'Head, School of Interdisciplinary Studies', 'anbarasu[at]iitm[.]ac[.]in', 'https://ee.iitm.ac.in/people/anbarasu-manivannan/', 0, 1, '2026-08-24 10:24:00', '2026-09-05 08:04:26', 0, 1),
-(153, '1', 'Ravindra Naik Bukke', 'dummy.png', 'School of Interdisciplinary Studies', 'Assistant Professor', 'ravindra[at]iitm[.]ac[.]in', '#', 0, 1, '2026-08-24 10:24:00', '2026-08-24 11:18:38', 0, 1);
+INSERT INTO `faculty` (`id`, `cluster_id`, `coordinator_role`, `coordinator_programme`, `coordinator_order`, `name`, `image`, `department`, `designation`, `email`, `personal_page`, `display_order`, `status`, `created_at`, `updated_at`, `top_section`, `top_order`) VALUES
+(4, '1', NULL, NULL, 0, 'Prashant Rawat', 'Prashant Rawat.webp', 'Aerospace Engineering', 'Faculty', 'prashant[.]rawat[at]smail[.]iitm[.]ac[.]in', 'https://www.prashantiitm.com/', 1, 1, '2026-08-24 10:02:18', '2026-09-05 07:47:54', 0, 0),
+(5, '1', NULL, NULL, 0, 'M S Sivakumar', 'm-s-sivakumar.ILElJ9wI_Z22UwSV.webp', 'Applied Mechanics and Biomedical Engineering', 'Faculty', 'mssiva[at]smail[.]iitm[.]ac[.]in', 'https://home.iitm.ac.in/mssiva/', 2, 1, '2026-08-24 10:02:18', '2026-08-27 07:33:43', 0, 0),
+(6, '1', NULL, NULL, 0, 'V V Raghavendra Sai', 'v-v-raghavendra-sai.7li7eJw4_9lRU7.webp', 'Applied Mechanics and Biomedical Engineering', 'Faculty', 'vvrsai[at]smail[.]iitm[.]ac[.]in', 'https://sites.google.com/smail.iitm.ac.in/biosensors/home', 3, 1, '2026-08-24 10:02:18', '2026-08-27 07:36:32', 0, 0),
+(7, '1', NULL, NULL, 0, 'Amit Nain', 'dummy.png', 'Applied Mechanics and Biomedical Engineering', 'Faculty', 'amit[at]smail[.]iitm[.]ac[.]in', '#', 4, 1, '2026-08-24 10:02:18', '2026-08-24 10:47:25', 0, 0),
+(8, '1', NULL, NULL, 0, 'S. VIMALRAJ', 'dummy.png', 'Applied Mechanics and Biomedical Enigineering', 'Faculty', 'vimalraj[at]smail[.]iitm[.]ac[.]in', '#', 5, 1, '2026-08-24 10:02:18', '2026-08-24 10:47:25', 0, 0),
+(9, '1', NULL, NULL, 0, 'Greeshma Thrivikraman', 'Greeshma Thrivikraman.png', 'Biotechnology', 'Faculty', 'greeshma[at]smail[.]iitm[.]ac[.]in', 'https://biotech.iitm.ac.in/innerfaculty.php?fname=Greeshma+Thrivikraman', 6, 1, '2026-08-24 10:02:18', '2026-08-27 07:55:14', 0, 0),
+(10, '1', NULL, NULL, 0, 'Sanjib Senapati', 'Sanjib Senapati.png', 'Biotechnology', 'Faculty', 'sanjibs[at]smail[.]iitm[.]ac[.]in', 'https://biotech.iitm.ac.in/innerfaculty.php?fname=Sanjib+Senapati', 7, 1, '2026-08-24 10:02:18', '2026-08-27 07:55:55', 0, 0),
+(11, '1', NULL, NULL, 0, 'Madivala G. Basavaraj', 'basavaraj.png', 'Chemical Engineering', 'Faculty', 'basa[at]smail[.]iitm[.]ac[.]in', 'https://che.iitm.ac.in/faculty.php?fname=Dr.+Basavaraj+M.+Gurappa', 8, 1, '2026-08-24 10:02:18', '2026-08-27 08:02:16', 0, 0),
+(12, '1', NULL, NULL, 0, 'S. R. K. Chaitanya Sharma Yamijala', '1772718815_715520dede.jpg', 'Chemistry', 'Faculty', 'yamijala[at]smail[.]iitm[.]ac[.]in', 'https://chem.iitm.ac.in/faculty-inner.php?id=9', 9, 1, '2026-08-24 10:02:18', '2026-08-27 10:59:30', 0, 0),
+(13, '1', NULL, NULL, 0, 'Krishna Reddy Nandipati', '1772729088_340420547a.jpg', 'Chemistry', 'Faculty', 'knandipati[at]smail[.]iitm[.]ac[.]in', 'https://chem.iitm.ac.in/faculty-inner.php?id=20', 10, 1, '2026-08-24 10:02:18', '2026-08-27 10:59:33', 0, 0),
+(14, '1', NULL, NULL, 0, 'Soumen Ghosh', '1772783552_db664e0fe2.jpg', 'Chemistry', 'Faculty', 'chemsghosh[at]smail[.]iitm[.]ac[.]in', 'https://chem.iitm.ac.in/faculty-inner.php?id=33', 11, 1, '2026-08-24 10:02:18', '2026-08-27 11:00:03', 0, 0),
+(15, '1', NULL, NULL, 0, 'Aslam Kunhi Mohamed', 'ASLAM.jpg', 'Civil Engineering', 'Faculty', 'akm[at]smail[.]iitm[.]ac[.]in', 'https://civil.iitm.ac.in/faculty/aslam/', 12, 1, '2026-08-24 10:02:18', '2026-08-27 11:03:45', 0, 0),
+(16, '1', NULL, NULL, 0, 'SOUMYA DUTTA', 'citations.jpg', 'Electrical Engineering', 'Faculty', 's[.]dutta[at]ee[.]iitm[.]ac[.]in', 'https://ee.iitm.ac.in/people/soumya-dutta/', 13, 1, '2026-08-24 10:02:18', '2026-08-28 05:37:09', 0, 0),
+(17, '1', NULL, NULL, 0, 'Shivananju B N', 'shivananju-bn.png', 'Electrical Engineering', 'Faculty', 'shivananju[at]smail[.]iitm[.]ac[.]in', 'https://ee.iitm.ac.in/people/shivananju-bn/', 14, 1, '2026-08-24 10:02:18', '2026-08-28 05:37:51', 0, 0),
+(18, '1', NULL, NULL, 0, 'Sudharsanan S', 'sudharsanan-srinivasan.png', 'Electrical Engineering', 'Faculty', 'sudharsanan[at]ee[.]iitm[.]ac[.]in', 'https://ee.iitm.ac.in/people/sudharsanan-srinivasan/', 15, 1, '2026-08-24 10:02:18', '2026-08-28 06:43:30', 0, 0),
+(19, '1', NULL, NULL, 0, 'Bhaswar Chakrabarti', 'bhaswar-chakrabarti.png', 'Electrical Engineering', 'Faculty', 'bchakrabarti[at]smail[.]iitm[.]ac[.]in', 'https://ee.iitm.ac.in/people/bhaswar-chakrabarti/', 16, 1, '2026-08-24 10:02:18', '2026-08-28 07:22:34', 0, 0),
+(20, '1', NULL, NULL, 0, 'Anil Prabhakar', 'anil-prabhakar.png', 'Electrical Engineering', 'Faculty', 'anilpr[at]smail[.]iitm[.]ac[.]in', 'https://ee.iitm.ac.in/people/anil-prabhakar/', 17, 1, '2026-08-24 10:02:18', '2026-08-28 07:23:02', 0, 0),
+(21, '1', NULL, NULL, 0, 'Tuhin Subhra Santra', 'TSubhraSantra.jpg', 'Engineering Design', 'Faculty', 'tuhin[at]smail[.]iitm[.]ac[.]in', 'https://ed.iitm.ac.in/faculty.html?id=Tuhin_Subhra_Santra', 18, 1, '2026-08-24 10:02:18', '2026-08-28 07:38:17', 0, 0),
+(22, '1', NULL, NULL, 0, 'Anirudh Udupa', 'audupa.png', 'Mechanical Engineering', 'Faculty', 'audupa[at]smail[.]iitm[.]ac[.]in', 'https://mech.iitm.ac.in/profile.php?fname=audupa', 19, 1, '2026-08-24 10:02:18', '2026-08-28 08:18:39', 0, 0),
+(23, '1', NULL, NULL, 0, 'Ranjit Bauri', 'ranjit.png', 'Metallurgical and Materials Engineering', 'Faculty', 'rbauri[at]smail[.]iitm[.]ac[.]in', 'https://mme.iitm.ac.in/innerfaculty.php?fname=Ranjit%20Bauri', 20, 1, '2026-08-24 10:02:18', '2026-08-28 08:25:58', 0, 0),
+(24, '1', NULL, NULL, 0, 'Ravi Kumar N V', 'WhatsApp Image 2025-08-07 at 12.18.50 PM.jpeg', 'Metallurgical and Materials Engineering', 'Faculty', 'nvrk[at]smail[.]iitm[.]ac[.]in', 'https://mme.iitm.ac.in/innerfaculty.php?fname=Ravi%20Kumar%20NV', 21, 1, '2026-08-24 10:02:18', '2026-08-28 08:32:19', 0, 0),
+(25, '1', NULL, NULL, 0, 'Surendra B. Anantharaman', 'surendra.png', 'Metallurgical and Materials Engineering', 'Faculty', 'sba[at]smail[.]iitm[.]ac[.]in', 'https://mme.iitm.ac.in/innerfaculty.php?fname=Surendra%20B%20Anantharaman', 22, 1, '2026-08-24 10:02:18', '2026-08-28 08:32:54', 0, 0),
+(26, '1', NULL, NULL, 0, 'Rohit Batra', 'rohit.png', 'Metallurgical and Materials Engineering', 'Faculty', 'rbatra[at]smail[.]iitm[.]ac[.]in', 'https://mme.iitm.ac.in/innerfaculty.php?fname=Rohit%20Batra', 23, 1, '2026-08-24 10:02:18', '2026-08-28 08:33:16', 0, 0),
+(27, '1', NULL, NULL, 0, 'Satyesh Kumar Yadav', 'satyesh.png', 'Metallurgical and Materials Engineering', 'Faculty', 'satyesh[at]smail[.]iitm[.]ac[.]in', 'https://mme.iitm.ac.in/innerfaculty.php?fname=Satyesh%20Kumar%20Yadav', 24, 1, '2026-08-24 10:02:18', '2026-08-28 08:33:39', 0, 0),
+(28, '1', NULL, NULL, 0, 'Prem Bisht', 'bisht.jpg', 'Physics', 'Faculty', 'bisht[at]smail[.]iitm[.]ac[.]in', 'https://physics.iitm.ac.in/people/facultyinfo/bisht.html', 25, 1, '2026-08-24 10:02:18', '2026-08-28 08:46:59', 0, 0),
+(29, '1', NULL, NULL, 0, 'Basudev Roy', 'basudev.jpg', 'Physics', 'Faculty', 'basudev[at]smail[.]iitm[.]ac[.]in', 'https://physics.iitm.ac.in/people/facultyinfo/basudev.html', 26, 1, '2026-08-24 10:02:18', '2026-08-28 08:47:35', 0, 0),
+(30, '1', NULL, NULL, 0, 'Rahul Sawant', 'rahul_sawant.jpg', 'Physics', 'Faculty', 'rahul[.]sawant[at]smail[.]iitm[.]ac[.]in', 'https://physics.iitm.ac.in/people/facultyinfo/rahul_sawant.html', 27, 1, '2026-08-24 10:02:18', '2026-08-28 08:48:56', 0, 0),
+(31, '1', NULL, NULL, 0, 'Panchanana Khuntia', 'pkhuntia.jpg', 'Physics', 'Faculty', 'pkhuntia[at]smail[.]iitm[.]ac[.]in', 'https://physics.iitm.ac.in/people/facultyinfo/pkhuntia.html', 28, 1, '2026-08-24 10:02:18', '2026-08-28 08:49:29', 0, 0),
+(32, '1', NULL, NULL, 0, 'P Murugavel', 'muruga.jpg', 'Physics', 'Faculty', 'muruga[at]smail[.]iitm[.]ac[.]in', 'https://physics.iitm.ac.in/people/facultyinfo/muruga.html', 29, 1, '2026-08-24 10:02:18', '2026-08-28 08:50:50', 0, 0),
+(33, '1', 'IDDD Coordinator', 'Advanced Materials and Nanotechnology', 1, 'Abhishek Misra', 'abhishek_misra.jpg', 'Physics', 'Faculty', 'abhishek[.]misra[at]smail[.]iitm[.]ac[.]in', 'https://physics.iitm.ac.in/people/facultyinfo/abhishek_misra.html', 30, 1, '2026-08-24 10:02:18', '2026-10-07 10:32:33', 0, 0),
+(34, '1', NULL, NULL, 0, 'Sudakar Chandran', 'csudakar.jpg', 'Physics', 'Faculty', 'csudakar[at]smail[.]iitm[.]ac[.]in', 'https://physics.iitm.ac.in/people/facultyinfo/csudakar.html', 31, 1, '2026-08-24 10:02:18', '2026-08-28 08:53:05', 0, 0),
+(35, '1', 'I2MP Coordinator', 'Advanced Materials and Nanotechnology', 3, 'V Praveen Bhallamudi', 'praveen_bhallamudi.jpg', 'Physics', 'Faculty', 'praveen[.]bhallamudi[at]smail[.]iitm[.]ac[.]in', 'https://physics.iitm.ac.in/people/facultyinfo/praveen_bhallamudi.html', 32, 1, '2026-08-24 10:02:18', '2026-10-07 10:32:33', 0, 0),
+(36, '1', NULL, NULL, 0, 'Sivarama Krishnan', 'srkrishnan.jpg', 'Physics', 'Faculty', 'srkrishnan[at]smail[.]iitm[.]ac[.]in', 'https://physics.iitm.ac.in/people/facultyinfo/srkrishnan.html', 33, 1, '2026-08-24 10:02:18', '2026-08-28 08:55:01', 0, 0),
+(37, '1', NULL, NULL, 0, 'Vaibhav Madhok', 'madhok.jpg', 'Physics', 'Faculty', 'madhok[at]physics[.]iitm[.]ac[.]in', 'https://physics.iitm.ac.in/people/facultyinfo/madhok.html', 34, 1, '2026-08-24 10:02:18', '2026-08-28 08:55:25', 0, 0),
+(38, '1', NULL, NULL, 0, 'Dillip Kumar Satapathy', 'dks.jpg', 'Physics', 'Faculty', 'dks[at]smail[.]iitm[.]ac[.]in', 'https://physics.iitm.ac.in/people/facultyinfo/dks.html', 35, 1, '2026-08-24 10:02:18', '2026-08-28 08:55:53', 0, 0),
+(39, '1', NULL, NULL, 0, 'Ayana Ghosh', 'ghosha.jpg', 'Physics', 'Faculty', 'research[.]aghosh[at]gmail[.]com', 'https://physics.iitm.ac.in/people/facultyinfo/ghosha.html', 36, 1, '2026-08-24 10:02:18', '2026-08-28 08:56:19', 0, 0),
+(40, '2', 'IDDD Coordinator', 'Blue Economy', 2, 'K. Murali', 'faculty_1751358968_68639df8a71f1.png', 'Ocean Engineering', 'Faculty', 'murali[at]smail[.]iitm[.]ac[.]in', 'https://doe.iitm.ac.in/muralik', 1, 1, '2026-08-24 10:12:59', '2026-10-07 10:32:33', 0, 0),
+(41, '2', 'IDDD Coordinator', 'Blue Economy', 1, 'V. Sriram', 'faculty_1754900673_6899a8c19a60f.png', 'Ocean Engineering', 'Faculty', 'vsriram[at]smail[.]iitm[.]ac[.]in', 'https://doe.iitm.ac.in/sriramvenkatachalam', 2, 1, '2026-08-24 10:12:59', '2026-10-07 10:32:33', 0, 0),
+(42, '2', NULL, NULL, 0, 'Debashis Chakraborty', '1772719541_7586731c39.jpg', 'Chemistry', 'Faculty', 'dchakraborty[at]smail[.]iitm[.]ac[.]in', 'https://chem.iitm.ac.in/faculty-inner.php?id=10', 3, 1, '2026-08-24 10:12:59', '2026-08-27 11:00:28', 0, 0),
+(43, '2', NULL, NULL, 0, 'Soumendra Nath Kuiry', 'snkuiry-SoumendraKui.jpg', 'Civil Engineering', 'Faculty', 'snkuiry[at]smail[.]iitm[.]ac[.]in', 'https://civil.iitm.ac.in/faculty/snkuiry/', 4, 1, '2026-08-24 10:12:59', '2026-08-27 11:08:40', 0, 0),
+(44, '2,5,9', NULL, NULL, 0, 'Krishna Malakar', 'krishna-qog0yqe83mryaiy1797o3solt84dkuui61vk8ou5dk.png', 'Humanities and Social Sciences', 'Faculty', 'krishnamalakar[at]smail[.]iitm[.]ac[.]in', 'https://hss.iitm.ac.in/krishna-malakar/', 5, 1, '2026-08-24 10:12:59', '2026-09-10 06:47:57', 0, 0),
+(45, '2,9', NULL, NULL, 0, 'Santosh Kumar Sahu', 'santosh_sahu-qweyxu9upf8mslsjejnurwdg45c0y64l4qnzsxz6wo.jpg', 'Humanities and Social Sciences', 'Faculty', 'santosh[at]smail[.]iitm[.]ac[.]in', 'https://hss.iitm.ac.in/santosh-kumar-sahu', 6, 1, '2026-08-24 10:12:59', '2026-09-10 06:48:20', 0, 0),
+(46, '2,11', NULL, NULL, 0, 'Abdus Samad', 'img_6899b5b4afa733.69416491.jpg', 'Ocean Engineering', 'Faculty', 'samad[at]smail[.]iitm[.]ac[.]in', 'https://doe.iitm.ac.in/samad', 7, 1, '2026-08-24 10:12:59', '2026-10-07 11:23:09', 0, 0),
+(47, '2', NULL, NULL, 0, 'Thejesh Kumar Garala', 'faculty_1754900713_6899a8e990b32.png', 'Ocean Engineering', 'Faculty', 'tkgarala[at]smail[.]iitm[.]ac[.]in', 'https://doe.iitm.ac.in/tkgarala', 8, 1, '2026-08-24 10:12:59', '2026-08-28 08:41:27', 0, 0),
+(48, '2', NULL, NULL, 0, 'M. A. Atmanand', 'atmanand.png', 'Ocean Engineering', 'Faculty', 'atma[at]smail[.]iitm[.]ac[.]in', 'https://doe.iitm.ac.in/atmanand', 9, 1, '2026-08-24 10:12:59', '2026-08-28 08:42:15', 0, 0),
+(49, '3,11,12', NULL, NULL, 0, 'A. Sameen', 'Sameen.webp', 'Aerospace Engineering', 'Faculty', 'sameen[at]smail[.]iitm[.]ac[.]in', 'https://home.iitm.ac.in/sameen/index.html', 1, 1, '2026-08-24 10:13:59', '2026-10-07 11:26:47', 0, 0),
+(50, '3', NULL, NULL, 0, 'Sunetra Sarkar', 'Sunetra Sarkar.webp', 'Aerospace Engineering', 'Faculty', 'sunetra[at]smail[.]iitm[.]ac[.]in', 'https://home.iitm.ac.in/sunetra/', 2, 1, '2026-08-24 10:13:59', '2026-08-27 07:28:18', 0, 0),
+(51, '3', NULL, NULL, 0, 'Aniketh Kalur', 'Aniketh_Kalur.jpg', 'Aerospace Engineering', 'Faculty', 'aniketh[.]kalur[at]smail[.]iitm[.]ac[.]in', 'https://ae.iitm.ac.in/~aniketh.kalur/', 3, 1, '2026-08-24 10:13:59', '2026-08-27 07:29:01', 0, 0),
+(52, '3', NULL, NULL, 0, 'Vagesh D. Narasimhamurthy', 'vagesh-d-narasimhamurthy.B0IDFXH2_zsFBC.webp', 'Applied Mechanics and Biomedical Engineering', 'Faculty', 'vagesh[at]smail[.]iitm[.]ac[.]in', 'https://home.iitm.ac.in/vagesh/', 4, 1, '2026-08-24 10:13:59', '2026-08-27 07:46:51', 0, 0),
+(53, '3', 'IDDD Coordinator', 'Computational Engineering', 1, 'Sayan Gupta', '20231130-1527512-690x1227.jpeg', 'Applied Mechanics and Biomedical Engineering', 'Faculty', 'sayangupta[at]smail[.]iitm[.]ac[.]in', 'https://home.iitm.ac.in/sayan/', 5, 1, '2026-08-24 10:13:59', '2026-10-07 10:32:33', 0, 0),
+(54, '3', 'IDDD Coordinator', 'Computational Engineering', 2, 'Prasad Patnaik B S V', 'b-s-v-prasad-patnaik.WEaEneeQ_Ze4SuK.webp', 'Applied Mechanics and Biomedical Engineering', 'Faculty', 'bsvp[at]smail[.]iitm[.]ac[.]in', 'https://simbiotsiitm.github.io/Simbiots-Lab/', 6, 1, '2026-08-24 10:13:59', '2026-10-07 10:32:34', 0, 0),
+(55, '3', NULL, NULL, 0, 'Sarith P Sathian', 'sarith-p-sathian.Cp2bKUVo_rly1X.webp', 'Applied Mechanics and Biomedical Engineering', 'Faculty', 'sarith[at]smail[.]iitm[.]ac[.]in', 'https://sites.google.com/site/sarithshomepage', 7, 1, '2026-08-24 10:13:59', '2026-08-27 07:48:57', 0, 0),
+(56, '3', NULL, NULL, 0, 'Aditi Kathpalia', 'aditi-kathpalia.DRa-ryD6_1cDCA8.webp', 'Applied Mechanics and Biomedical Engineering', 'Faculty', 'aditi[at]smail[.]iitm[.]ac[.]in', 'https://aditikathpalia.wordpress.com/', 8, 1, '2026-08-24 10:13:59', '2026-08-27 07:49:24', 0, 0),
+(57, '3', NULL, NULL, 0, 'Danny Raj M', 'danny-apm.D3hQ6GP-_2bA5ET.webp', 'Applied Mechanics and Biomedical Engineering', 'Faculty', 'danny[at]smail[.]iitm[.]ac[.]in', 'https://www.dannyraj.com/', 9, 1, '2026-08-24 10:13:59', '2026-08-27 07:49:47', 0, 0),
+(58, '3', NULL, NULL, 0, 'M. Hamsa Priya', 'faculty_6995e2470aab36.89472653.jpeg', 'Biotechnology', 'Faculty', 'hamsa[at]smail[.]iitm[.]ac[.]in', 'https://biotech.iitm.ac.in/innerfaculty.php?fname=M+Hamsa+Priya', 10, 1, '2026-08-24 10:13:59', '2026-08-27 07:56:50', 0, 0),
+(59, '3', NULL, NULL, 0, 'Abhinav S. Raman', 'ASR_photo.jpg', 'Chemical Engineering', 'Faculty', 'asraman[at]smail[.]iitm[.]ac[.]in', 'https://che.iitm.ac.in/faculty.php?fname=Dr.+Abhinav+S.+Raman', 11, 1, '2026-08-24 10:13:59', '2026-08-27 08:12:48', 0, 0),
+(60, '3', NULL, NULL, 0, 'Parul Verma', 'Parul.png', 'Chemical Engineering', 'Faculty', 'parulv[at]smail[.]iitm[.]ac[.]in', 'https://che.iitm.ac.in/faculty.php?fname=Dr.+Parul+Verma', 12, 1, '2026-08-24 10:13:59', '2026-08-27 08:15:07', 0, 0),
+(61, '3,9', NULL, NULL, 0, 'Sreeparvathy Vijay', 'Sreeparvathy Photo1.jpg', 'Civil Engineering', 'Faculty', 'sreeparvathyvijay[at]smail[.]iitm[.]ac[.]in', 'https://civil.iitm.ac.in/faculty/sreeparvathyvijay/', 13, 1, '2026-08-24 10:13:59', '2026-09-10 06:46:33', 0, 0),
+(62, '3', NULL, NULL, 0, 'Saravanan U', 'saran-SaravananUIITM.jpg', 'Civil Engineering', 'Faculty', 'saran[at]smail[.]iitm[.]ac[.]in', 'https://civil.iitm.ac.in/faculty/saran/', 14, 1, '2026-08-24 10:13:59', '2026-08-27 11:10:05', 0, 0),
+(63, '3', NULL, NULL, 0, 'Sivaram Ambikasaran', 'dummy.png', 'Mathematics', 'Faculty', 'sivaambi[at]smail[.]iitm[.]ac[.]in', 'https://math.iitm.ac.in/innerfaculty.php?fname=Sivaram', 15, 1, '2026-08-24 10:13:59', '2026-08-28 08:13:58', 0, 0),
+(64, '3', NULL, NULL, 0, 'Barun Sarkar', 'barunsarkar.png', 'Mathematics', 'Faculty', 'barun[at]smail[.]iitm[.]ac[.]in', 'https://math.iitm.ac.in/innerfaculty.php?fname=Barun%20Sarkar', 16, 1, '2026-08-24 10:13:59', '2026-08-28 08:14:52', 0, 0),
+(65, '3', NULL, NULL, 0, 'Rakhi Singh', 'WhatsApp Image 2025-01-13 at 9.12.00 AM.jpeg', 'Mathematics', 'Faculty', 'rakhi[at]smail[.]iitm[.]ac[.]in', 'https://math.iitm.ac.in/innerfaculty.php?fname=Rakhi%20Singh', 17, 1, '2026-08-24 10:13:59', '2026-08-28 08:16:30', 0, 0),
+(66, '3', NULL, NULL, 0, 'Balaji Srinivasan', 'sbalaji.png', 'Mechanical Engineering', 'Faculty', 'sbalaji[at]smail[.]iitm[.]ac[.]in', 'https://mech.iitm.ac.in/profile.php?fname=sbalaji', 18, 1, '2026-08-24 10:13:59', '2026-08-28 08:20:29', 0, 0),
+(67, '3', NULL, NULL, 0, 'Gandham Phanikumar', 'gandham.png', 'Metallurgical and Materials Engineering', 'Faculty', 'gphani[at]smail[.]iitm[.]ac[.]in', 'https://mme.iitm.ac.in/innerfaculty.php?fname=Gandham%20Phanikumar', 19, 1, '2026-08-24 10:13:59', '2026-08-28 08:34:18', 0, 0),
+(68, '3', NULL, NULL, 0, 'Neelima M Gupte', 'gupte.jpg', 'Physics', 'Faculty', 'gupte[at]physics[.]iitm[.]ac[.]in', 'https://physics.iitm.ac.in/people/facultyinfo/gupte.html', 20, 1, '2026-08-24 10:13:59', '2026-08-28 08:56:49', 0, 0),
+(69, '4', NULL, NULL, 0, 'Mahesh V Panchagnula', 'mahesh-panchagnula.CDvs0crw_2vvUx9.webp', 'Applied Mechanics and Biomedical Engineering', 'Faculty', 'mvp[at]smail[.]iitm[.]ac[.]in', 'https://home.iitm.ac.in/mvp/', 1, 1, '2026-08-24 10:15:50', '2026-08-27 07:50:24', 0, 0),
+(70, '4', NULL, NULL, 0, 'A N Rajagopalan', 'rajagopalan-an.png', 'Electrical Engineering', 'Faculty', 'raju[at]ee[.]iitm[.]ac[.]in', 'https://ee.iitm.ac.in/people/rajagopalan-an/', 2, 1, '2026-08-24 10:15:50', '2026-08-28 07:29:58', 0, 0),
+(71, '4', NULL, NULL, 0, 'Babji Srinivasan', 'profile.jpeg', 'Applied Mechanics & Biomedical Engineering', 'Faculty', 'babji[.]srinivasan[at]iitm[.]ac[.]in', 'https://home.iitm.ac.in/babji.srinivasan/', 3, 1, '2026-08-24 10:15:50', '2026-08-27 07:44:34', 0, 0),
+(72, '4', NULL, NULL, 0, 'Raghunathan Rengaswamy', 'prof-raghu.png', 'Chemical Engineering', 'Faculty', 'raghur[at]iitm[.]ac[.]in', 'https://che.iitm.ac.in/faculty.php?fname=Dr.+Ragunathan+Rengasamy', 4, 1, '2026-08-24 10:15:50', '2026-08-27 08:16:59', 0, 0),
+(73, '4', NULL, NULL, 0, 'Nandan Sudarsanam', 'nandan.jpg.webp', 'Data Science & AI', 'Faculty', 'nandan[at]dsai[.]iitm[.]ac[.]in', 'https://doms.iitm.ac.in/index.php/people/new-profile/nandan-sudarsanam-profile/', 5, 1, '2026-08-24 10:15:50', '2026-08-27 11:33:09', 0, 0),
+(74, '4', NULL, NULL, 0, 'Arunkumar Thittai', 'arun-kumar-thittai.D_sDbPte_ZVnr7O.webp', 'Applied Mechanics & Biomedical Engineering', 'Faculty', 'akthittai[at]iitm[.]ac[.]in', 'https://sites.google.com/view/arunthittai', 6, 1, '2026-08-24 10:15:50', '2026-08-27 07:45:57', 0, 0),
+(75, '4', NULL, NULL, 0, 'Sivaram Ambikasaran', 'dummy.png', 'Data Science & AI', 'Faculty', 'sivaambi[at]dsai[.]iitm[.]ac[.]in', 'https://math.iitm.ac.in/innerfaculty.php?fname=Sivaram', 7, 1, '2026-08-24 10:15:50', '2026-08-27 11:33:59', 0, 0),
+(76, '4', NULL, NULL, 0, 'Manish Anand', 'manand.png', 'Mechanical Engineering', 'Faculty', 'manand[at]iitm[.]ac[.]in', 'https://mech.iitm.ac.in/profile.php?fname=manand', 8, 1, '2026-08-24 10:15:50', '2026-08-28 08:21:18', 0, 0),
+(77, '5', NULL, NULL, 0, 'M. Thenmozhi', '2U2A0852-scaled.jpg-1-e1771587104861.webp', 'Department of Management Studies (DoMS)', 'Faculty', 'mtm[at]iitm[.]ac[.]in', 'https://doms.iitm.ac.in/index.php/people/faculty/thenmozhim/', 1, 1, '2026-08-24 10:16:42', '2026-08-27 11:39:55', 0, 0),
+(78, '5', NULL, NULL, 0, 'Hitika Tiwari', 'image.webp', 'Data Science and AI', 'Faculty', 'hitika[at]iitmz[.]ac[.]in', 'https://www.iitmz.ac.in/schools/engineering-and-science/faculty/prof-hitika-tiwari', 2, 1, '2026-08-24 10:16:42', '2026-08-27 11:34:59', 0, 0),
+(79, '5', NULL, NULL, 0, 'Lata Dyaram', 'lata_dyaram1-2.jpg.webp', 'Department of Management Studies', 'Faculty', 'lata[.]dyaram[at]smail[.]iitm[.]ac[.]in', 'https://doms.iitm.ac.in/index.php/people/faculty/latadayaram/', 3, 1, '2026-08-24 10:16:42', '2026-08-27 11:38:36', 0, 0),
+(80, '5', NULL, NULL, 0, 'Sudhir Chella Rajan', 'prof_chella_rajan-qxk7hm1au5qeodqeberr71shttsdw56zyujfgyd5fc.jpg', 'Humanities and Social Sciences', 'Faculty', 'scrajan[at]smail[.]iitm[.]ac[.]in', 'https://hss.iitm.ac.in/sudhir-chella-rajan', 4, 1, '2026-08-24 10:16:42', '2026-08-28 07:53:45', 0, 0),
+(81, '5', NULL, NULL, 0, 'Subash S', 'Subash_300-r1s0s1f5h88hvkrd0d50i9j439z43jr3n1qm2cjmwo.jpg', 'Humanities and Social Sciences', 'Faculty', 'subash[at]smail[.]iitm[.]ac[.]in', 'https://hss.iitm.ac.in/subash-s', 5, 1, '2026-08-24 10:16:42', '2026-08-28 07:54:26', 0, 0),
+(83, '5', NULL, NULL, 0, 'Pramod Kumar Naik', 'pramod-qog10tlbadmw3bwt05ptn9phc1tqon514e2emtqnjs.png', 'Humanities and Social Sciences', 'Faculty', 'pramod[at]smail[.]iitm[.]ac[.]in', 'https://hss.iitm.ac.in/pramod-kumar-naik', 7, 1, '2026-08-24 10:16:42', '2026-08-28 07:57:18', 0, 0),
+(84, '5', 'IDDD Coordinator', 'Management and Public Policy', 1, 'V.R. Muraleedharan', 'murali.png', 'Humanities and Social Sciences', 'Faculty', 'vrm[at]smail[.]iitm[.]ac[.]in', 'https://hss.iitm.ac.in/muraleedharan-vr/', 8, 1, '2026-08-24 10:16:42', '2026-10-07 10:32:34', 0, 0),
+(85, '5', NULL, NULL, 0, 'Sandeep Kumar Kujur', 'sandeep-qog13bttih2f1w9qd8q0amxqd1gz7l39gsp0pe0uyg.png', 'Humanities and Social Sciences', 'Faculty', 'sandeep[at]smail[.]iitm[.]ac[.]in', 'https://hss.iitm.ac.in/sandeep-kumar-kujur', 9, 1, '2026-08-24 10:16:42', '2026-08-28 08:03:15', 0, 0),
+(86, '5', NULL, NULL, 0, 'Neelesh S Upadhye', 'neelesh.png', 'Mathematics', 'Faculty', 'neelesh[at]smail[.]iitm[.]ac[.]in', 'https://math.iitm.ac.in/innerfaculty.php?fname=Neelesh%20Shankar', 10, 1, '2026-08-24 10:16:42', '2026-08-28 08:16:20', 0, 0),
+(87, '6', NULL, NULL, 0, 'Kothandaraman Ramanujam', '1772728376_3ca6b85bde.jpg', 'Chemistry', 'Faculty', 'rkraman[at]smail[.]iitm[.]ac[.]in', 'https://chem.iitm.ac.in/faculty-inner.php?id=19', 1, 1, '2026-08-24 10:17:19', '2026-08-27 11:00:54', 0, 0),
+(88, '6', 'IDDD Coordinator', 'Power Conversion System', 1, 'Arun Karuppaswamy B', 'arun-karuppaswamy-b.png', 'Electrical Engineering', 'Faculty', 'akp[at]smail[.]iitm[.]ac[.]in', 'https://ee.iitm.ac.in/people/arun-karuppaswamy-b/', 2, 1, '2026-08-24 10:17:19', '2026-10-07 10:32:34', 0, 0),
+(89, '6', NULL, NULL, 0, 'Kamalesh Hatua', 'kamalesh-hatua.png', 'Electrical Engineering', 'Faculty', 'kamalesh[at]ee[.]iitm[.]ac[.]in', 'https://ee.iitm.ac.in/people/kamalesh-hatua/', 3, 1, '2026-08-24 10:17:19', '2026-08-28 07:30:57', 0, 0),
+(90, '6', NULL, NULL, 0, 'K Shanti Swarup', 'k-swarup.png', 'Electrical Engineering', 'Faculty', 'swarup[at]ee[.]iitm[.]ac[.]in', 'https://ee.iitm.ac.in/people/shanti-k/', 4, 1, '2026-08-24 10:17:19', '2026-08-28 07:32:18', 0, 0),
+(91, '6', 'IDDD Coordinator', 'Power Conversion System', 3, 'R Sarathi', 'sarathi-r.png', 'Electrical Engineering', 'Faculty', 'rsarathi[at]smail[.]iitm[.]ac[.]in', 'https://ee.iitm.ac.in/people/sarathi-r/', 5, 1, '2026-08-24 10:17:19', '2026-10-07 10:32:34', 0, 0),
+(92, '6', NULL, NULL, 0, 'Mahesh Kumar', 'mahesh-kumar.png', 'Electrical Engineering', 'Faculty', 'maheshk[at]smail[.]iitm[.]ac[.]in', 'https://ee.iitm.ac.in/people/mahesh-kumar/', 6, 1, '2026-08-24 10:17:19', '2026-08-28 07:33:34', 0, 0),
+(93, '6', NULL, NULL, 0, 'Lakshminarasamma N', 'lakshminarasamma-n.png', 'Electrical Engineering', 'Faculty', 'lakshmin[at]smail[.]iitm[.]ac[.]in', 'https://ee.iitm.ac.in/people/lakshminarasamma-n/', 7, 1, '2026-08-24 10:17:19', '2026-08-28 07:34:03', 0, 0),
+(94, '6', 'IDDD Coordinator', 'Power Conversion System', 2, 'Srikanthan Sridharan', 'SSrikanthan.jpg', 'Engineering Design', 'Faculty', 'srikanthan[at]smail[.]iitm[.]ac[.]in', 'https://ed.iitm.ac.in/faculty.html?id=Srikanthan_S', 8, 1, '2026-08-24 10:17:19', '2026-10-07 10:32:34', 0, 0),
+(95, '6', NULL, NULL, 0, 'Deepak Ronanki', 'deepak.jpg', 'Engineering Design', 'Faculty', 'dronanki[at]smail[.]iitm[.]ac[.]in', 'https://ed.iitm.ac.in/faculty.html?id=Deepak_Ronanki', 9, 1, '2026-08-24 10:17:19', '2026-08-28 07:40:04', 0, 0),
+(96, '7', NULL, NULL, 0, 'Satadal Ghosh', 'Satadal Ghosh.webp', 'Aerospace Engineering', 'Faculty', 'satadal[at]smail[.]iitm[.]ac[.]in', 'https://sites.google.com/smail.iitm.ac.in/satadalghosh', 1, 1, '2026-08-24 10:17:43', '2026-08-27 07:30:37', 0, 0),
+(97, '7', NULL, NULL, 0, 'Devaprakash Muniraj', 'Devaprakash Muniraj.webp', 'Aerospace Engineering', 'Faculty', 'deva[at]smail[.]iitm[.]ac[.]in', 'https://sites.google.com/view/rasas-lab/home', 2, 1, '2026-08-24 10:17:43', '2026-08-27 07:30:01', 0, 0),
+(98, '7', NULL, NULL, 0, 'M Manivannan', 'm-manivannan.BI-MCDrb_RKTXF.webp', 'Applied Mechanics and Biomedical Engineering', 'Faculty', 'mani[at]smail[.]iitm[.]ac[.]in', 'https://home.iitm.ac.in/mani/', 3, 1, '2026-08-24 10:17:43', '2026-08-27 07:51:53', 0, 0),
+(99, '7', NULL, NULL, 0, 'Aritra Pal', '1729461288969.jpg', 'Civil Engineering', 'Faculty', 'aritrapal[at]smail[.]iitm[.]ac[.]in', 'https://civil.iitm.ac.in/faculty/aritrap/', 4, 1, '2026-08-24 10:17:43', '2026-08-27 11:10:38', 0, 0),
+(100, '7', NULL, NULL, 0, 'Ayon Chakraborty', 'ayon.jpg', 'Computer Science and Engineering', 'Faculty', 'ayon[at]cse[.]iitm[.]ac[.]in', 'https://cse.iitm.ac.in/innerfaculty.php?fname=Ayon%20Chakraborty', 5, 1, '2026-08-24 10:17:43', '2026-08-27 11:30:48', 0, 0),
+(101, '7', NULL, NULL, 0, 'Gopalakrishnan Srinivasan', 'gopal.png', 'Computer Science and Engineering', 'Faculty', 'sgopal[at]cse[.]iitm[.]ac[.]in', 'https://cse.iitm.ac.in/innerfaculty.php?fname=Gopalakrishnan%20Srinivasan', 6, 1, '2026-08-24 10:17:43', '2026-08-27 11:31:22', 0, 0),
+(102, '7', NULL, NULL, 0, 'Chester Rebeiro', 'chester.png', 'Computer Science and Engineering', 'Faculty', 'chester[at]cse[.]iitm[.]ac[.]in', 'https://cse.iitm.ac.in/innerfaculty.php?fname=Chester%20Rebeiro', 7, 1, '2026-08-24 10:17:43', '2026-08-27 11:31:56', 0, 0),
+(103, '7', NULL, NULL, 0, 'Patanjali', 'dummy.png', 'Data Science and AI', 'Faculty', 'patanjali[at]dsai[.]iitm[.]ac[.]in', '#', 8, 1, '2026-08-24 10:17:43', '2026-08-24 10:47:25', 0, 0),
+(104, '7', NULL, NULL, 0, 'Arunkumar D Mahindrakar', 'arun-d-mahindrakar.png', 'Electrical Engineering', 'Faculty', 'arun_dm[at]ee[.]iitm[.]ac[.]in', 'https://ee.iitm.ac.in/people/arun-d-mahindrakar/', 9, 1, '2026-08-24 10:17:43', '2026-08-28 07:35:46', 0, 0),
+(105, '7', 'IDDD Coordinator', 'Robotics and Cyber-physical System', 3, 'Puduru Viswanadha Reddy', 'puduru-reddy.png', 'Electrical Engineering', 'Faculty', 'vishwa[at]smail[.]iitm[.]ac[.]in', 'https://ee.iitm.ac.in/people/puduru-reddy/', 10, 1, '2026-08-24 10:17:43', '2026-10-07 10:32:34', 0, 0),
+(106, '7', NULL, NULL, 0, 'Bijo Sebastian', 'bijo.jpg', 'Engineering Design', 'Faculty', 'bijo[.]sebastian[at]smail[.]iitm[.]ac[.]in', 'https://ed.iitm.ac.in/faculty.html?id=Bijo_Sebastian', 11, 1, '2026-08-24 10:17:43', '2026-08-28 07:40:33', 0, 0),
+(107, '7', NULL, NULL, 0, 'Niravkumar Patel', 'Nirav_Patel.jpg', 'Engineering Design', 'Faculty', 'niravpatel[at]smail[.]iitm[.]ac[.]in', 'https://ed.iitm.ac.in/faculty.html?id=Nirav_Patel', 12, 1, '2026-08-24 10:17:43', '2026-08-28 07:40:56', 0, 0),
+(108, '7', NULL, NULL, 0, 'Sandipan Bandyopadhyay', 'SBandyopadhyay.jpg', 'Engineering Design', 'Faculty', 'sandipan[at]smail[.]iitm[.]ac[.]in', 'https://ed.iitm.ac.in/faculty.html?id=Sandipan_Bandyopadhyay', 13, 1, '2026-08-24 10:17:43', '2026-08-28 07:41:19', 0, 0),
+(109, '7', NULL, NULL, 0, 'Santanu Sarkar', '1749709804_2e344f9d6954da9d.jpg', 'Mathematics', 'Faculty', 'santanu[at]smail[.]iitm[.]ac[.]in', 'https://math.iitm.ac.in/innerfaculty.php?fname=Santanu%20Sarkar', 14, 1, '2026-08-24 10:17:43', '2026-08-28 08:17:21', 0, 0),
+(110, '7', NULL, NULL, 0, 'Krishnan Balasubramanian', 'balas.png', 'Mechanical Engineering', 'Faculty', 'balas[at]smail[.]iitm[.]ac[.]in', 'https://mech.iitm.ac.in/profile.php?fname=balas', 15, 1, '2026-08-24 10:17:43', '2026-08-28 08:22:16', 0, 0),
+(111, '7', NULL, NULL, 0, 'Anuj Kumar Tiwari', 'anujt.png', 'Mechanical Engineering', 'Faculty', 'anujt[at]smail[.]iitm[.]ac[.]in', 'https://mech.iitm.ac.in/profile.php?fname=anujt', 16, 1, '2026-08-24 10:17:43', '2026-08-28 08:22:44', 0, 0),
+(112, '7', NULL, NULL, 0, 'Abhilash Somayajula', 'img_6938ae6358bb98.66689705.jpg', 'Ocean Engineering', 'Faculty', 'abhilash[at]smail[.]iitm[.]ac[.]in', 'https://doe.iitm.ac.in/abhilash', 17, 1, '2026-08-24 10:17:43', '2026-08-28 08:44:21', 0, 0),
+(113, '8', NULL, NULL, 0, 'Satyanarayanan Seshadri', 'satyanarayanan-seshadri.C3EpzFCj_1TxrGS.webp', 'Applied Mechanics and Biomedical Engineering', 'Faculty', 'satya[at]iitm[.]ac[.]in', 'https://energlab.com/', 1, 1, '2026-08-24 10:18:26', '2026-08-27 07:52:37', 0, 0),
+(114, '9', NULL, NULL, 0, 'Ashwin Mahalingam', 'ashwin.jpg', 'Civil Engineering', 'Faculty', 'mash[at]iitm[.]ac[.]in', 'https://civil.iitm.ac.in/faculty/mash/', 1, 1, '2026-08-24 10:19:09', '2026-08-27 11:11:19', 0, 0),
+(115, '9', NULL, NULL, 0, 'Manikandan Mathur Sankaranarayanan', 'Manikandan Mathur.webp', 'Aerospace Engineering', 'Faculty', 'manims[at]smail[.]iitm[.]ac[.]in', 'https://sites.google.com/site/mathur2m/home', 2, 1, '2026-08-24 10:19:09', '2026-08-27 07:31:20', 0, 0),
+(116, '9', NULL, NULL, 0, 'Saumendra K. Bajpai', 'saumendra-kumar-bajpai.B1vrE_8x_1PgEy3.webp', 'Applied Mechanics and Biomedical Engineering', 'Faculty', 'sbajpai[at]smail[.]iitm[.]ac[.]in', 'https://cellmechanics.blogspot.com/', 3, 1, '2026-08-24 10:19:09', '2026-08-27 07:53:08', 0, 0),
+(117, '9', NULL, NULL, 0, 'Guhan Jayaraman', 'Guhan Jayaraman.png', 'Biotechnology', 'Faculty', 'guhanj[at]smail[.]iitm[.]ac[.]in', 'https://biotech.iitm.ac.in/innerfaculty.php?fname=Guhan+Jayaraman', 4, 1, '2026-08-24 10:19:09', '2026-08-27 07:58:37', 0, 0),
+(118, '9', NULL, NULL, 0, 'Rayala Suresh Kumar', 'Suresh Rayala.png', 'Biotechnology', 'Faculty', 'rayala[at]smail[.]iitm[.]ac[.]in', 'https://biotech.iitm.ac.in/innerfaculty.php?fname=Suresh+Kumar+', 5, 1, '2026-08-24 10:19:09', '2026-08-27 07:59:10', 0, 0),
+(119, '9', NULL, NULL, 0, 'Sathyanarayana N. Gummadi', 'sathya.png', 'Biotechnology', 'Faculty', 'gummadi[at]smail[.]iitm[.]ac[.]in', 'https://biotech.iitm.ac.in/innerfaculty.php?fname=Sathyanarayana+N+Gummadi', 6, 1, '2026-08-24 10:19:09', '2026-08-27 07:59:36', 0, 0),
+(120, '9', 'IDDD Coordinator', 'School of sustainability', 1, 'Rajnish Kumar', 'rajnish.png', 'Chemical Engineering', 'Faculty', 'rajnish[at]smail[.]iitm[.]ac[.]in', 'https://che.iitm.ac.in/faculty.php?fname=Dr.+Rajnish+Kumar', 7, 1, '2026-08-24 10:19:09', '2026-10-07 10:32:34', 0, 0),
+(121, '9', NULL, NULL, 0, 'Sankha Karmakar', 'sanka.png', 'Chemical Engineering', 'Faculty', 'skarmakar[at]smail[.]iitm[.]ac[.]in', 'https://che.iitm.ac.in/faculty.php?fname=Dr.+Sankha+Karmakar', 8, 1, '2026-08-24 10:19:09', '2026-08-27 08:19:54', 0, 0),
+(122, '9', NULL, NULL, 0, 'Jithin John Varghese', 'jithin.png', 'Chemical Engineering', 'Faculty', 'jithinjv[at]smail[.]iitm[.]ac[.]in', 'https://che.iitm.ac.in/faculty.php?fname=Dr.+Jithin+John+Varghese', 9, 1, '2026-08-24 10:19:09', '2026-08-27 08:20:22', 0, 0),
+(123, '9', NULL, NULL, 0, 'NITIN MURALIDHARAN', 'WhatsApp Image 2024-11-05 at 2.43.21 PM.jpg', 'Chemical Engineering', 'Faculty', 'muralidharan[at]smail[.]iitm[.]ac[.]in', 'https://che.iitm.ac.in/faculty.php?fname=Dr.+Nitin+Muralidharan', 10, 1, '2026-08-24 10:19:09', '2026-08-27 08:20:56', 0, 0),
+(124, '9', NULL, NULL, 0, 'Ramesh L. Gardas', '1772778304_fda6f5d870.jpg', 'Chemistry', 'Faculty', 'gardas[at]smail[.]iitm[.]ac[.]in', 'https://chem.iitm.ac.in/faculty-inner.php?id=28', 11, 1, '2026-08-24 10:19:09', '2026-08-27 11:01:20', 0, 0),
+(125, '9', 'IDDD Coordinator', 'School of sustainability', 3, 'Sachin S. Gunthe', 'SachinSGunthe(2) - Sachin S Gunthe II.jpg', 'Civil Engineering', 'Faculty', 's[.]gunthe[at]smail[.]iitm[.]ac[.]in', 'https://civil.iitm.ac.in/faculty/sgunthe/', 12, 1, '2026-08-24 10:19:09', '2026-10-07 10:32:34', 0, 0),
+(126, '9', NULL, NULL, 0, 'Chandan Sarangi', 'Chandan_Sarangi.jpg', 'Civil Engineering', 'Faculty', 'chandansarangi[at]civil[.]iitm[.]ac[.]in', 'https://civil.iitm.ac.in/faculty/chandansarangi/', 13, 1, '2026-08-24 10:19:09', '2026-08-27 11:12:41', 0, 0),
+(127, '9', NULL, NULL, 0, 'Indumathi Nambi', 'IMN-IndumathiNambi.jpg', 'Civil Engineering', 'Faculty', 'indunambi[at]smail[.]iitm[.]ac[.]in', 'https://civil.iitm.ac.in/faculty/indunambi/', 14, 1, '2026-08-24 10:19:09', '2026-08-27 11:13:08', 0, 0),
+(128, '9', NULL, NULL, 0, 'Mathava Kumar S', 'Mathava Kumar S - EWRE-CE - Mathava Kumar S IITM.jpg', 'Civil Engineering', 'Faculty', 'mathav[at]smail[.]iitm[.]ac[.]in', 'https://civil.iitm.ac.in/faculty/mathava/', 15, 1, '2026-08-24 10:19:09', '2026-08-27 11:13:39', 0, 0),
+(129, '9', NULL, NULL, 0, 'Prakash Singh Badal', 'Psbimage.jpg', 'Civil Engineering', 'Faculty', 'psb[at]smail[.]iitm[.]ac[.]in', 'https://civil.iitm.ac.in/faculty/prakash/', 16, 1, '2026-08-24 10:19:09', '2026-08-27 11:14:15', 0, 0),
+(130, '9', NULL, NULL, 0, 'Anmol Pahwa', 'Profile Photo.jpg', 'Civil Engineering', 'Faculty', 'anmpahwa[at]smail[.]iitm[.]ac[.]in', 'https://civil.iitm.ac.in/faculty/anmpahwa/', 17, 1, '2026-08-24 10:19:09', '2026-08-27 11:14:48', 0, 0),
+(132, '9', NULL, NULL, 0, 'Ligy Philip', 'DSC_1084.jpg', 'Civil Engineering', 'Faculty', 'ligy[at]smail[.]iitm[.]ac[.]in', 'https://civil.iitm.ac.in/faculty/ligy/', 19, 1, '2026-08-24 10:19:09', '2026-08-27 11:16:02', 0, 0),
+(133, '9', NULL, NULL, 0, 'Venkatraman Srinivasan', 'venkatram.jpg', 'Civil Engineering', 'Faculty', 'venkatraman[at]smail[.]iitm[.]ac[.]in', 'https://civil.iitm.ac.in/faculty/venkatraman/', 20, 1, '2026-08-24 10:19:09', '2026-08-27 11:16:47', 0, 0),
+(134, '9', NULL, NULL, 0, 'Nikhil Bugalia', '20.jpg', 'Civil Engineering', 'Faculty', 'nbugalia[at]smail[.]iitm[.]ac[.]in', 'https://civil.iitm.ac.in/faculty/nbugalia/', 21, 1, '2026-08-24 10:19:09', '2026-08-27 11:17:12', 0, 0),
+(135, '9', NULL, NULL, 0, 'Shiva Nagendra SM', 'Shiva Nagendra SM - Shiva Nagendra.jpg', 'Civil Engineering', 'Faculty', 'snagendra[at]smail[.]iitm[.]ac[.]in', 'https://civil.iitm.ac.in/faculty/snagendra/', 22, 1, '2026-08-24 10:19:09', '2026-08-27 11:19:26', 0, 0),
+(136, '9', NULL, NULL, 0, 'Balaji Srinivasan', 'balaji-srinivasan.png', 'Electrical Engineering', 'Faculty', 'balajis[at]ee[.]iitm[.]ac[.]in', 'https://ee.iitm.ac.in/people/balaji-srinivasan/', 23, 1, '2026-08-24 10:19:09', '2026-08-28 07:36:47', 0, 0),
+(137, '9', NULL, NULL, 0, 'Harikrishna', 'dummy.png', 'Engineering Design', 'Faculty', 'ed17d009[at]smail[.]iitm[.]ac[.]in', '#', 24, 1, '2026-08-24 10:19:09', '2026-08-24 10:47:25', 0, 0),
+(138, '9', NULL, NULL, 0, 'Atriya Biswas', 'ABiswas.jpg', 'Engineering Design', 'Faculty', 'abiswas[at]smail[.]iitm[.]ac[.]in', 'https://ed.iitm.ac.in/faculty.html?id=Atriya_Biswas', 25, 1, '2026-08-24 10:19:09', '2026-08-28 07:43:46', 0, 0),
+(139, '9', NULL, NULL, 0, 'Kavitha Arunachalam', 'Kavitha_Arunachalam.jpg', 'Engineering Design', 'Faculty', 'akavitha[at]smail[.]iitm[.]ac[.]in', 'https://ed.iitm.ac.in/faculty.html?id=Kavitha_Arunachalam', 26, 1, '2026-08-24 10:19:09', '2026-08-28 07:46:42', 0, 0),
+(140, '9', NULL, NULL, 0, 'Sabuj Kumar Mandal', 'SabujKumar1-qog11140t1x6o7lvs8yu77t634soe7yvtfaah1fi60.png', 'Humanities and Social Sciences', 'Faculty', 'sabuj[at]smail[.]iitm[.]ac[.]in', 'https://hss.iitm.ac.in/sabuj-kumar-mandal', 27, 1, '2026-08-24 10:19:09', '2026-08-28 08:04:23', 0, 0),
+(143, '9', NULL, NULL, 0, 'GL Samuel', 'samuelgl.png', 'Mechanical Engineering', 'Faculty', 'samuelgl[at]smail[.]iitm[.]ac[.]in', 'https://mech.iitm.ac.in/profile.php?fname=samuelgl', 30, 1, '2026-08-24 10:19:09', '2026-08-28 08:23:07', 0, 0),
+(144, '9', NULL, NULL, 0, 'Bhuvanesh Srinivasan', 'bhuvan.png', 'Metallurgical and Materials Engineering', 'Faculty', 'bhuvanesh[.]srini[at]smail[.]iitm[.]ac[.]in', 'https://mme.iitm.ac.in/innerfaculty.php?fname=Bhuvanesh%20Srinivasan', 31, 1, '2026-08-24 10:19:09', '2026-08-28 08:35:12', 0, 0),
+(145, '9', NULL, NULL, 0, 'Lakshman Neelakantan', 'lakshman.png', 'Metallurgical and Materials Engineering', 'Faculty', 'nlakshman[at]smail[.]iitm[.]ac[.]in', 'https://mme.iitm.ac.in/innerfaculty.php?fname=Lakshman%20Neelakantan', 32, 1, '2026-08-24 10:19:09', '2026-08-28 08:36:50', 0, 0),
+(146, '9', NULL, NULL, 0, 'Ajay Kumar Shukla', 'shukla.png', 'Metallurgical and Materials Engineering', 'Faculty', 'shukla[at]smail[.]iitm[.]ac[.]in', 'https://mme.iitm.ac.in/innerfaculty.php?fname=Shukla%20Ajay%20Kumar', 33, 1, '2026-08-24 10:19:09', '2026-08-28 08:37:13', 0, 0),
+(147, '9', NULL, NULL, 0, 'Tiju Thomas', 'tiju.png', 'Metallurgical and Materials Engineering', 'Faculty', 'tijuthomas[at]smail[.]iitm[.]ac[.]in', 'https://mme.iitm.ac.in/innerfaculty.php?fname=Tiju%20Thomas', 34, 1, '2026-08-24 10:19:09', '2026-08-28 08:37:36', 0, 0),
+(148, '9', NULL, NULL, 0, 'S. Sankaran', 'sankaran.png', 'Metallurgical and Materials Engineering', 'Faculty', 'ssankaran[at]smail[.]iitm[.]ac[.]in', 'https://mme.iitm.ac.in/innerfaculty.php?fname=Sankaran%20S', 35, 1, '2026-08-24 10:19:09', '2026-08-28 08:37:57', 0, 0),
+(149, '9', NULL, NULL, 0, 'Somnath C Roy', 'somnath.jpg', 'Physics', 'Faculty', 'somnath[at]smail[.]iitm[.]ac[.]in', 'https://physics.iitm.ac.in/people/facultyinfo/somnath.html', 36, 1, '2026-08-24 10:19:09', '2026-08-28 08:57:37', 0, 0),
+(152, '', NULL, NULL, 0, 'Anbarasu Manivannan', 'anbu.jpg', 'Department of Electrical Engineering', 'Head, School of Interdisciplinary Studies', 'anbarasu[at]iitm[.]ac[.]in', 'https://ee.iitm.ac.in/people/anbarasu-manivannan/', 0, 1, '2026-08-24 10:24:00', '2026-09-05 08:04:26', 0, 1),
+(153, '', NULL, NULL, 0, 'Ravindra Naik Bukke', 'faculty_1790315537_5813744c98b772a0.jpg', 'School of Interdisciplinary Studies', 'Assistant Professor', 'ravindra[at]iitm[.]ac[.]in', '#', 0, 1, '2026-08-24 10:24:00', '2026-09-25 05:52:17', 0, 1);
 
 -- --------------------------------------------------------
 
@@ -411,7 +419,58 @@ CREATE TABLE `hero_section` (
 --
 
 INSERT INTO `hero_section` (`id`, `title`, `subtitle`, `image`, `created_at`, `updated_at`) VALUES
-(1, 'School of Interdisciplinary Studies', 'IIT Madras', 'hero_1789957414_9bf0182a2d47b5b9.jpg', '2026-08-20 07:01:54', '2026-09-21 02:23:34');
+(1, 'School of Interdisciplinary Studies', 'IIT Madras', 'hero_1790228738_a3a7fd49677fabdf.png', '2026-08-20 07:01:54', '2026-09-24 05:45:38');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `how_to_apply`
+--
+
+CREATE TABLE `how_to_apply` (
+  `id` int UNSIGNED NOT NULL,
+  `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `image` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `link_type` enum('link','attachment') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'link',
+  `link_url` varchar(500) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `attachment` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `display_order` int NOT NULL DEFAULT '0',
+  `status` tinyint(1) NOT NULL DEFAULT '1',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `how_to_apply`
+--
+
+INSERT INTO `how_to_apply` (`id`, `title`, `image`, `link_type`, `link_url`, `attachment`, `display_order`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'Research', 'apply_1791306687_6232cb42a3eb.png', 'link', '#', NULL, 1, 1, '2026-10-06 15:26:54', '2026-10-07 10:50:36'),
+(2, 'Guidelines', 'apply_1791306762_efa2bb937cb2.png', 'link', '#', NULL, 2, 1, '2026-10-06 15:26:54', '2026-10-06 17:13:11');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `important_dates`
+--
+
+CREATE TABLE `important_dates` (
+  `id` int UNSIGNED NOT NULL,
+  `schedule_name` varchar(255) NOT NULL,
+  `description` varchar(500) NOT NULL,
+  `date_schedule` varchar(255) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `important_dates`
+--
+
+INSERT INTO `important_dates` (`id`, `schedule_name`, `description`, `date_schedule`, `created_at`, `updated_at`) VALUES
+(1, 'Admission Schedule 2026-2027', 'Portal open for online application', '10 April 2026', '2026-10-06 15:05:48', '2026-10-06 15:05:48'),
+(2, 'Admission Schedule 2026-2027', 'Last date of receipt of online application', '30th October 2026 @ 5:00 PM', '2026-10-06 15:05:48', '2026-10-06 15:05:48'),
+(3, 'Admission Schedule 2026-2027', 'Written test and interview', 'To be announced by the concerned department', '2026-10-06 15:05:48', '2026-10-06 15:05:48');
 
 -- --------------------------------------------------------
 
@@ -432,7 +491,7 @@ CREATE TABLE `message_from_director` (
 --
 
 INSERT INTO `message_from_director` (`id`, `title`, `iframe_url`, `created_at`, `updated_at`) VALUES
-(1, 'Message from the Director', 'https://drive.google.com/file/d/1BISZLMTUsMHNxyOLKIoP6sqNsA5vNsvT/preview', '2026-08-20 06:46:22', '2026-09-15 07:55:33');
+(1, 'Message from the Director', 'https://drive.google.com/file/d/1BISZLMTUsMHNxyOLKIoP6sqNsA5vNsvT/preview', '2026-08-20 06:46:22', '2026-09-24 05:46:32');
 
 -- --------------------------------------------------------
 
@@ -1019,6 +1078,18 @@ ALTER TABLE `hero_section`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `how_to_apply`
+--
+ALTER TABLE `how_to_apply`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `important_dates`
+--
+ALTER TABLE `important_dates`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `message_from_director`
 --
 ALTER TABLE `message_from_director`
@@ -1089,7 +1160,7 @@ ALTER TABLE `announcements`
 -- AUTO_INCREMENT for table `clusters`
 --
 ALTER TABLE `clusters`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `contact`
@@ -1126,6 +1197,18 @@ ALTER TABLE `head_message`
 --
 ALTER TABLE `hero_section`
   MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `how_to_apply`
+--
+ALTER TABLE `how_to_apply`
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+
+--
+-- AUTO_INCREMENT for table `important_dates`
+--
+ALTER TABLE `important_dates`
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `message_from_director`
@@ -1174,77 +1257,6 @@ ALTER TABLE `staff`
 --
 ALTER TABLE `users`
   MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
--- Table structure for table `important_dates`
---
-
-CREATE TABLE `important_dates` (
-  `id` int UNSIGNED NOT NULL,
-  `schedule_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `description` varchar(500) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `date_schedule` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `important_dates`
---
-
-INSERT INTO `important_dates` (`id`, `schedule_name`, `description`, `date_schedule`) VALUES
-(1, 'Admission Schedule 2026-2027', 'Portal open for online application', '10 April 2026'),
-(2, 'Admission Schedule 2026-2027', 'Last date of receipt of online application', '30th October 2026 @ 5:00 PM'),
-(3, 'Admission Schedule 2026-2027', 'Written test and interview', 'To be announced by the concerned department');
-
---
--- Indexes for table `important_dates`
---
-ALTER TABLE `important_dates`
-  ADD PRIMARY KEY (`id`);
-
---
--- AUTO_INCREMENT for table `important_dates`
---
-ALTER TABLE `important_dates`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- Table structure for table `how_to_apply`
---
-
-CREATE TABLE `how_to_apply` (
-  `id` int UNSIGNED NOT NULL,
-  `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `image` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `link_type` enum('link','attachment') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'link',
-  `link_url` varchar(500) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `attachment` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `display_order` int NOT NULL DEFAULT '0',
-  `status` tinyint(1) NOT NULL DEFAULT '1',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `how_to_apply`
---
-
-INSERT INTO `how_to_apply` (`id`, `title`, `image`, `link_type`, `link_url`, `attachment`, `display_order`, `status`) VALUES
-(1, 'Research', 'Frame 150.png', 'link', 'clusters.php', NULL, 1, 1),
-(2, 'Guidelines', 'Frame 151.png', 'attachment', NULL, 'SIDiS-D3P_INVITATION.pdf', 2, 1);
-
---
--- Indexes for table `how_to_apply`
---
-ALTER TABLE `how_to_apply`
-  ADD PRIMARY KEY (`id`);
-
---
--- AUTO_INCREMENT for table `how_to_apply`
---
-ALTER TABLE `how_to_apply`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
