@@ -158,6 +158,56 @@
 
 
 <?php
+if (!function_exists('getFacultyCardLink')) {
+    function getFacultyCardLink(array $member): array {
+        $id           = (int)($member['id'] ?? 0);
+        $pageType     = strtolower(trim($member['page_type'] ?? ''));
+        $personalPage = trim($member['personal_page'] ?? '');
+        $isTopOrder   = !empty($member['top_order']) && (int)$member['top_order'] > 0;
+
+        // 1. If page_type is explicitly 'inner', ALWAYS open inner faculty page
+        if ($pageType === 'inner') {
+            return ['url' => 'innerfaculty.php?id=' . $id, 'target' => '_self'];
+        }
+
+        // 2. If page_type is explicitly 'personal', open external website
+        if ($pageType === 'personal') {
+            if (preg_match('/^https?:\/\//i', $personalPage)) {
+                return ['url' => $personalPage, 'target' => '_blank'];
+            }
+            if (!empty($personalPage) && $personalPage !== '#') {
+                return ['url' => $personalPage, 'target' => '_blank'];
+            }
+            // If personal chosen but no link, fallback
+            return $isTopOrder 
+                ? ['url' => 'innerfaculty.php?id=' . $id, 'target' => '_self'] 
+                : ['url' => '', 'target' => ''];
+        }
+
+        // 3. Fallback for legacy records without page_type
+        if (strpos($personalPage, 'innerfaculty.php') !== false) {
+            return ['url' => 'innerfaculty.php?id=' . $id, 'target' => '_self'];
+        }
+
+        // If top order (SIDIS faculty) and no page_type, default to inner page
+        if ($isTopOrder) {
+            return ['url' => 'innerfaculty.php?id=' . $id, 'target' => '_self'];
+        }
+
+        // External affiliate with link
+        if (preg_match('/^https?:\/\//i', $personalPage)) {
+            return ['url' => $personalPage, 'target' => '_blank'];
+        }
+
+        // If other department and has inner details
+        if (!empty($member['about1']) || !empty($member['resrch'])) {
+            return ['url' => 'innerfaculty.php?id=' . $id, 'target' => '_self'];
+        }
+
+        return ['url' => '', 'target' => ''];
+    }
+}
+
 $topFacultyQuery = "
     SELECT *
     FROM faculty
@@ -176,12 +226,17 @@ $topFaculty = $topFacultyStmt->fetchAll(PDO::FETCH_ASSOC);
         <div class="faculty-top-cards">
 
             <?php foreach ($topFaculty as $member): ?>
+                <?php $cardLink = getFacultyCardLink($member); ?>
 
-                <a href="<?php echo htmlspecialchars(
-                    $member['personal_page'],
-                    ENT_QUOTES,
-                    'UTF-8'
-                ); ?>" target="_blank" class="faculty-card">
+                <?php if (!empty($cardLink['url'])): ?>
+                    <a href="<?php echo htmlspecialchars(
+                        $cardLink['url'],
+                        ENT_QUOTES,
+                        'UTF-8'
+                    ); ?>" <?php echo !empty($cardLink['target']) ? 'target="' . $cardLink['target'] . '"' : ''; ?> class="faculty-card">
+                <?php else: ?>
+                    <div class="faculty-card">
+                <?php endif; ?>
 
                     <div class="faculty-image">
                         <img src="images/faculty/<?php echo htmlspecialchars(
@@ -234,7 +289,11 @@ $topFaculty = $topFacultyStmt->fetchAll(PDO::FETCH_ASSOC);
 
                     </div>
 
-                </a>
+                <?php if (!empty($cardLink['url'])): ?>
+                    </a>
+                <?php else: ?>
+                    </div>
+                <?php endif; ?>
 
             <?php endforeach; ?>
 
@@ -288,14 +347,17 @@ $facultySql = "
         f.department,
         f.designation,
         f.email,
-        f.personal_page
+        f.personal_page,
+        f.top_order,
+        f.page_type,
+        f.about1,
+        f.resrch
     FROM faculty f
     WHERE f.status = 1
         AND f.top_order = 0
         AND f.cluster_id IS NOT NULL
         AND f.cluster_id != ''
     ORDER BY
-        
         f.name ASC
 ";
 
@@ -345,7 +407,7 @@ $faculty = $facultyStmt->fetchAll();
                     <?php foreach ($faculty as $member): ?>
 
                         <?php
-                        $personalPage = trim($member['personal_page'] ?? '');
+                        $cardLink = getFacultyCardLink($member);
 
                         /*
                         |--------------------------------------------------------------------------
@@ -367,19 +429,19 @@ $faculty = $facultyStmt->fetchAll();
                                 'UTF-8'
                             ); ?>">
 
-                            <?php if (!empty($personalPage)): ?>
+                            <?php if (!empty($cardLink['url'])): ?>
 
                                 <a href="<?php echo htmlspecialchars(
-                                    $personalPage,
+                                    $cardLink['url'],
                                     ENT_QUOTES,
                                     'UTF-8'
-                                ); ?>" target="_blank" class="faculty-card">
+                                ); ?>" <?php echo !empty($cardLink['target']) ? 'target="' . $cardLink['target'] . '"' : ''; ?> class="faculty-card">
 
-                                <?php else: ?>
+                            <?php else: ?>
 
-                                    <div class="faculty-card">
+                                <div class="faculty-card">
 
-                                    <?php endif; ?>
+                            <?php endif; ?>
 
                                     <div class="faculty-image">
 
@@ -432,17 +494,17 @@ $faculty = $facultyStmt->fetchAll();
 
                                     </div>
 
-                                    <?php if (!empty($personalPage)): ?>
+                            <?php if (!empty($cardLink['url'])): ?>
 
                                 </a>
 
                             <?php else: ?>
 
-                            </div>
+                                </div>
 
-                        <?php endif; ?>
+                            <?php endif; ?>
 
-                    </div>
+                        </div>
 
                 <?php endforeach; ?>
 

@@ -173,6 +173,10 @@ $navigation = [
 
             <?php endforeach; ?>
 
+            <!-- Faculty Logins / Users -->
+            <a href="users.php" class="nav-link <?= in_array($current_page, ['users.php', 'adduser.php', 'edituser.php']) ? 'active' : '' ?>">
+                <span>Users & Faculty Logins</span>
+            </a>
 
         </nav>
 

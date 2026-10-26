@@ -1,7 +1,7 @@
 <?php
 /*
 |--------------------------------------------------------------------------
-| BOOTSTRAP — process BEFORE any output
+| BOOTSTRAP - process BEFORE any output
 |--------------------------------------------------------------------------
 */
 
@@ -10,30 +10,19 @@ require_once __DIR__ . '/../config.php';
 
 $error = '';
 
-/*
-|--------------------------------------------------------------------------
-| FORM DEFAULTS
-|--------------------------------------------------------------------------
-| Unique variable names to avoid clashes with header.php
-*/
-
 $facultyName     = '';
 $facultyDept     = '';
 $facultyDesig    = '';
 $facultyEmail    = '';
 $facultyPage     = '';
+$facultyOffice   = '';
+$facultyPhone    = '';
+$pageType        = 'personal';
 $topOrder        = '0';
 $selectedClusters = [];
 $coordinatorRole      = '';
 $coordinatorProgramme = '';
 $coordinatorOrder     = '0';
-
-
-/*
-|--------------------------------------------------------------------------
-| FORCE RESET ON FRESH GET LOAD
-|--------------------------------------------------------------------------
-*/
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     $facultyName      = '';
@@ -41,41 +30,26 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     $facultyDesig     = '';
     $facultyEmail     = '';
     $facultyPage      = '';
+    $facultyOffice    = '';
+    $facultyPhone     = '';
+    $pageType         = 'personal';
     $topOrder         = '0';
     $selectedClusters = [];
 }
 
-
-/*
-|--------------------------------------------------------------------------
-| IMAGE DIRECTORY
-|--------------------------------------------------------------------------
-*/
-
 $imageDirectory = __DIR__ . '/../images/faculty/';
-
-
-/*
-|--------------------------------------------------------------------------
-| DECODE HELPERS
-|--------------------------------------------------------------------------
-*/
 
 function decodeInput($value) {
     if (empty($value)) return '';
-
     $decoded = base64_decode($value, true);
-
     if ($decoded !== false && $decoded !== '') {
         return trim($decoded);
     }
-
     return trim($value);
 }
 
 function reconstructChunks($fieldName) {
     $countField = $fieldName . '_chunk_count';
-
     if (!isset($_POST[$countField]) || (int)$_POST[$countField] === 0) {
         if (isset($_POST[$fieldName . '_encoded'])) {
             return decodeInput($_POST[$fieldName . '_encoded']);
@@ -88,23 +62,14 @@ function reconstructChunks($fieldName) {
 
     $chunkCount = (int)$_POST[$countField];
     $base64 = '';
-
     for ($i = 0; $i < $chunkCount; $i++) {
         $chunkName = $fieldName . '_chunk_' . $i;
         if (isset($_POST[$chunkName])) {
             $base64 .= $_POST[$chunkName];
         }
     }
-
     return decodeInput($base64);
 }
-
-
-/*
-|--------------------------------------------------------------------------
-| FETCH CLUSTERS
-|--------------------------------------------------------------------------
-*/
 
 $clusterStmt = $pdo->prepare("
     SELECT id, cluster_name
@@ -115,119 +80,69 @@ $clusterStmt = $pdo->prepare("
 $clusterStmt->execute();
 $clusters = $clusterStmt->fetchAll(PDO::FETCH_ASSOC);
 
-
-/*
-|--------------------------------------------------------------------------
-| PROCESS ADD FORM
-|--------------------------------------------------------------------------
-*/
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
-    $facultyName  = reconstructChunks('name');
-    $facultyDept  = reconstructChunks('department');
-    $facultyDesig = reconstructChunks('designation');
-    $facultyEmail = reconstructChunks('email');
-    $facultyPage  = reconstructChunks('personal_page');
+    $facultyName   = reconstructChunks('name');
+    $facultyDept   = reconstructChunks('department');
+    $facultyDesig  = reconstructChunks('designation');
+    $facultyEmail  = reconstructChunks('email');
+    $facultyPage   = reconstructChunks('personal_page');
+    $facultyOffice = reconstructChunks('office');
+    $facultyPhone  = reconstructChunks('phone');
+    $pageType      = reconstructChunks('page_type');
 
     $topOrder = isset($_POST['top_order']) ? (string)$_POST['top_order'] : '0';
     $coordinatorRole      = null;
     $coordinatorProgramme = null;
     $coordinatorOrder     = 0;
 
-
-    /*
-    |--------------------------------------------------------------------------
-    | CLUSTERS
-    |--------------------------------------------------------------------------
-    */
-
-    $selectedClusters = $_POST['clusters'] ?? [];
-
-    if (!is_array($selectedClusters)) {
+    if ($topOrder === '1') {
+        if ($pageType !== 'inner' && $pageType !== 'personal') {
+            $pageType = (!empty($facultyPage) && $facultyPage !== '#') ? 'personal' : 'inner';
+        }
         $selectedClusters = [];
-    }
+    } else {
+        $pageType = 'personal';
+        $selectedClusters = $_POST['clusters'] ?? [];
 
-    $selectedClusters = array_map('intval', $selectedClusters);
-    $selectedClusters = array_values(
-        array_unique(
-            array_filter(
-                $selectedClusters,
-                function ($value) {
-                    return $value > 0;
-                }
+        if (!is_array($selectedClusters)) {
+            $selectedClusters = [];
+        }
+
+        $selectedClusters = array_map('intval', $selectedClusters);
+        $selectedClusters = array_values(
+            array_unique(
+                array_filter(
+                    $selectedClusters,
+                    function ($value) {
+                        return $value > 0;
+                    }
+                )
             )
-        )
-    );
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | VALIDATE TOP ORDER
-    |--------------------------------------------------------------------------
-    */
+        );
+    }
 
     if ($topOrder !== '0' && $topOrder !== '1') {
         $topOrder = '0';
     }
 
-
-    /*
-    |--------------------------------------------------------------------------
-    | VALIDATION
-    |--------------------------------------------------------------------------
-    */
-
     if ($facultyName === '') {
-
         $error = 'Please enter the faculty member name.';
-
     } elseif ($facultyDept === '') {
-
         $error = 'Please enter the department.';
-
     } elseif ($facultyDesig === '') {
-
         $error = 'Please enter the designation.';
-
     } elseif ($topOrder === '0' && empty($selectedClusters)) {
-
         $error = 'Please select at least one cluster for cluster faculty.';
-
     } elseif (
         !isset($_FILES['image']) ||
         $_FILES['image']['error'] !== UPLOAD_ERR_OK
     ) {
-
         $error = 'Please upload a faculty image.';
-
     }
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | TOP FACULTY
-    |--------------------------------------------------------------------------
-    | Top faculty cannot have clusters.
-    */
-
-    if ($topOrder === '1') {
-        $selectedClusters = [];
-    }
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | IMAGE VALIDATION
-    |--------------------------------------------------------------------------
-    */
 
     $mimeType = '';
-
     if ($error === '') {
-
         $image = $_FILES['image'];
-
         $allowedTypes = [
             'image/jpeg' => 'jpg',
             'image/png'  => 'png',
@@ -238,34 +153,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $mimeType = $finfo->file($image['tmp_name']);
 
         if (!isset($allowedTypes[$mimeType])) {
-
             $error = 'Only JPG, PNG and WEBP images are allowed.';
-
         } elseif ($image['size'] > 5 * 1024 * 1024) {
-
             $error = 'Image size must not exceed 5 MB.';
-
         } elseif (@getimagesize($image['tmp_name']) === false) {
-
             $error = 'The uploaded file is not a valid image.';
-
         }
-
     }
 
-
-    /*
-    |--------------------------------------------------------------------------
-    | INSERT
-    |--------------------------------------------------------------------------
-    */
-
     if ($error === '') {
-
         $imagePath = null;
-
         try {
-
             if (!is_dir($imageDirectory)) {
                 @mkdir($imageDirectory, 0755, true);
             }
@@ -275,7 +173,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
             $extension = $allowedTypes[$mimeType];
-
             $imageName = 'faculty_' . time() . '_' . bin2hex(random_bytes(8)) . '.' . $extension;
             $imagePath = $imageDirectory . $imageName;
 
@@ -283,30 +180,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 throw new Exception('Unable to upload image.');
             }
 
-
-            /*
-            |--------------------------------------------------------------------------
-            | SAVE CLUSTER IDs
-            |--------------------------------------------------------------------------
-            */
-
             $clusterIds = '';
-
             if ($topOrder === '0' && !empty($selectedClusters)) {
                 $clusterIds = implode(',', $selectedClusters);
             }
 
-
-            /*
-            |--------------------------------------------------------------------------
-            | INSERT FACULTY
-            |--------------------------------------------------------------------------
-            */
-
             $stmt = $pdo->prepare("
                 INSERT INTO faculty
-                (name, image, department, designation, email, personal_page, cluster_id, top_order, coordinator_role, coordinator_programme, coordinator_order)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                (name, image, department, designation, email, personal_page, cluster_id, top_order, coordinator_role, coordinator_programme, coordinator_order, page_type, office, phone)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ");
 
             $stmt->execute([
@@ -320,64 +202,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $topOrder,
                 $coordinatorRole,
                 $coordinatorProgramme,
-                $coordinatorOrder
+                $coordinatorOrder,
+                $pageType,
+                $facultyOffice,
+                $facultyPhone
             ]);
 
             header('Location: faculty.php?success=added');
             exit;
-
         } catch (Exception $e) {
-
             if ($imagePath !== null && file_exists($imagePath)) {
                 @unlink($imagePath);
             }
-
             error_log("Faculty Add Error: " . $e->getMessage());
             $error = 'Unable to add the faculty member. Please try again.';
-
         } catch (PDOException $e) {
-
             if ($imagePath !== null && file_exists($imagePath)) {
                 @unlink($imagePath);
             }
-
             error_log("DB Error: " . $e->getMessage());
             $error = 'Unable to add the faculty member. Please try again.';
-
         }
-
     }
-
 }
 
-
-/*
-|--------------------------------------------------------------------------
-| HEADER
-|--------------------------------------------------------------------------
-*/
-
 include 'header.php';
-
 ?>
 
-
 <div class="dashboard-content">
-
-
-    <!-- PAGE HEADER -->
-
     <div class="page-header">
-
         <div>
             <h2>Add Faculty</h2>
-            <p>Add a new faculty member to the website.</p>
+            <p>Add a new faculty member to the SIDIS website.</p>
         </div>
-
     </div>
-
-
-    <!-- ERROR -->
 
     <?php if ($error !== ''): ?>
         <div class="alert alert-danger">
@@ -385,28 +243,19 @@ include 'header.php';
         </div>
     <?php endif; ?>
 
-
-    <!-- FORM CARD -->
-
     <div class="dashboard-card">
-
         <div class="card-header">
             <div>
                 <h3>Faculty Details</h3>
-                <p>Enter the faculty member's details.</p>
+                <p>Enter the faculty member's information.</p>
             </div>
         </div>
 
-
         <form method="POST" action="" enctype="multipart/form-data" id="facultyForm" onsubmit="return prepareSubmit()">
 
-
             <!-- NAME (chunked Base64) -->
-
             <div class="form-group">
-
-                <label for="name">Name</label>
-
+                <label for="name">Name *</label>
                 <input
                     type="text"
                     id="name"
@@ -416,194 +265,194 @@ include 'header.php';
                     oninput="syncChunked('name')"
                     required
                 >
-
                 <input type="hidden" id="name_chunk_count" name="name_chunk_count" value="0">
                 <div id="name_chunks_container"></div>
-
             </div>
 
-
             <!-- DEPARTMENT (chunked Base64) -->
-
             <div class="form-group">
-
-                <label for="department">Department</label>
-
+                <label for="department">Department *</label>
                 <input
                     type="text"
                     id="department"
                     class="form-control"
                     value="<?= htmlspecialchars($facultyDept, ENT_QUOTES, 'UTF-8') ?>"
-                    placeholder="Enter department"
+                    placeholder="e.g. Metallurgical and Materials Engineering or SIDIS"
                     oninput="syncChunked('department')"
                     required
                 >
-
                 <input type="hidden" id="department_chunk_count" name="department_chunk_count" value="0">
                 <div id="department_chunks_container"></div>
-
             </div>
 
-
             <!-- DESIGNATION (chunked Base64) -->
-
             <div class="form-group">
-
-                <label for="designation">Designation</label>
-
+                <label for="designation">Designation *</label>
                 <textarea
                     id="designation"
                     class="form-control"
-                    rows="3"
-                    placeholder="Enter designation"
+                    rows="2"
+                    placeholder="e.g. Assistant Professor or Associate Professor"
                     oninput="syncChunked('designation')"
                     required
                 ><?= htmlspecialchars($facultyDesig, ENT_QUOTES, 'UTF-8') ?></textarea>
-
                 <input type="hidden" id="designation_chunk_count" name="designation_chunk_count" value="0">
                 <div id="designation_chunks_container"></div>
-
             </div>
 
-
             <!-- EMAIL (chunked Base64) -->
-
             <div class="form-group">
-
                 <label for="email">Email</label>
-
                 <input
                     type="text"
                     id="email"
                     class="form-control"
                     value="<?= htmlspecialchars($facultyEmail, ENT_QUOTES, 'UTF-8') ?>"
-                    placeholder="Enter email address"
+                    placeholder="e.g. name@iitm.ac.in"
                     oninput="syncChunked('email')"
                 >
-
                 <input type="hidden" id="email_chunk_count" name="email_chunk_count" value="0">
                 <div id="email_chunks_container"></div>
-
             </div>
-
-
-            <!-- PERSONAL PAGE (chunked Base64) -->
-
-            <div class="form-group">
-
-                <label for="personal_page">Personal Page</label>
-
-                <input
-                    type="text"
-                    id="personal_page"
-                    class="form-control"
-                    value="<?= htmlspecialchars($facultyPage, ENT_QUOTES, 'UTF-8') ?>"
-                    placeholder="https://example.com"
-                    oninput="syncChunked('personal_page')"
-                >
-
-                <input type="hidden" id="personal_page_chunk_count" name="personal_page_chunk_count" value="0">
-                <div id="personal_page_chunks_container"></div>
-
-            </div>
-
 
             <!-- FACULTY TYPE -->
-
             <div class="form-group">
-
-                <label>Faculty Type</label>
-
+                <label style="font-weight:600;">Faculty Category</label>
                 <div style="margin-top:10px;">
-
-                    <label style="margin-right:25px;">
+                    <label style="margin-right:25px; cursor:pointer;">
                         <input
                             type="radio"
                             name="top_order"
                             value="1"
                             id="topFaculty"
                             <?= $topOrder === '1' ? 'checked' : '' ?>
+                            onchange="handleFacultyTypeChange('1')"
                         >
-                        Top Faculty
+                        <strong>Top Faculty (SIDIS Faculty)</strong>
                     </label>
-
-                    <label>
+                    <label style="cursor:pointer;">
                         <input
                             type="radio"
                             name="top_order"
                             value="0"
                             id="clusterFaculty"
                             <?= $topOrder === '0' ? 'checked' : '' ?>
+                            onchange="handleFacultyTypeChange('0')"
                         >
-                        Cluster Faculty
+                        Cluster Faculty (Department Affiliate)
                     </label>
-
                 </div>
-
             </div>
 
+            <!-- PROFILE PAGE TYPE (Only shown for Top Faculty) -->
+            <div class="form-group" id="profileTypeWrapper" style="<?= $topOrder === '1' ? '' : 'display:none;' ?>; background: #f8fafc; padding: 18px 20px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 20px;">
+                <label style="font-weight:600; color:#184C74;">Profile Page Option</label>
+                <p style="font-size:13px; color:#64748b; margin-top:2px; margin-bottom:12px;">Choose whether this top-order faculty member links to an external personal website or uses the dedicated SIDIS inner profile page.</p>
 
-            <!-- CLUSTERS -->
-
-            <div
-                class="form-group"
-                id="clusterSection"
-                style="<?= $topOrder === '1' ? 'display:none;' : '' ?>"
-            >
-
-                <label>Clusters</label>
-
-                <small style="display:block; margin-bottom:12px;">
-                    Select one or more clusters.
-                </small>
-
-                <div
-                    style="
-                        display:grid;
-                        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-                        gap:10px;
-                    "
-                >
-
-                    <?php foreach ($clusters as $cluster): ?>
-
-                        <label
-                            style="
-                                display:flex;
-                                align-items:center;
-                                gap:8px;
-                                padding:10px;
-                                border:1px solid #ddd;
-                                border-radius:6px;
-                            "
+                <div style="display:flex; gap:25px; margin-bottom: 12px;">
+                    <label style="cursor:pointer; display:flex; align-items:center; gap:8px;">
+                        <input
+                            type="radio"
+                            name="page_type_radio"
+                            value="personal"
+                            id="typePersonal"
+                            <?= $pageType === 'personal' ? 'checked' : '' ?>
+                            onchange="handlePageTypeChange('personal')"
                         >
+                        Personal / External Page Link
+                    </label>
 
+                    <label style="cursor:pointer; display:flex; align-items:center; gap:8px;">
+                        <input
+                            type="radio"
+                            name="page_type_radio"
+                            value="inner"
+                            id="typeInner"
+                            <?= $pageType === 'inner' ? 'checked' : '' ?>
+                            onchange="handlePageTypeChange('inner')"
+                        >
+                        Inner Faculty Page (innerfaculty.php)
+                    </label>
+                </div>
+
+                <input type="hidden" id="page_type_val" value="<?= htmlspecialchars($pageType) ?>">
+                <input type="hidden" id="page_type_chunk_count" name="page_type_chunk_count" value="0">
+                <div id="page_type_chunks_container"></div>
+
+                <!-- BASIC DETAILS FOR INNER PAGE (Building No & Mobile) -->
+                <div id="innerBasicDetails" style="<?= ($topOrder === '1' && $pageType === 'inner') ? '' : 'display:none;' ?>; margin-top: 15px; padding-top: 15px; border-top: 1px dashed #cbd5e1;">
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
+                        <div>
+                            <label for="office" style="font-size:13px; font-weight:600;">Building / Office No</label>
+                            <input
+                                type="text"
+                                id="office"
+                                class="form-control"
+                                value="<?= htmlspecialchars($facultyOffice, ENT_QUOTES, 'UTF-8') ?>"
+                                placeholder="e.g. 521, ED Building"
+                                oninput="syncChunked('office')"
+                            >
+                            <input type="hidden" id="office_chunk_count" name="office_chunk_count" value="0">
+                            <div id="office_chunks_container"></div>
+                        </div>
+
+                        <div>
+                            <label for="phone" style="font-size:13px; font-weight:600;">Mobile / Office Phone Number</label>
+                            <input
+                                type="text"
+                                id="phone"
+                                class="form-control"
+                                value="<?= htmlspecialchars($facultyPhone, ENT_QUOTES, 'UTF-8') ?>"
+                                placeholder="e.g. 044-2257-2303"
+                                oninput="syncChunked('phone')"
+                            >
+                            <input type="hidden" id="phone_chunk_count" name="phone_chunk_count" value="0">
+                            <div id="phone_chunks_container"></div>
+                        </div>
+                    </div>
+                    <small style="color:#64748b; font-size:12px; margin-top:6px; display:block;">
+                        * The faculty member will be able to log in to the Faculty Portal to manage education, biography, and publications.
+                    </small>
+                </div>
+            </div>
+
+            <!-- PERSONAL PAGE URL -->
+            <div class="form-group" id="personalPageWrapper" style="<?= ($topOrder === '1' && $pageType === 'inner') ? 'display:none;' : '' ?>">
+                <label for="personal_page" id="personalPageLabel"><?= ($topOrder === '1') ? 'Personal Website URL' : 'Department Profile / Personal Page URL' ?></label>
+                <input
+                    type="text"
+                    id="personal_page"
+                    class="form-control"
+                    value="<?= htmlspecialchars($facultyPage, ENT_QUOTES, 'UTF-8') ?>"
+                    placeholder="https://example.iitm.ac.in/..."
+                    oninput="syncChunked('personal_page')"
+                >
+                <input type="hidden" id="personal_page_chunk_count" name="personal_page_chunk_count" value="0">
+                <div id="personal_page_chunks_container"></div>
+            </div>
+
+            <!-- CLUSTERS (Cluster Faculty Only) -->
+            <div class="form-group" id="clusterSection" style="<?= $topOrder === '1' ? 'display:none;' : '' ?>">
+                <label>Clusters *</label>
+                <small style="display:block; margin-bottom:12px;">Select one or more clusters.</small>
+                <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:10px;">
+                    <?php foreach ($clusters as $cluster): ?>
+                        <label style="display:flex; align-items:center; gap:8px; padding:10px; border:1px solid #ddd; border-radius:6px; cursor:pointer;">
                             <input
                                 type="checkbox"
                                 name="clusters[]"
                                 value="<?= (int)$cluster['id'] ?>"
                                 <?= in_array((int)$cluster['id'], $selectedClusters, true) ? 'checked' : '' ?>
                             >
-
                             <?= htmlspecialchars($cluster['cluster_name'], ENT_QUOTES, 'UTF-8') ?>
-
                         </label>
-
                     <?php endforeach; ?>
-
                 </div>
-
-                
-
             </div>
 
-
             <!-- IMAGE -->
-
             <div class="form-group">
-
-                <label for="image">Faculty Image</label>
-
+                <label for="image">Faculty Image *</label>
                 <input
                     type="file"
                     id="image"
@@ -612,26 +461,17 @@ include 'header.php';
                     accept=".jpg,.jpeg,.png,.webp"
                     required
                 >
-
-                <small>
-                    Allowed formats: JPG, PNG, WEBP. Maximum size: 5 MB.
-                </small>
-
+                <small>Allowed formats: JPG, PNG, WEBP. Maximum size: 5 MB.</small>
             </div>
 
-
             <!-- BUTTONS -->
-
             <div class="form-actions">
-
-                <button type="submit" class="btn btn-primary">
+                <button type="submit" class="btn btn-primary" style="background:#184C74;">
                     Add Faculty
                 </button>
-
                 <a href="faculty.php" class="btn btn-secondary">
                     Cancel
                 </a>
-
             </div>
 
         </form>
@@ -640,32 +480,47 @@ include 'header.php';
 
 </div>
 
-
 <script>
-function handleCoordinatorRoleChange(value) {
-    const wrapper = document.getElementById('customRoleWrapper');
-    const input = document.getElementById('custom_coordinator_role');
-    if (value === '__custom__') {
-        wrapper.style.display = 'block';
-        input.focus();
+function handleFacultyTypeChange(val) {
+    const clusterSection = document.getElementById('clusterSection');
+    const profileTypeWrapper = document.getElementById('profileTypeWrapper');
+    const personalPageWrapper = document.getElementById('personalPageWrapper');
+
+    if (val === '1') {
+        clusterSection.style.display = 'none';
+        profileTypeWrapper.style.display = 'block';
+        const curType = document.getElementById('page_type_val').value || 'personal';
+        handlePageTypeChange(curType);
     } else {
-        wrapper.style.display = 'none';
+        clusterSection.style.display = 'block';
+        profileTypeWrapper.style.display = 'none';
+        personalPageWrapper.style.display = 'block';
+        document.getElementById('innerBasicDetails').style.display = 'none';
+        document.getElementById('page_type_val').value = 'personal';
+        syncCustomChunked('page_type', 'personal');
     }
 }
 
-function enableCustomRole() {
-    const select = document.getElementById('coordinator_role');
-    select.value = '__custom__';
-    handleCoordinatorRoleChange('__custom__');
+function handlePageTypeChange(val) {
+    document.getElementById('page_type_val').value = val;
+    syncCustomChunked('page_type', val);
+
+    const innerBasicDetails = document.getElementById('innerBasicDetails');
+    const personalPageWrapper = document.getElementById('personalPageWrapper');
+
+    if (val === 'inner') {
+        innerBasicDetails.style.display = 'block';
+        personalPageWrapper.style.display = 'none';
+    } else {
+        innerBasicDetails.style.display = 'none';
+        personalPageWrapper.style.display = 'block';
+    }
 }
 
-
-/* UTF-8-safe Base64 encoder */
 function b64EncodeUtf8(str) {
     return btoa(unescape(encodeURIComponent(str)));
 }
 
-/* Split into fixed-size chunks */
 function splitIntoChunks(text, chunkSize) {
     const chunks = [];
     for (let i = 0; i < text.length; i += chunkSize) {
@@ -674,76 +529,61 @@ function splitIntoChunks(text, chunkSize) {
     return chunks;
 }
 
-/* Sync a text field into chunked hidden inputs */
 function syncChunked(fieldId) {
-
-    const visible    = document.getElementById(fieldId);
-    const countInput = document.getElementById(fieldId + '_chunk_count');
-    const container  = document.getElementById(fieldId + '_chunks_container');
-
-    if (!visible || !countInput || !container) return;
-
-    const base64 = b64EncodeUtf8(visible.value);
+    const visible = document.getElementById(fieldId);
+    if (!visible) return;
+    const value = visible.value || '';
+    const base64 = b64EncodeUtf8(value);
     const chunks = splitIntoChunks(base64, 200);
 
-    countInput.value = chunks.length;
+    const countElem = document.getElementById(fieldId + '_chunk_count');
+    const container = document.getElementById(fieldId + '_chunks_container');
 
-    container.innerHTML = '';
-    for (let i = 0; i < chunks.length; i++) {
-        const inp = document.createElement('input');
-        inp.type  = 'hidden';
-        inp.name  = fieldId + '_chunk_' + i;
-        inp.value = chunks[i];
-        container.appendChild(inp);
+    if (countElem) countElem.value = chunks.length;
+    if (container) {
+        container.innerHTML = '';
+        chunks.forEach((chunk, index) => {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = fieldId + '_chunk_' + index;
+            input.value = chunk;
+            container.appendChild(input);
+        });
     }
-
 }
 
-/* Ensure all fields are encoded before submit */
+function syncCustomChunked(targetName, val) {
+    const base64 = b64EncodeUtf8(String(val || ''));
+    const chunks = splitIntoChunks(base64, 200);
+
+    const countElem = document.getElementById(targetName + '_chunk_count');
+    const container = document.getElementById(targetName + '_chunks_container');
+
+    if (countElem) countElem.value = chunks.length;
+    if (container) {
+        container.innerHTML = '';
+        chunks.forEach((chunk, index) => {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = targetName + '_chunk_' + index;
+            input.value = chunk;
+            container.appendChild(input);
+        });
+    }
+}
+
 function prepareSubmit() {
-    syncChunked('name');
-    syncChunked('department');
-    syncChunked('designation');
-    syncChunked('email');
-    syncChunked('personal_page');
+    ['name', 'department', 'designation', 'email', 'personal_page', 'office', 'phone'].forEach(f => syncChunked(f));
+    const pt = document.getElementById('page_type_val').value || 'personal';
+    syncCustomChunked('page_type', pt);
     return true;
 }
 
-/* Initialize */
-document.addEventListener('DOMContentLoaded', function () {
-
-    syncChunked('name');
-    syncChunked('department');
-    syncChunked('designation');
-    syncChunked('email');
-    syncChunked('personal_page');
-
-
-    /* Toggle clusters visibility based on faculty type */
-
-    const topFaculty     = document.getElementById('topFaculty');
-    const clusterFaculty = document.getElementById('clusterFaculty');
-    const clusterSection = document.getElementById('clusterSection');
-
-    function toggleClusters() {
-        if (topFaculty.checked) {
-            clusterSection.style.display = 'none';
-            clusterSection.querySelectorAll('input[type="checkbox"]').forEach(function (cb) {
-                cb.checked = false;
-            });
-        } else {
-            clusterSection.style.display = 'block';
-        }
-    }
-
-    if (topFaculty && clusterFaculty && clusterSection) {
-        topFaculty.addEventListener('change', toggleClusters);
-        clusterFaculty.addEventListener('change', toggleClusters);
-    }
-
+document.addEventListener('DOMContentLoaded', function() {
+    ['name', 'department', 'designation', 'email', 'personal_page', 'office', 'phone'].forEach(f => syncChunked(f));
+    const pt = document.getElementById('page_type_val').value || 'personal';
+    syncCustomChunked('page_type', pt);
 });
-
 </script>
-
 
 <?php include 'footer.php'; ?>

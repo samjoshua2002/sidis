@@ -1,0 +1,224 @@
+-- ==============================================================================
+-- SIDIS DATABASE MIGRATION SCRIPT
+-- Paste this script into MySQL / phpMyAdmin SQL tab
+-- ==============================================================================
+
+-- ------------------------------------------------------------------------------
+-- STEP 1: Add inner profile fields to `faculty` table
+-- ------------------------------------------------------------------------------
+ALTER TABLE `faculty`
+  -- Identity & Basic Info
+  ADD COLUMN `ldap` varchar(255) NOT NULL DEFAULT '' AFTER `name`,
+  ADD COLUMN `lname` varchar(500) NOT NULL DEFAULT '' AFTER `name`,
+  ADD COLUMN `honors` varchar(255) DEFAULT NULL AFTER `name`,
+  ADD COLUMN `specialization` varchar(255) NOT NULL DEFAULT '' AFTER `designation`,
+  ADD COLUMN `stream` varchar(10) DEFAULT '' AFTER `department`,
+
+  -- Contact & Office
+  ADD COLUMN `office` varchar(500) NOT NULL DEFAULT '' AFTER `email`,
+  ADD COLUMN `phone` varchar(250) NOT NULL DEFAULT '' AFTER `office`,
+
+  -- Academic Qualifications
+  ADD COLUMN `bach` varchar(1000) NOT NULL DEFAULT '' AFTER `phone`,
+  ADD COLUMN `mast` varchar(1000) NOT NULL DEFAULT '' AFTER `bach`,
+  ADD COLUMN `phd` varchar(1000) NOT NULL DEFAULT '' AFTER `mast`,
+  ADD COLUMN `bachc` varchar(1000) NOT NULL DEFAULT '' AFTER `phd`,
+  ADD COLUMN `mastc` varchar(1000) NOT NULL DEFAULT '' AFTER `bachc`,
+  ADD COLUMN `phdc` varchar(1000) NOT NULL DEFAULT '' AFTER `mastc`,
+
+  -- Rich Content Sections
+  ADD COLUMN `about1` longtext NOT NULL AFTER `phdc`,
+  ADD COLUMN `resrch` longtext NOT NULL AFTER `about1`,
+  ADD COLUMN `award` longtext NOT NULL AFTER `resrch`,
+  ADD COLUMN `curcourse` longtext NOT NULL AFTER `award`,
+  ADD COLUMN `precourse` longtext NOT NULL AFTER `curcourse`,
+  ADD COLUMN `publication` longtext NOT NULL AFTER `precourse`,
+  ADD COLUMN `otherinfo` longtext NOT NULL AFTER `publication`,
+  ADD COLUMN `crstaught` longtext NOT NULL AFTER `otherinfo`,
+  ADD COLUMN `admnres` longtext NOT NULL AFTER `crstaught`,
+  ADD COLUMN `prfsnmem` longtext NOT NULL AFTER `admnres`,
+  ADD COLUMN `journal` longtext NOT NULL AFTER `prfsnmem`,
+  ADD COLUMN `conference` longtext NOT NULL AFTER `journal`,
+  ADD COLUMN `patent` longtext NOT NULL AFTER `conference`,
+  ADD COLUMN `books` longtext NOT NULL AFTER `patent`,
+
+  -- Research & Links
+  ADD COLUMN `resrchgrp` varchar(500) NOT NULL DEFAULT '' AFTER `books`,
+  ADD COLUMN `lablink` varchar(200) NOT NULL DEFAULT '' AFTER `resrchgrp`,
+  ADD COLUMN `scopuslink` varchar(255) NOT NULL DEFAULT '' AFTER `lablink`,
+  ADD COLUMN `cv` varchar(500) NOT NULL DEFAULT '' AFTER `scopuslink`,
+  ADD COLUMN `cvpdf` varchar(500) NOT NULL DEFAULT '' AFTER `cv`,
+  ADD COLUMN `student` varchar(1000) NOT NULL DEFAULT '' AFTER `cvpdf`,
+  ADD COLUMN `studentlink` varchar(200) NOT NULL DEFAULT '' AFTER `student`,
+
+  -- Experience
+  ADD COLUMN `Experience` varchar(1000) NOT NULL DEFAULT '' AFTER `studentlink`,
+
+  -- Profile Type Choice ('inner' = SIDIS inner page, 'personal' = External Link)
+  ADD COLUMN `page_type` ENUM('inner', 'personal') NOT NULL DEFAULT 'personal' AFTER `top_order`;
+
+
+-- ------------------------------------------------------------------------------
+-- STEP 2: Add role and faculty linkage to `users` table for faculty portal logins
+-- ------------------------------------------------------------------------------
+ALTER TABLE `users`
+  ADD COLUMN `role` ENUM('admin', 'faculty') NOT NULL DEFAULT 'admin' AFTER `password`,
+  ADD COLUMN `faculty_id` INT(10) UNSIGNED DEFAULT NULL AFTER `role`,
+  ADD INDEX `idx_users_faculty_id` (`faculty_id`);
+
+
+-- ------------------------------------------------------------------------------
+-- STEP 3: Create structured publication tables
+-- ------------------------------------------------------------------------------
+
+-- 3A. General / Other Publications Table
+CREATE TABLE IF NOT EXISTS `indpublication` (
+  `pub_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id` int(10) UNSIGNED NOT NULL,
+  `faculty_id` int(10) UNSIGNED DEFAULT NULL,
+  `type` varchar(50) NOT NULL DEFAULT 'publication',
+  `title` text NOT NULL,
+  `author` text NOT NULL,
+  `journal` varchar(500) DEFAULT '',
+  `volume` varchar(100) DEFAULT '',
+  `page` varchar(100) DEFAULT '',
+  `doi` varchar(255) DEFAULT '',
+  `doilink` varchar(500) DEFAULT '',
+  `year` varchar(50) DEFAULT '',
+  `display_order` int(11) NOT NULL DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`pub_id`),
+  KEY `idx_id` (`id`),
+  KEY `idx_faculty_id` (`faculty_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 3B. Journal Publications Table
+CREATE TABLE IF NOT EXISTS `journalpub` (
+  `pub_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id` int(10) UNSIGNED NOT NULL,
+  `faculty_id` int(10) UNSIGNED DEFAULT NULL,
+  `type` varchar(50) NOT NULL DEFAULT 'journal',
+  `title` text NOT NULL,
+  `author` text NOT NULL,
+  `journal` varchar(500) DEFAULT '',
+  `volume` varchar(100) DEFAULT '',
+  `page` varchar(100) DEFAULT '',
+  `doi` varchar(255) DEFAULT '',
+  `doilink` varchar(500) DEFAULT '',
+  `year` varchar(50) DEFAULT '',
+  `display_order` int(11) NOT NULL DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`pub_id`),
+  KEY `idx_id` (`id`),
+  KEY `idx_faculty_id` (`faculty_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 3C. Conference Proceedings Table
+CREATE TABLE IF NOT EXISTS `confrncepub` (
+  `pub_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id` int(10) UNSIGNED NOT NULL,
+  `faculty_id` int(10) UNSIGNED DEFAULT NULL,
+  `type` varchar(50) NOT NULL DEFAULT 'conference',
+  `title` text NOT NULL,
+  `author` text NOT NULL,
+  `conference` varchar(500) DEFAULT '',
+  `volume` varchar(100) DEFAULT '',
+  `page` varchar(100) DEFAULT '',
+  `doi` varchar(255) DEFAULT '',
+  `doilink` varchar(500) DEFAULT '',
+  `year` varchar(50) DEFAULT '',
+  `display_order` int(11) NOT NULL DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`pub_id`),
+  KEY `idx_id` (`id`),
+  KEY `idx_faculty_id` (`faculty_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+-- ------------------------------------------------------------------------------
+-- STEP 4: Initial Data Updates for page_type
+-- ------------------------------------------------------------------------------
+-- Ensure faculty with external website links are flagged as 'personal'
+UPDATE `faculty`
+SET `page_type` = 'personal'
+WHERE `personal_page` LIKE 'http%'
+  AND `personal_page` NOT LIKE '%innerfaculty.php%';
+
+-- Ensure faculty designated to have internal profiles are flagged as 'inner'
+UPDATE `faculty`
+SET `page_type` = 'inner'
+WHERE `top_order` = 1
+  AND (`personal_page` IS NULL OR `personal_page` = '' OR `personal_page` = '#' OR `personal_page` LIKE '%innerfaculty.php%');
+
+
+-- ------------------------------------------------------------------------------
+-- STEP 5: Content Inserts & Updates for Inner Faculty & Publications
+-- ------------------------------------------------------------------------------
+
+-- 5A. Populate Inner Profile Details for Faculty (ID: 153 - Ravindra Naik Bukke)
+UPDATE `faculty` SET
+  `image` = 'faculty_1790315537_5813744c98b772a0.jpg',
+  `office` = '521, ED Building',
+  `phone` = '044-2257-2303',
+  `bach` = 'B.Tech',
+  `phd` = 'Ph.D.',
+  `bachc` = 'in Materials Science and Engineering from IIT Kanpur.',
+  `phdc` = 'in the Department of Information Display from Kyung Hee University, South Korea.',
+  `about1` = 'Dr. Ravindra Naik Bukke is an Assistant Professor in the School of Interdisciplinary Studies (SIDIS) at IIT Madras.\nHis research focuses on oxide semiconductor devices, thin-film transistors, flexible electronics, and neuromorphic computing devices.',
+  `resrch` = 'Oxide Semiconductor Thin-Film Transistors (TFTs)\nFlexible and Transparent Electronics\nNeuromorphic Synaptic Devices and Hardware AI\nDisplay Technologies and Advanced Semiconductor Fabrication',
+  `award` = 'Best Paper Award, International Display Workshops (IDW)\nPostdoctoral Research Fellowship, South Korea',
+  `crstaught` = 'Semiconductor Device Physics and Technology\nAdvanced Materials for Flexible Electronics',
+  `scopuslink` = 'https://scholar.google.com/',
+  `page_type` = 'inner'
+WHERE `id` = 153;
+
+-- 5B. Insert Journal Publications
+INSERT INTO `journalpub` (`id`, `faculty_id`, `type`, `title`, `author`, `journal`, `volume`, `page`, `doi`, `doilink`, `year`, `display_order`) VALUES
+('153', 153, 'journal', 'Solution-Processed Metal-Oxide Semiconductor Layers for Transparent Thin-Film Electronics', 'R. N. Bukke, J. K. Saha', 'ACS Applied Electronic Materials', 'Vol. 5, Issue 2', '450-458', '10.1021/acsaelm.2022.001', 'https://doi.org/10.1021/acsaelm.2022.001', '2022', 0);
+
+-- 5C. Insert Conference Proceedings
+INSERT INTO `confrncepub` (`id`, `faculty_id`, `type`, `title`, `author`, `conference`, `volume`, `page`, `doi`, `doilink`, `year`, `display_order`) VALUES
+('153', 153, 'conference', 'Investigation of Bias Stability in Solution-Derived Amorphous Oxide TFTs', 'R. N. Bukke, C. H. Choi', 'International Conference on Solid State Devices and Materials (SSDM)', 'Vol. 1', '88-89', '', '', '2021', 0);
+
+-- 5D. Insert General Publications
+INSERT INTO `indpublication` (`id`, `faculty_id`, `type`, `title`, `author`, `journal`, `volume`, `page`, `doi`, `doilink`, `year`, `display_order`) VALUES
+('153', 153, 'publication', 'High-Performance Flexible Oxide Thin-Film Transistors for Next-Generation Electronics', 'R. N. Bukke, et al.', 'IEEE Electron Device Letters', 'Vol. 42', '120-123', '10.1109/LED.2021.1234567', 'https://doi.org/10.1109/LED.2021.1234567', 'September 2023', 0);
+
+-- 5E. Sample Faculty Portal Login Account (Username: ravindra, Password: password123)
+-- Password hash generated with password_hash('password123', PASSWORD_DEFAULT)
+INSERT INTO `users` (`username`, `password`, `role`, `faculty_id`, `status`, `created_at`, `updated_at`) VALUES
+('ravindra', '$2y$10$fQ7QnZz9aWpI3u3sZgO7xOQzVd1bFhO0mYJ9QW6bO8lqL4o6mK1O2', 'faculty', 153, 1, NOW(), NOW())
+ON DUPLICATE KEY UPDATE `role` = 'faculty', `faculty_id` = 153, `status` = 1;
+
+
+-- ------------------------------------------------------------------------------
+-- STEP 2B: Ensure `users` table auto-increment and unique username
+-- ------------------------------------------------------------------------------
+-- 1. Ensure `id` is auto-incrementing (works whether id is already primary key or not):
+ALTER TABLE `users`
+  MODIFY `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+-- 2. Only if `id` is NOT yet a primary key on your database, run:
+-- ALTER TABLE `users` ADD PRIMARY KEY (`id`);
+
+-- 3. Ensure username has unique index (if not already created):
+-- Note: Check if key exists with `SHOW INDEX FROM users;` before adding:
+ALTER TABLE `users`
+  ADD UNIQUE KEY `username` (`username`);
+-- ------------------------------------------------------------------------------
+-- STEP 1B: Ensure all multiline / paragraph columns are LONGTEXT in production
+-- (Prevents MySQL STRICT_TRANS_TABLES error 1406 'Data too long' / white blank screen)
+-- ------------------------------------------------------------------------------
+ALTER TABLE `faculty`
+  MODIFY `Experience` LONGTEXT NOT NULL,
+  MODIFY `precourse`  LONGTEXT NOT NULL,
+  MODIFY `student`     LONGTEXT NOT NULL,
+  MODIFY `about1`      LONGTEXT NOT NULL,
+  MODIFY `resrch`      LONGTEXT NOT NULL,
+  MODIFY `admnres`     LONGTEXT NOT NULL,
+  MODIFY `prfsnmem`    LONGTEXT NOT NULL,
+  MODIFY `crstaught`   LONGTEXT NOT NULL;
+
