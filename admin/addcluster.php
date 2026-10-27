@@ -702,7 +702,7 @@ include 'header.php';
                 <!-- Dropdown Trigger Button -->
                 <button type="button" id="facultyDropdownTrigger" class="form-control" onclick="toggleFacultyDropdown()" style="display:flex; align-items:center; justify-content:space-between; text-align:left; background:#fff; height:auto; padding:10px 14px; cursor:pointer;">
                     <span id="triggerText" style="color:#64748b;">-- Click to Choose Faculty Member --</span>
-                    <span style="font-size:12px; color:#64748b;">▼</span>
+                    <span style="font-size:12px; color:#64748b;">?</span>
                 </button>
 
                 <!-- Dropdown Menu List -->

@@ -90,6 +90,19 @@
         color: #fff;
     }
 
+    /* Section Headings */
+    .faculty-heading {
+        font-family: 'Lato', sans-serif;
+        font-size: 26px;
+        color: #184C74;
+        font-weight: 600;
+        margin: 0 0 25px 0;
+        line-height: 1.3;
+        border: none;
+        text-decoration: none;
+        text-align: center;
+    }
+
     .clusters-side-heading {
         font-family: 'Lato', sans-serif;
         font-size: 26px;
@@ -98,22 +111,17 @@
         padding-bottom: 20px;
     }
 
+    @media (max-width: 768px) {
+        .faculty-heading {
+            font-size: 22px;
+            margin-bottom: 20px;
+        }
+    }
+
     .about-section p {
         font-family: 'Inter', sans-serif;
         margin: 5px;
         text-align: left;
-    }
-
-    .hero-content {
-        top: 35%;
-        background-color: #1F3C44;
-        padding: 5px 20px;
-    }
-
-
-
-    .hero-content h2 {
-        color: #fff;
     }
 
     .news-content h3 {
@@ -121,37 +129,47 @@
         background-color: #1F3C44;
         color: #fff;
         font-size: 28px;
-
         margin-bottom: 20px;
     }
 
     .faculty-top-section {
-        padding: 50px 0 40px;
+        padding: 40px 0 25px;
         background: #ffffff;
     }
 
     .faculty-top-cards {
-        display: flex;
-        justify-content: center;
-        align-items: stretch;
-        gap: 30px;
-        /* max-width: 800px; */
-        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 25px;
     }
 
     .faculty-top-cards .faculty-card {
-        width: 350px;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
     }
 
-    @media (max-width: 767px) {
+    @media (max-width: 1199px) {
         .faculty-top-cards {
-            flex-direction: column;
-            align-items: center;
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
+    @media (max-width: 991px) {
+        .faculty-top-cards {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 575px) {
+        .faculty-top-cards {
+            grid-template-columns: 1fr;
+            gap: 20px;
         }
 
         .faculty-top-cards .faculty-card {
-            width: 100%;
             max-width: 350px;
+            margin: 0 auto;
         }
     }
 </style>
@@ -211,7 +229,8 @@ if (!function_exists('getFacultyCardLink')) {
 $topFacultyQuery = "
     SELECT *
     FROM faculty
-    WHERE top_order = 1
+    WHERE status = 1
+        AND top_order = 1
     ORDER BY id ASC
 ";
 
@@ -220,8 +239,13 @@ $topFacultyStmt->execute();
 $topFaculty = $topFacultyStmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
+<?php if (!empty($topFaculty)): ?>
 <section class="faculty-top-section">
     <div class="container">
+
+        <h3 class="faculty-heading">
+            Core Faculty
+        </h3>
 
         <div class="faculty-top-cards">
 
@@ -301,6 +325,7 @@ $topFaculty = $topFacultyStmt->fetchAll(PDO::FETCH_ASSOC);
 
     </div>
 </section>
+<?php endif; ?>
 
 
 
@@ -371,6 +396,10 @@ $faculty = $facultyStmt->fetchAll();
 <section class="faculty-section">
 
     <div class="container">
+
+        <h3 class="faculty-heading">
+            Associate Faculty
+        </h3>
 
         <div class="row">
 
@@ -643,7 +672,7 @@ $faculty = $facultyStmt->fetchAll();
 
 <style>
     .faculty-section {
-        padding: 70px 0;
+        padding: 25px 0 60px;
         background: #ffffff;
     }
 
@@ -722,7 +751,8 @@ $faculty = $facultyStmt->fetchAll();
     }
 
     .faculty-card {
-        display: block;
+        display: flex;
+        flex-direction: column;
         width: 100%;
         height: 100%;
         background: #ffffff;
@@ -766,6 +796,10 @@ $faculty = $facultyStmt->fetchAll();
     .faculty-content {
         padding: 20px 18px 22px;
         text-align: center;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
     }
 
     .faculty-name {
