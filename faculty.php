@@ -183,146 +183,127 @@ if (!function_exists('getFacultyCardLink')) {
         $personalPage = trim($member['personal_page'] ?? '');
         $isTopOrder   = !empty($member['top_order']) && (int)$member['top_order'] > 0;
 
-        // 1. If page_type is explicitly 'inner', ALWAYS open inner faculty page
-        if ($pageType === 'inner') {
-            return ['url' => 'innerfaculty.php?id=' . $id, 'target' => '_self'];
-        }
-
-        // 2. If page_type is explicitly 'personal', open external website
-        if ($pageType === 'personal') {
-            if (preg_match('/^https?:\/\//i', $personalPage)) {
-                return ['url' => $personalPage, 'target' => '_blank'];
-            }
-            if (!empty($personalPage) && $personalPage !== '#') {
-                return ['url' => $personalPage, 'target' => '_blank'];
-            }
-            // If personal chosen but no link, fallback
-            return $isTopOrder 
-                ? ['url' => 'innerfaculty.php?id=' . $id, 'target' => '_self'] 
-                : ['url' => '', 'target' => ''];
-        }
-
-        // 3. Fallback for legacy records without page_type
-        if (strpos($personalPage, 'innerfaculty.php') !== false) {
-            return ['url' => 'innerfaculty.php?id=' . $id, 'target' => '_self'];
-        }
-
-        // If top order (SIDIS faculty) and no page_type, default to inner page
+        // TOP FACULTY (SIDIS Faculty: Core, Adjunct/Visiting, PoP)
         if ($isTopOrder) {
+            // If set to personal external link or has personal URL configured
+            if ($pageType === 'personal' || $pageType === 'link' || ($pageType !== 'inner' && !empty($personalPage) && $personalPage !== '#')) {
+                if (preg_match('/^https?:\/\//i', $personalPage) || (!empty($personalPage) && $personalPage !== '#')) {
+                    return ['url' => $personalPage, 'target' => '_blank'];
+                }
+                return ['url' => 'innerfaculty.php?id=' . $id, 'target' => '_self'];
+            }
+            // Default to inner faculty page
             return ['url' => 'innerfaculty.php?id=' . $id, 'target' => '_self'];
         }
 
-        // External affiliate with link
+        // ASSOCIATE FACULTY (Cluster Faculty / Department Affiliate) - NEVER inner page
         if (preg_match('/^https?:\/\//i', $personalPage)) {
             return ['url' => $personalPage, 'target' => '_blank'];
         }
-
-        // If other department and has inner details
-        if (!empty($member['about1']) || !empty($member['resrch'])) {
-            return ['url' => 'innerfaculty.php?id=' . $id, 'target' => '_self'];
+        if (!empty($personalPage) && $personalPage !== '#') {
+            return ['url' => $personalPage, 'target' => '_blank'];
         }
 
         return ['url' => '', 'target' => ''];
     }
 }
 
-$topFacultyQuery = "
-    SELECT *
-    FROM faculty
-    WHERE status = 1
-        AND top_order = 1
-    ORDER BY id ASC
-";
+if (!function_exists('renderFacultyCard')) {
+    function renderFacultyCard(array $member) {
+        $cardLink = getFacultyCardLink($member);
+        ?>
+        <?php if (!empty($cardLink['url'])): ?>
+            <a href="<?php echo htmlspecialchars($cardLink['url'], ENT_QUOTES, 'UTF-8'); ?>" <?php echo !empty($cardLink['target']) ? 'target="' . $cardLink['target'] . '"' : ''; ?> class="faculty-card">
+        <?php else: ?>
+            <div class="faculty-card">
+        <?php endif; ?>
 
-$topFacultyStmt = $pdo->prepare($topFacultyQuery);
-$topFacultyStmt->execute();
-$topFaculty = $topFacultyStmt->fetchAll(PDO::FETCH_ASSOC);
+            <div class="faculty-image">
+                <img src="images/faculty/<?php echo htmlspecialchars($member['image'], ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($member['name'], ENT_QUOTES, 'UTF-8'); ?>" loading="lazy">
+            </div>
+
+            <div class="faculty-content">
+                <h3 class="faculty-name">
+                    <?php echo htmlspecialchars($member['name'], ENT_QUOTES, 'UTF-8'); ?>
+                </h3>
+                <p class="faculty-department">
+                    <?php echo htmlspecialchars($member['department'], ENT_QUOTES, 'UTF-8'); ?>
+                </p>
+                <p class="faculty-designation">
+                    <?php echo htmlspecialchars($member['designation'], ENT_QUOTES, 'UTF-8'); ?>
+                </p>
+                <?php if (!empty($member['email'])): ?>
+                    <p class="faculty-email">
+                        <i class="fa-regular fa-envelope"></i>
+                        <?php echo htmlspecialchars($member['email'], ENT_QUOTES, 'UTF-8'); ?>
+                    </p>
+                <?php endif; ?>
+            </div>
+
+        <?php if (!empty($cardLink['url'])): ?>
+            </a>
+        <?php else: ?>
+            </div>
+        <?php endif; ?>
+        <?php
+    }
+}
+
+// Fetch Top Faculty Categories (SIDIS Faculty)
+$coreFaculty = $pdo->query("
+    SELECT * FROM faculty 
+    WHERE status = 1 AND top_order = 1 
+    ORDER BY id ASC
+")->fetchAll(PDO::FETCH_ASSOC);
+
+$adjunctFaculty = $pdo->query("
+    SELECT * FROM faculty 
+    WHERE status = 1 AND top_order = 2 
+    ORDER BY id ASC
+")->fetchAll(PDO::FETCH_ASSOC);
+
+$popFaculty = $pdo->query("
+    SELECT * FROM faculty 
+    WHERE status = 1 AND top_order = 3 
+    ORDER BY id ASC
+")->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
-<?php if (!empty($topFaculty)): ?>
+<?php if (!empty($coreFaculty)): ?>
 <section class="faculty-top-section">
     <div class="container">
-
         <h3 class="faculty-heading">
             Core Faculty
         </h3>
-
         <div class="faculty-top-cards">
-
-            <?php foreach ($topFaculty as $member): ?>
-                <?php $cardLink = getFacultyCardLink($member); ?>
-
-                <?php if (!empty($cardLink['url'])): ?>
-                    <a href="<?php echo htmlspecialchars(
-                        $cardLink['url'],
-                        ENT_QUOTES,
-                        'UTF-8'
-                    ); ?>" <?php echo !empty($cardLink['target']) ? 'target="' . $cardLink['target'] . '"' : ''; ?> class="faculty-card">
-                <?php else: ?>
-                    <div class="faculty-card">
-                <?php endif; ?>
-
-                    <div class="faculty-image">
-                        <img src="images/faculty/<?php echo htmlspecialchars(
-                            $member['image'],
-                            ENT_QUOTES,
-                            'UTF-8'
-                        ); ?>" alt="<?php echo htmlspecialchars(
-                             $member['name'],
-                             ENT_QUOTES,
-                             'UTF-8'
-                         ); ?>">
-                    </div>
-
-                    <div class="faculty-content">
-
-                        <h3 class="faculty-name">
-                            <?php echo htmlspecialchars(
-                                $member['name'],
-                                ENT_QUOTES,
-                                'UTF-8'
-                            ); ?>
-                        </h3>
-                        <p class="faculty-department">
-                            <?php echo htmlspecialchars(
-                                $member['department'],
-                                ENT_QUOTES,
-                                'UTF-8'
-                            ); ?>
-                        </p>
-
-                        <p class="faculty-designation">
-                            <?php echo htmlspecialchars(
-                                $member['designation'],
-                                ENT_QUOTES,
-                                'UTF-8'
-                            ); ?>
-                        </p>
-
-                        <?php if (!empty($member['email'])): ?>
-                            <p class="faculty-email">
-                                <i class="fa-regular fa-envelope"></i>
-
-                                <?php echo htmlspecialchars(
-                                    $member['email'],
-                                    ENT_QUOTES,
-                                    'UTF-8'
-                                ); ?>
-                            </p>
-                        <?php endif; ?>
-
-                    </div>
-
-                <?php if (!empty($cardLink['url'])): ?>
-                    </a>
-                <?php else: ?>
-                    </div>
-                <?php endif; ?>
-
-            <?php endforeach; ?>
-
+            <?php foreach ($coreFaculty as $member) renderFacultyCard($member); ?>
         </div>
+    </div>
+</section>
+<?php endif; ?>
 
+<?php if (!empty($adjunctFaculty)): ?>
+<section class="faculty-top-section">
+    <div class="container">
+        <h3 class="faculty-heading">
+            Adjunct / Visiting Faculty
+        </h3>
+        <div class="faculty-top-cards">
+            <?php foreach ($adjunctFaculty as $member) renderFacultyCard($member); ?>
+        </div>
+    </div>
+</section>
+<?php endif; ?>
+
+<?php if (!empty($popFaculty)): ?>
+<section class="faculty-top-section">
+    <div class="container">
+        <h3 class="faculty-heading">
+            Professor of Practice (PoP)
+        </h3>
+        <div class="faculty-top-cards">
+            <?php foreach ($popFaculty as $member) renderFacultyCard($member); ?>
+        </div>
     </div>
 </section>
 <?php endif; ?>
@@ -433,23 +414,9 @@ $faculty = $facultyStmt->fetchAll();
 
                 <div class="row" id="facultyContainer">
 
-                    <?php foreach ($faculty as $member): ?>
-
-                        <?php
-                        $cardLink = getFacultyCardLink($member);
-
-                        /*
-                        |--------------------------------------------------------------------------
-                        | Faculty can belong to multiple clusters
-                        |
-                        | Example:
-                        | cluster_id = "1,2"
-                        | cluster_id = "1,3,5"
-                        |--------------------------------------------------------------------------
-                        */
-
+                    <?php foreach ($faculty as $member): 
                         $clusterIds = trim($member['cluster_id']);
-                        ?>
+                    ?>
 
                         <div class="col-lg-4 col-md-6 faculty-card-wrapper"
                             data-cluster-id="<?php echo htmlspecialchars(
@@ -458,80 +425,7 @@ $faculty = $facultyStmt->fetchAll();
                                 'UTF-8'
                             ); ?>">
 
-                            <?php if (!empty($cardLink['url'])): ?>
-
-                                <a href="<?php echo htmlspecialchars(
-                                    $cardLink['url'],
-                                    ENT_QUOTES,
-                                    'UTF-8'
-                                ); ?>" <?php echo !empty($cardLink['target']) ? 'target="' . $cardLink['target'] . '"' : ''; ?> class="faculty-card">
-
-                            <?php else: ?>
-
-                                <div class="faculty-card">
-
-                            <?php endif; ?>
-
-                                    <div class="faculty-image">
-
-                                        <img src="images/faculty/<?php echo htmlspecialchars(
-                                            $member['image'],
-                                            ENT_QUOTES,
-                                            'UTF-8'
-                                        ); ?>" alt="<?php echo htmlspecialchars(
-                                             $member['name'],
-                                             ENT_QUOTES,
-                                             'UTF-8'
-                                         ); ?>" loading="lazy">
-
-                                    </div>
-
-                                    <div class="faculty-content">
-
-                                        <h3 class="faculty-name">
-                                            <?php echo htmlspecialchars(
-                                                $member['name'],
-                                                ENT_QUOTES,
-                                                'UTF-8'
-                                            ); ?>
-                                        </h3>
-
-                                        <p class="faculty-department">
-                                            <?php echo htmlspecialchars(
-                                                $member['department'],
-                                                ENT_QUOTES,
-                                                'UTF-8'
-                                            ); ?>
-                                        </p>
-
-                                        <p class="faculty-designation">
-                                            <?php echo htmlspecialchars(
-                                                $member['designation'],
-                                                ENT_QUOTES,
-                                                'UTF-8'
-                                            ); ?>
-                                        </p>
-
-                                        <p class="faculty-email">
-                                            <i class="fa-regular fa-envelope"></i>
-                                            <?php echo htmlspecialchars(
-                                                $member['email'],
-                                                ENT_QUOTES,
-                                                'UTF-8'
-                                            ); ?>
-                                        </p>
-
-                                    </div>
-
-                            <?php if (!empty($cardLink['url'])): ?>
-
-                                </a>
-
-                            <?php else: ?>
-
-                                </div>
-
-                            <?php endif; ?>
+                            <?php renderFacultyCard($member); ?>
 
                         </div>
 

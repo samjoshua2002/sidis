@@ -25,6 +25,29 @@ if (!$facr) {
     exit;
 }
 
+// Only Top Faculty (Core Faculty, Adjunct / Visiting Faculty, Professor of Practice: top_order > 0) have inner profile pages
+$topOrder = (int)($facr['top_order'] ?? 0);
+if ($topOrder <= 0) {
+    // Associate faculty (cluster) do not have inner pages
+    $personalPage = trim($facr['personal_page'] ?? '');
+    if (!empty($personalPage) && preg_match('/^https?:\/\//i', $personalPage)) {
+        header("Location: " . $personalPage);
+        exit;
+    }
+    header("Location: faculty.php");
+    exit;
+}
+
+// If top faculty member has an external profile link specified
+$pageType = strtolower(trim($facr['page_type'] ?? ''));
+if ($pageType === 'personal' || $pageType === 'link') {
+    $personalPage = trim($facr['personal_page'] ?? '');
+    if (!empty($personalPage) && preg_match('/^https?:\/\//i', $personalPage)) {
+        header("Location: " . $personalPage);
+        exit;
+    }
+}
+
 // Format email cleanly for display and mailto link
 $cleanEmail = str_replace(['[at]', '[.]', '(at)', '(dot)'], ['@', '.', '@', '.'], $facr['email'] ?? '');
 

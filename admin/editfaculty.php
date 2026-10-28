@@ -88,12 +88,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $topOrder = isset($_POST['top_order']) ? (string)$_POST['top_order'] : '0';
 
-    if ($topOrder === '1') {
+    if (in_array($topOrder, ['1', '2', '3'], true)) {
         if ($pageType !== 'inner' && $pageType !== 'personal') {
             $pageType = (!empty($facultyPage) && $facultyPage !== '#') ? 'personal' : 'inner';
         }
         $selectedClusters = [];
     } else {
+        $topOrder = '0';
         $pageType = 'personal';
         $selectedClusters = $_POST['clusters'] ?? [];
         if (!is_array($selectedClusters)) $selectedClusters = [];
@@ -101,7 +102,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $selectedClusters = array_values(array_unique(array_filter($selectedClusters, function($v) { return $v > 0; })));
     }
 
-    if ($topOrder !== '0' && $topOrder !== '1') {
+    if (!in_array($topOrder, ['0', '1', '2', '3'], true)) {
         $topOrder = '0';
     }
 
@@ -112,7 +113,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif ($facultyDesig === '') {
         $error = 'Please enter the designation.';
     } elseif ($topOrder === '0' && empty($selectedClusters)) {
-        $error = 'Please select at least one cluster for cluster faculty.';
+        $error = 'Please select at least one cluster for associate faculty.';
     }
 
     // Image Upload (optional on edit)
@@ -287,36 +288,69 @@ include 'header.php';
             </div>
 
             <!-- FACULTY TYPE -->
+            <!-- FACULTY CATEGORY -->
             <div class="form-group">
-                <label style="font-weight:600;">Faculty Category</label>
-                <div style="margin-top:10px;">
-                    <label style="margin-right:25px; cursor:pointer;">
-                        <input
-                            type="radio"
-                            name="top_order"
-                            value="1"
-                            id="topFaculty"
-                            <?= $topOrder === '1' ? 'checked' : '' ?>
-                            onchange="handleFacultyTypeChange('1')"
-                        >
-                        <strong>Top Faculty (SIDIS Faculty)</strong>
-                    </label>
-                    <label style="cursor:pointer;">
+                <label style="font-weight:600;">Faculty Category *</label>
+                <p style="font-size:13px; color:#64748b; margin-top:2px; margin-bottom:10px;">Select faculty category. Top faculty members (Core, Adjunct/Visiting, PoP) have dedicated profile pages.</p>
+
+                <div style="background:#f8fafc; padding:16px 18px; border-radius:8px; border:1px solid #e2e8f0; margin-bottom:12px;">
+                    <div style="font-size:12px; font-weight:700; color:#184C74; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:10px;">
+                        Top Faculty (SIDIS Faculty) — with Inner Profile Pages
+                    </div>
+                    <div style="display:flex; flex-wrap:wrap; gap:20px;">
+                        <label style="cursor:pointer; display:flex; align-items:center; gap:8px;">
+                            <input
+                                type="radio"
+                                name="top_order"
+                                value="1"
+                                id="catCore"
+                                <?= $topOrder === '1' ? 'checked' : '' ?>
+                                onchange="handleFacultyTypeChange('1')"
+                            >
+                            <strong>Core Faculty</strong>
+                        </label>
+                        <label style="cursor:pointer; display:flex; align-items:center; gap:8px;">
+                            <input
+                                type="radio"
+                                name="top_order"
+                                value="2"
+                                id="catAdjunct"
+                                <?= $topOrder === '2' ? 'checked' : '' ?>
+                                onchange="handleFacultyTypeChange('2')"
+                            >
+                            <strong>Adjunct / Visiting Faculty</strong>
+                        </label>
+                        <label style="cursor:pointer; display:flex; align-items:center; gap:8px;">
+                            <input
+                                type="radio"
+                                name="top_order"
+                                value="3"
+                                id="catPop"
+                                <?= $topOrder === '3' ? 'checked' : '' ?>
+                                onchange="handleFacultyTypeChange('3')"
+                            >
+                            <strong>Professor of Practice (PoP)</strong>
+                        </label>
+                    </div>
+                </div>
+
+                <div style="background:#f8fafc; padding:14px 18px; border-radius:8px; border:1px solid #e2e8f0; margin-bottom: 20px;">
+                    <label style="cursor:pointer; display:flex; align-items:center; gap:8px; margin:0;">
                         <input
                             type="radio"
                             name="top_order"
                             value="0"
-                            id="clusterFaculty"
+                            id="catAssociate"
                             <?= $topOrder === '0' ? 'checked' : '' ?>
                             onchange="handleFacultyTypeChange('0')"
                         >
-                        Cluster Faculty (Department Affiliate)
+                        <span><strong>Associate Faculty</strong> (Cluster Faculty / Department Affiliate)</span>
                     </label>
                 </div>
             </div>
 
             <!-- PROFILE PAGE TYPE (Only shown for Top Faculty) -->
-            <div class="form-group" id="profileTypeWrapper" style="<?= $topOrder === '1' ? '' : 'display:none;' ?>; background: #f8fafc; padding: 18px 20px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 20px;">
+            <div class="form-group" id="profileTypeWrapper" style="<?= in_array($topOrder, ['1', '2', '3'], true) ? '' : 'display:none;' ?>; background: #f8fafc; padding: 18px 20px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 20px;">
                 <label style="font-weight:600; color:#184C74;">Profile Page Option</label>
                 <p style="font-size:13px; color:#64748b; margin-top:2px; margin-bottom:12px;">Choose whether this top-order faculty member links to an external personal website or uses the dedicated SIDIS inner profile page.</p>
 
@@ -351,7 +385,7 @@ include 'header.php';
                 <div id="page_type_chunks_container"></div>
 
                 <!-- BASIC DETAILS FOR INNER PAGE (Building No & Mobile) -->
-                <div id="innerBasicDetails" style="<?= ($topOrder === '1' && $pageType === 'inner') ? '' : 'display:none;' ?>; margin-top: 15px; padding-top: 15px; border-top: 1px dashed #cbd5e1;">
+                <div id="innerBasicDetails" style="<?= (in_array($topOrder, ['1', '2', '3'], true) && $pageType === 'inner') ? '' : 'display:none;' ?>; margin-top: 15px; padding-top: 15px; border-top: 1px dashed #cbd5e1;">
                     <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
                         <div>
                             <label for="office" style="font-size:13px; font-weight:600;">Building / Office No</label>
@@ -388,8 +422,8 @@ include 'header.php';
             </div>
 
             <!-- PERSONAL PAGE URL -->
-            <div class="form-group" id="personalPageWrapper" style="<?= ($topOrder === '1' && $pageType === 'inner') ? 'display:none;' : '' ?>">
-                <label for="personal_page" id="personalPageLabel"><?= ($topOrder === '1') ? 'Personal Website URL' : 'Department Profile / Personal Page URL' ?></label>
+            <div class="form-group" id="personalPageWrapper" style="<?= (in_array($topOrder, ['1', '2', '3'], true) && $pageType === 'inner') ? 'display:none;' : '' ?>">
+                <label for="personal_page" id="personalPageLabel"><?= in_array($topOrder, ['1', '2', '3'], true) ? 'Personal Website URL' : 'Department Profile / Personal Page URL' ?></label>
                 <input
                     type="text"
                     id="personal_page"
@@ -402,8 +436,8 @@ include 'header.php';
                 <div id="personal_page_chunks_container"></div>
             </div>
 
-            <!-- CLUSTERS (Cluster Faculty Only) -->
-            <div class="form-group" id="clusterSection" style="<?= $topOrder === '1' ? 'display:none;' : '' ?>">
+            <!-- CLUSTERS (Associate / Cluster Faculty Only) -->
+            <div class="form-group" id="clusterSection" style="<?= in_array($topOrder, ['1', '2', '3'], true) ? 'display:none;' : '' ?>">
                 <label>Clusters *</label>
                 <small style="display:block; margin-bottom:12px;">Select one or more clusters.</small>
                 <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:10px;">
@@ -460,16 +494,19 @@ function handleFacultyTypeChange(val) {
     const clusterSection = document.getElementById('clusterSection');
     const profileTypeWrapper = document.getElementById('profileTypeWrapper');
     const personalPageWrapper = document.getElementById('personalPageWrapper');
+    const personalPageLabel = document.getElementById('personalPageLabel');
 
-    if (val === '1') {
+    if (val === '1' || val === '2' || val === '3') {
         clusterSection.style.display = 'none';
         profileTypeWrapper.style.display = 'block';
+        if (personalPageLabel) personalPageLabel.textContent = 'Personal Website URL';
         const curType = document.getElementById('page_type_val').value || 'personal';
         handlePageTypeChange(curType);
     } else {
         clusterSection.style.display = 'block';
         profileTypeWrapper.style.display = 'none';
         personalPageWrapper.style.display = 'block';
+        if (personalPageLabel) personalPageLabel.textContent = 'Department Profile / Personal Page URL';
         document.getElementById('innerBasicDetails').style.display = 'none';
         document.getElementById('page_type_val').value = 'personal';
         syncCustomChunked('page_type', 'personal');

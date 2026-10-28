@@ -208,7 +208,270 @@ $newsEvents = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
 
-<section class="about-section" style="padding-top: 0;">
+<!-- KEY STATISTICS / COUNTER SECTION -->
+<?php
+$counterStmt = $pdo->query("
+    SELECT id, cheading, cvalue, template_key 
+    FROM `counter` 
+    WHERE `status` = 1 
+    ORDER BY `display_order` ASC, `id` ASC 
+    LIMIT 10
+");
+$homeCounters = $counterStmt ? $counterStmt->fetchAll(PDO::FETCH_ASSOC) : [];
+
+// Auto-sync template counters with real-time live database counts
+$liveQueries = [
+    'core_faculty'  => "SELECT COUNT(*) FROM `faculty` WHERE `status` = 1 AND `top_order` = 1",
+    'faculty'       => "SELECT COUNT(*) FROM `faculty` WHERE `status` = 1",
+    'total_faculty' => "SELECT COUNT(*) FROM `faculty` WHERE `status` = 1",
+    'staff'         => "SELECT COUNT(*) FROM `staff`",
+    'mtech'         => "SELECT COUNT(*) FROM `mtech_students`",
+    'ms'            => "SELECT COUNT(*) FROM `ms`",
+    'phd'           => "SELECT COUNT(*) FROM `phd_scholars`",
+    'clusters'      => "SELECT COUNT(*) FROM `clusters` WHERE `status` = 1",
+];
+
+foreach ($homeCounters as &$cnt) {
+    $tKey = $cnt['template_key'] ?? '';
+    if (!empty($tKey) && isset($liveQueries[$tKey])) {
+        try {
+            $liveVal = $pdo->query($liveQueries[$tKey])->fetchColumn();
+            if ($liveVal !== false) {
+                $cnt['cvalue'] = (string)$liveVal;
+            }
+        } catch (Exception $e) {}
+    }
+}
+unset($cnt);
+
+$totalCounters = count($homeCounters);
+
+// Dynamic Counter Background Image
+$counterBgImage = 'counter.png';
+try {
+    $counterSettingsStmt = $pdo->query("SELECT bg_image FROM `counter_settings` WHERE `id` = 1 LIMIT 1");
+    if ($counterSettingsStmt) {
+        $counterSettingRow = $counterSettingsStmt->fetch(PDO::FETCH_ASSOC);
+        if (!empty($counterSettingRow['bg_image']) && file_exists(__DIR__ . '/images/' . $counterSettingRow['bg_image'])) {
+            $counterBgImage = $counterSettingRow['bg_image'];
+        }
+    }
+} catch (Exception $e) {
+    $counterBgImage = 'counter.png';
+}
+
+if (!function_exists('formatCounterHeading')) {
+    function formatCounterHeading($heading) {
+        $heading = trim($heading);
+
+        // Special responsive handling for Undergraduate / Postgraduate
+        if (stripos($heading, 'Undergraduate') !== false) {
+            return "Under<span class='d-md-none'><br></span>graduate<br>Students";
+        }
+        if (stripos($heading, 'Postgraduate') !== false) {
+            return "Post<span class='d-md-none'><br></span>graduate<br>Students";
+        }
+
+        $words = preg_split('/\s+/', $heading);
+        $count = count($words);
+
+        if ($count <= 1) {
+            return htmlspecialchars($heading, ENT_QUOTES, 'UTF-8');
+        }
+
+        // Supportive words: of, to, by, in, for, and, on, at, with, from, etc.
+        $supportiveWords = ['of', 'to', 'by', 'in', 'for', 'and', 'on', 'at', 'with', 'from', '&'];
+
+        // If the second word is a supportive word (e.g. "Professor Of Practice")
+        // Line 1: Word 1 + supportive word ("Professor Of")
+        // Line 2: Remaining words ("Practice")
+        if ($count >= 3 && in_array(strtolower($words[1]), $supportiveWords)) {
+            $line1 = htmlspecialchars($words[0] . ' ' . $words[1], ENT_QUOTES, 'UTF-8');
+            $line2 = htmlspecialchars(implode(' ', array_slice($words, 2)), ENT_QUOTES, 'UTF-8');
+            return $line1 . '<br>' . $line2;
+        }
+
+        // Default 2 words (e.g. "MTech Students", "Exchange Students")
+        if ($count === 2) {
+            return htmlspecialchars($words[0], ENT_QUOTES, 'UTF-8') . '<br>' . htmlspecialchars($words[1], ENT_QUOTES, 'UTF-8');
+        }
+
+        // 3+ words without supportive 2nd word (e.g. "M.S. Research Scholars")
+        $line1 = htmlspecialchars($words[0], ENT_QUOTES, 'UTF-8');
+        $line2 = htmlspecialchars(implode(' ', array_slice($words, 1)), ENT_QUOTES, 'UTF-8');
+        return $line1 . '<br>' . $line2;
+    }
+}
+?>
+
+<?php if (!empty($homeCounters)): ?>
+<div class="hero-deer" id="counter-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <?php foreach ($homeCounters as $key => $cnt): ?>
+                <?php
+                if ($totalCounters === 10) {
+                    $colClass = 'col-md-5-custom counter-col';
+                } elseif ($totalCounters === 9) {
+                    $colClass = ($key < 5) ? 'col-md-5-custom counter-col' : 'col-md-3 counter-col';
+                } elseif ($totalCounters === 8) {
+                    $colClass = 'col-md-3 counter-col';
+                } elseif ($totalCounters <= 5) {
+                    $colClass = 'col-md-5-custom counter-col';
+                } else {
+                    $colClass = ($key < 5) ? 'col-md-5-custom counter-col' : 'col-md-3 counter-col';
+                }
+                ?>
+                <div class="<?= $colClass ?>">
+                    <div class="home-counters">
+                        <div class="counter">
+                            <div class="counter-content">
+                                <span class="counter-value"><?= htmlspecialchars($cnt['cvalue'], ENT_QUOTES, 'UTF-8') ?></span>
+                                <h3 class="counter-hdng"><?= formatCounterHeading($cnt['cheading']) ?></h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</div>
+
+<style>
+    .hero-deer {
+        background-image: url('images/<?= htmlspecialchars($counterBgImage, ENT_QUOTES, 'UTF-8') ?>');
+        background-position: center bottom;
+        background-size: cover;
+        background-repeat: no-repeat;
+        display: flex;
+        align-items: center;
+        min-height: 400px;
+        padding: 40px 0;
+    }
+
+    .hero-deer .container {
+        width: 100%;
+    }
+
+    .hero-deer .row {
+        justify-content: center;
+        align-items: flex-start;
+    }
+
+    .col-md-5-custom {
+        width: 20%;
+        flex: 0 0 20%;
+        max-width: 20%;
+    }
+
+    .counter-col {
+        display: flex;
+        justify-content: center;
+    }
+
+    .home-counters {
+        width: 100%;
+        text-align: center;
+        padding: 10px 4px;
+        display: flex;
+        justify-content: center;
+    }
+
+    .counter {
+        width: 100%;
+        text-align: center;
+        color: #fff;
+        font-family: 'Lato', sans-serif;
+    }
+
+    .counter .counter-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        margin: 0 auto;
+        padding: 5px;
+        max-width: 180px;
+    }
+
+    .counter .counter-value {
+        font-size: 42px;
+        font-weight: 700;
+        line-height: 48px;
+        margin: 0 auto 8px auto;
+        display: block;
+        color: #fff;
+        font-family: 'Lato', sans-serif;
+        text-align: center;
+    }
+
+    .counter h3,
+    .counter-hdng {
+        color: #fff;
+        font-size: 16px !important;
+        font-weight: 700 !important;
+        font-family: 'Lato', sans-serif;
+        letter-spacing: 0.3px;
+        margin: 0 auto;
+        line-height: 1.35;
+        text-align: center;
+    }
+
+    @media screen and (max-width: 768px) {
+        .hero-deer {
+            min-height: auto !important;
+            align-items: center !important;
+            padding: 35px 0 45px 0 !important;
+        }
+
+        .hero-deer .row {
+            row-gap: 18px !important;
+        }
+
+        .counter-col {
+            width: 33.33% !important;
+            flex: 0 0 33.33% !important;
+            max-width: 33.33% !important;
+            min-width: 0 !important;
+            padding: 0 2px !important;
+        }
+
+        .home-counters {
+            padding: 0 !important;
+        }
+
+        .counter .counter-content {
+            padding: 0 !important;
+            max-width: 95px !important;
+            width: 100% !important;
+            margin: 0 auto !important;
+        }
+
+        .counter .counter-value {
+            font-size: 18px !important;
+            font-weight: 700 !important;
+            line-height: 1.2 !important;
+            margin: 0 auto 3px auto !important;
+        }
+
+        .counter h3,
+        .counter-hdng {
+            font-size: 11.5px !important;
+            line-height: 14.5px !important;
+            font-weight: 600 !important;
+            letter-spacing: 0 !important;
+            white-space: normal !important;
+            word-break: normal !important;
+            max-width: 95px !important;
+            margin: 0 auto !important;
+            text-align: center !important;
+        }
+    }
+</style>
+<?php endif; ?>
+
+<section class="about-section" style="padding-top: 35px;">
 
     <div class="container">
 

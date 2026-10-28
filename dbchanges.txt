@@ -222,3 +222,48 @@ ALTER TABLE `faculty`
   MODIFY `prfsnmem`    LONGTEXT NOT NULL,
   MODIFY `crstaught`   LONGTEXT NOT NULL;
 
+
+-- ------------------------------------------------------------------------------
+-- STEP 6: Key Statistics / Counter Table for Homepage (max 10 items)
+-- ------------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `counter` (
+  `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `cheading` VARCHAR(255) NOT NULL,
+  `cvalue` VARCHAR(100) NOT NULL,
+  `display_order` INT(11) NOT NULL DEFAULT 0,
+  `status` TINYINT(1) NOT NULL DEFAULT 1,
+  `template_key` VARCHAR(50) DEFAULT NULL,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- If table was already created earlier, run this to add template_key:
+-- ALTER TABLE `counter` ADD COLUMN IF NOT EXISTS `template_key` VARCHAR(50) DEFAULT NULL AFTER `status`;
+
+-- Sample / Initial Counter Data
+INSERT INTO `counter` (`cheading`, `cvalue`, `display_order`, `status`) VALUES
+('Faculty', '39', 1, 1),
+('Staff', '11', 2, 1),
+('Professor Of Practice', '6', 3, 1),
+('Projects', '829', 4, 1),
+('Undergraduate Students', '1107', 5, 1),
+('MTech Students', '452', 6, 1),
+('M.S. Research Scholars', '58', 7, 1),
+('Ph.D. Research Scholars', '172', 8, 1),
+('Exchange Students', '7', 9, 1);
+
+
+-- ------------------------------------------------------------------------------
+-- STEP 7: Counter Section Settings (Dynamic Background Image)
+-- ------------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `counter_settings` (
+  `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `bg_image` VARCHAR(255) NOT NULL DEFAULT 'counter.png',
+  `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO `counter_settings` (`id`, `bg_image`)
+VALUES (1, 'counter.png')
+ON DUPLICATE KEY UPDATE `id` = `id`;

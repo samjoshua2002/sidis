@@ -1432,6 +1432,35 @@ ALTER TABLE `staff`
 --
 ALTER TABLE `users`
   MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- Table structure for table `counter`
+--
+CREATE TABLE IF NOT EXISTS `counter` (
+  `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `cheading` VARCHAR(255) NOT NULL,
+  `cvalue` VARCHAR(100) NOT NULL,
+  `display_order` INT(11) NOT NULL DEFAULT 0,
+  `status` TINYINT(1) NOT NULL DEFAULT 1,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Table structure for table `counter_settings`
+--
+CREATE TABLE IF NOT EXISTS `counter_settings` (
+  `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `bg_image` VARCHAR(255) NOT NULL DEFAULT 'counter.png',
+  `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO `counter_settings` (`id`, `bg_image`)
+VALUES (1, 'counter.png')
+ON DUPLICATE KEY UPDATE `id` = `id`;
+
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

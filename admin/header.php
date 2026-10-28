@@ -12,6 +12,7 @@ $navigation = [
         'hero.php' => 'Hero Section',
         'director-message.php' => 'Message from the Director',
         'head-message.php' => 'Message from Head',
+        'counter.php' => 'Key Statistics / Counter',
         'news.php' => 'Latest News & Events',
         'announcements.php' => 'Announcements',
         'research.php' => 'Featured Research',
@@ -122,6 +123,10 @@ $navigation = [
 
                 $section_open = array_key_exists($current_page, $pages);
 
+                if ($section === 'Homepage' && in_array($current_page, ['counter.php', 'addcounter.php', 'editcounter.php'])) {
+                    $section_open = true;
+                }
+
                 if ($section === 'Admissions' && in_array($current_page, ['important_dates.php', 'add_important_date.php', 'edit_important_date.php', 'how_to_apply.php', 'add_how_to_apply.php', 'edit_how_to_apply.php'])) {
                     $section_open = true;
                 }
@@ -156,6 +161,7 @@ $navigation = [
 
                         <?php
                         $isActive = ($current_page === $page) ||
+                            ($page === 'counter.php' && in_array($current_page, ['addcounter.php', 'editcounter.php'])) ||
                             ($page === 'important_dates.php' && in_array($current_page, ['add_important_date.php', 'edit_important_date.php'])) ||
                             ($page === 'how_to_apply.php' && in_array($current_page, ['add_how_to_apply.php', 'edit_how_to_apply.php']));
                         ?>

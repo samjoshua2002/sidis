@@ -289,39 +289,25 @@ include 'header.php';
                                 <!-- TYPE -->
 
                                 <td>
-
-                                    <?php if ((int)$member['top_order'] === 1): ?>
-
-                                        <span
-                                            style="
-                                                display:inline-block;
-                                                padding:5px 10px;
-                                                border-radius:4px;
-                                                background:#d4edda;
-                                                color:#155724;
-                                                font-size:13px;
-                                            "
-                                        >
-                                            Top Faculty
+                                    <?php 
+                                    $catOrder = (int)($member['top_order'] ?? 0);
+                                    if ($catOrder === 1): ?>
+                                        <span style="display:inline-block; padding:4px 9px; border-radius:4px; background:#d4edda; color:#155724; font-size:12px; font-weight:600;">
+                                            Core Faculty
                                         </span>
-
+                                    <?php elseif ($catOrder === 2): ?>
+                                        <span style="display:inline-block; padding:4px 9px; border-radius:4px; background:#e0e7ff; color:#3730a3; font-size:12px; font-weight:600;">
+                                            Adjunct / Visiting
+                                        </span>
+                                    <?php elseif ($catOrder === 3): ?>
+                                        <span style="display:inline-block; padding:4px 9px; border-radius:4px; background:#fef3c7; color:#92400e; font-size:12px; font-weight:600;">
+                                            Prof. of Practice (PoP)
+                                        </span>
                                     <?php else: ?>
-
-                                        <span
-                                            style="
-                                                display:inline-block;
-                                                padding:5px 10px;
-                                                border-radius:4px;
-                                                background:#e2e3e5;
-                                                color:#383d41;
-                                                font-size:13px;
-                                            "
-                                        >
-                                            Cluster Faculty
+                                        <span style="display:inline-block; padding:4px 9px; border-radius:4px; background:#e2e3e5; color:#383d41; font-size:12px; font-weight:600;">
+                                            Associate Faculty
                                         </span>
-
                                     <?php endif; ?>
-
                                 </td>
 
 

@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
     if ($facultyId > 0 && in_array($targetType, ['inner', 'personal'], true)) {
         try {
-            $stmt = $pdo->prepare("UPDATE faculty SET page_type = :pt WHERE id = :id AND top_order = 1");
+            $stmt = $pdo->prepare("UPDATE faculty SET page_type = :pt WHERE id = :id AND top_order > 0");
             $stmt->execute([':pt' => $targetType, ':id' => $facultyId]);
             $success = 'Profile type updated to ' . ($targetType === 'inner' ? 'Inner Faculty Page' : 'External Link') . '.';
         } catch (PDOException $e) {
@@ -159,6 +159,7 @@ $query = "
         f.office,
         f.phone,
         f.image,
+        f.top_order,
         COALESCE(f.page_type, 'personal') AS page_type,
         f.personal_page,
         u.id AS user_id,
@@ -167,8 +168,8 @@ $query = "
         u.updated_at AS user_last_updated
     FROM faculty f
     LEFT JOIN users u ON u.faculty_id = f.id AND u.role = 'faculty'
-    WHERE f.top_order = 1 AND f.status = 1
-    ORDER BY f.id ASC
+    WHERE f.top_order > 0 AND f.status = 1
+    ORDER BY f.top_order ASC, f.id ASC
 ";
 $topFaculty = $pdo->query($query)->fetchAll(PDO::FETCH_ASSOC);
 
@@ -276,6 +277,16 @@ include 'header.php';
                                     <strong style="color: #184C74; font-size: 15px;">
                                         <?= htmlspecialchars($fullName, ENT_QUOTES, 'UTF-8') ?>
                                     </strong>
+                                    <?php
+                                    $catOrder = (int)($fac['top_order'] ?? 1);
+                                    if ($catOrder === 1) {
+                                        echo '<span style="display:inline-block; font-size:11px; font-weight:600; padding:2px 8px; border-radius:4px; background:#d4edda; color:#155724; margin-left:6px;">Core Faculty</span>';
+                                    } elseif ($catOrder === 2) {
+                                        echo '<span style="display:inline-block; font-size:11px; font-weight:600; padding:2px 8px; border-radius:4px; background:#e0e7ff; color:#3730a3; margin-left:6px;">Adjunct / Visiting</span>';
+                                    } elseif ($catOrder === 3) {
+                                        echo '<span style="display:inline-block; font-size:11px; font-weight:600; padding:2px 8px; border-radius:4px; background:#fef3c7; color:#92400e; margin-left:6px;">Prof. of Practice (PoP)</span>';
+                                    }
+                                    ?>
                                     <div style="font-size: 12px; color: #555; margin-top: 3px;">
                                         <i class="fa-regular fa-envelope" style="margin-right: 4px; color:#184C74;"></i><?= htmlspecialchars($fac['email']) ?>
                                     </div>
@@ -423,8 +434,13 @@ include 'header.php';
                 <select id="select_faculty" class="form-control" style="width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 6px;" onchange="onSelectFacultyChange(this.value)">
                     <option value="">-- Choose Faculty Member --</option>
                     <?php foreach ($topFaculty as $f): ?>
+                        <?php
+                        $catLabel = 'Core';
+                        if ((int)$f['top_order'] === 2) $catLabel = 'Adjunct/Visiting';
+                        elseif ((int)$f['top_order'] === 3) $catLabel = 'PoP';
+                        ?>
                         <option value="<?= (int)$f['faculty_id'] ?>" data-name="<?= htmlspecialchars($f['name'], ENT_QUOTES, 'UTF-8') ?>">
-                            <?= htmlspecialchars($f['name'] . ' (' . $f['department'] . ')') ?>
+                            <?= htmlspecialchars($f['name'] . ' [' . $catLabel . ' - ' . $f['department'] . ']') ?>
                             <?= !empty($f['username']) ? ' [Account: ' . htmlspecialchars($f['username']) . ']' : '' ?>
                         </option>
                     <?php endforeach; ?>
