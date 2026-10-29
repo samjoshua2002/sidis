@@ -10,6 +10,28 @@
         </div>
     </div>
 </section>
+
+<!-- SEARCH BAR AT CENTER -->
+<div class="container live-search-container">
+    <div class="live-search-wrapper">
+        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        <input 
+            type="text" 
+            id="staffSearchInput" 
+            class="live-search-input" 
+            placeholder="Search staff by name, designation..." 
+            autocomplete="off"
+            aria-label="Search staff"
+        >
+        <button type="button" id="staffSearchClear" class="search-clear-btn" aria-label="Clear search" style="display: none;">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    </div>
+    <div id="staffGlobalNoResult" class="live-search-no-result" style="display: none;">
+        <i class="fa-solid fa-magnifying-glass" style="font-size: 26px; margin-bottom: 10px; display: block; color: #9CA3AF;"></i>
+        No staff members found matching "<span id="staffSearchQueryText"></span>".
+    </div>
+</div>
 <style>
     td>p>a {
         color: #000;
@@ -260,5 +282,53 @@ $staff = $staffStmt->fetchAll();
         margin-bottom: 20px;
     }
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const searchInput     = document.getElementById('staffSearchInput');
+    const clearBtn        = document.getElementById('staffSearchClear');
+    const globalNoResult  = document.getElementById('staffGlobalNoResult');
+    const searchQueryText = document.getElementById('staffSearchQueryText');
+    const cards           = document.querySelectorAll('.staff-grid .faculty-card');
+
+    function performSearch() {
+        const query = searchInput ? searchInput.value.trim().toLowerCase() : '';
+        if (clearBtn) {
+            clearBtn.style.display = query.length > 0 ? 'inline-flex' : 'none';
+        }
+
+        let visible = 0;
+        cards.forEach(function (card) {
+            const text = (card.textContent || '').toLowerCase();
+            if (!query || text.includes(query)) {
+                card.style.display = '';
+                visible++;
+            } else {
+                card.style.display = 'none';
+            }
+        });
+
+        if (globalNoResult) {
+            if (query && visible === 0) {
+                if (searchQueryText) searchQueryText.textContent = searchInput ? searchInput.value.trim() : '';
+                globalNoResult.style.display = 'block';
+            } else {
+                globalNoResult.style.display = 'none';
+            }
+        }
+    }
+
+    if (searchInput) searchInput.addEventListener('input', performSearch);
+    if (clearBtn) {
+        clearBtn.addEventListener('click', function () {
+            if (searchInput) {
+                searchInput.value = '';
+                performSearch();
+                searchInput.focus();
+            }
+        });
+    }
+});
+</script>
 
 <?php include 'footer.php'; ?>

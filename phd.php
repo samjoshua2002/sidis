@@ -103,6 +103,28 @@ include 'header.php';
 
 </section>
 
+<!-- SEARCH BAR AT CENTER -->
+<div class="container live-search-container">
+    <div class="live-search-wrapper">
+        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        <input 
+            type="text" 
+            id="studentSearchInput" 
+            class="live-search-input" 
+            placeholder="Search by roll number, name, email, mentor..." 
+            autocomplete="off"
+            aria-label="Search scholars"
+        >
+        <button type="button" id="studentSearchClear" class="search-clear-btn" aria-label="Clear search" style="display: none;">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    </div>
+    <div id="studentGlobalNoResult" class="live-search-no-result" style="display: none;">
+        <i class="fa-solid fa-magnifying-glass" style="font-size: 26px; margin-bottom: 10px; display: block; color: #9CA3AF;"></i>
+        No scholars found matching "<span id="studentSearchQueryText"></span>".
+    </div>
+</div>
+
 
 <style>
 
@@ -418,5 +440,77 @@ include 'header.php';
 
 </style>
 
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const searchInput     = document.getElementById('studentSearchInput');
+    const clearBtn        = document.getElementById('studentSearchClear');
+    const globalNoResult  = document.getElementById('studentGlobalNoResult');
+    const searchQueryText = document.getElementById('studentSearchQueryText');
+    const batchSections   = document.querySelectorAll('.phd-table-section');
+
+    function performSearch() {
+        const query = searchInput ? searchInput.value.trim().toLowerCase() : '';
+        if (clearBtn) {
+            clearBtn.style.display = query.length > 0 ? 'inline-flex' : 'none';
+        }
+
+        let totalVisible = 0;
+        batchSections.forEach(function (section) {
+            const rows = section.querySelectorAll('.phd-table tbody tr');
+            let sectionVisible = 0;
+            rows.forEach(function (row) {
+                const text = (row.textContent || '').toLowerCase();
+                if (!query || text.includes(query)) {
+                    row.style.display = '';
+                    sectionVisible++;
+                    totalVisible++;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            /* Re-stripe visible rows so alternating yellow/white is preserved
+               even when some rows are hidden (CSS nth-child counts hidden rows).
+               Use explicit colours (not '') so stale inline styles are overwritten. */
+            let visibleIdx = 0;
+            rows.forEach(function (row) {
+                if (row.style.display !== 'none') {
+                    row.style.backgroundColor = (visibleIdx % 2 === 0) ? '#ffffff' : '#F4E796';
+                    visibleIdx++;
+                }
+            });
+
+            if (query && sectionVisible === 0) {
+                section.style.display = 'none';
+            } else {
+                section.style.display = '';
+            }
+        });
+
+        if (globalNoResult) {
+            if (query && totalVisible === 0) {
+                if (searchQueryText) searchQueryText.textContent = searchInput ? searchInput.value.trim() : '';
+                globalNoResult.style.display = 'block';
+            } else {
+                globalNoResult.style.display = 'none';
+            }
+        }
+    }
+
+    if (searchInput) searchInput.addEventListener('input', performSearch);
+    if (clearBtn) {
+        clearBtn.addEventListener('click', function () {
+            if (searchInput) {
+                searchInput.value = '';
+                performSearch();
+                searchInput.focus();
+            }
+        });
+    }
+
+    /* Apply restripe on initial page load so colours are correct before any search. */
+    performSearch();
+});
+</script>
 
 <?php include 'footer.php'; ?>

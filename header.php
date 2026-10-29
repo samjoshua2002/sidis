@@ -1,5 +1,34 @@
 <?php
 require_once __DIR__ . '/config.php';
+
+// Dynamic check: only show faculty categories in navigation that have active members
+$navFacultyCounts = [
+    'core'      => 0,
+    'associate' => 0,
+    'adjunct'   => 0,
+    'pop'       => 0,
+];
+
+try {
+    $navFacultyStmt = $pdo->query("
+        SELECT 
+            SUM(CASE WHEN top_order = 1 THEN 1 ELSE 0 END) AS core_count,
+            SUM(CASE WHEN top_order = 2 THEN 1 ELSE 0 END) AS adjunct_count,
+            SUM(CASE WHEN top_order = 3 THEN 1 ELSE 0 END) AS pop_count,
+            SUM(CASE WHEN top_order = 0 AND cluster_id IS NOT NULL AND cluster_id != '' THEN 1 ELSE 0 END) AS associate_count
+        FROM faculty
+        WHERE status = 1
+    ");
+    if ($counts = $navFacultyStmt->fetch(PDO::FETCH_ASSOC)) {
+        $navFacultyCounts['core']      = (int)($counts['core_count'] ?? 0);
+        $navFacultyCounts['adjunct']   = (int)($counts['adjunct_count'] ?? 0);
+        $navFacultyCounts['pop']       = (int)($counts['pop_count'] ?? 0);
+        $navFacultyCounts['associate'] = (int)($counts['associate_count'] ?? 0);
+    }
+} catch (Exception $e) {
+    $navFacultyCounts['core'] = 1;
+    $navFacultyCounts['associate'] = 1;
+}
 ?>
 
 <!DOCTYPE html>
@@ -25,6 +54,8 @@ require_once __DIR__ . '/config.php';
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="owlcarousel/owl.carousel.min.js"></script>
     <link rel="stylesheet" href="style.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 
 <body>
@@ -79,16 +110,25 @@ require_once __DIR__ . '/config.php';
 
                                 <!-- Faculty -->
                                 <li class="dropdown-submenu">
-                                    <a class="dropdown-item d-flex justify-content-between" href="faculty.php">
+                                    <a class="dropdown-item d-flex justify-content-between" href="javascript:void(0)">
                                         Faculty
-                                        <!-- <span>&#9656;</span>                                    -->
+                                        <span>&#9656;</span>
                                     </a>
 
-                                    <!-- <ul class="submenu list-unstyled">
-                                        <li><a class="dropdown-item" href="#">Core Faculty</a></li>
-                                        <li><a class="dropdown-item" href="#">Affiliated Faculty</a>
-                                        </li>
-                                    </ul> -->
+                                    <ul class="submenu list-unstyled">
+                                        <?php if (!empty($navFacultyCounts['core'])): ?>
+                                            <li><a class="dropdown-item" href="core-faculty.php">Core Faculty</a></li>
+                                        <?php endif; ?>
+                                        <?php if (!empty($navFacultyCounts['associate'])): ?>
+                                            <li><a class="dropdown-item" href="associate-faculty.php">Associate Faculty</a></li>
+                                        <?php endif; ?>
+                                        <?php if (!empty($navFacultyCounts['adjunct'])): ?>
+                                            <li><a class="dropdown-item" href="adjunct-faculty.php">Adjunct / Visiting Faculty</a></li>
+                                        <?php endif; ?>
+                                        <?php if (!empty($navFacultyCounts['pop'])): ?>
+                                            <li><a class="dropdown-item" href="pop-faculty.php">Professor of Practice (PoP)</a></li>
+                                        <?php endif; ?>
+                                    </ul>
                                 </li>
 
                                 <!-- Students -->
@@ -226,16 +266,25 @@ require_once __DIR__ . '/config.php';
                     </a>
 
                     <div class="collapse" id="peopleMenu">
-                        <a href="faculty.php" class="mobile-sub">Faculty</a>
                         <!-- Faculty -->
-                        <!-- <a class="mobile-sub" data-bs-toggle="collapse" href="#facultyMenu">
+                        <a class="mobile-sub d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#facultyMenu">
                             Faculty <span class="mobile-arrow">&#9662;</span>
                         </a>
 
                         <div class="collapse ps-3" id="facultyMenu">
-                            <a href="#" class="mobile-sub">Core Faculty</a>
-                            <a href="#" class="mobile-sub">Affiliated Faculty</a>
-                        </div> -->
+                            <?php if (!empty($navFacultyCounts['core'])): ?>
+                                <a href="core-faculty.php" class="mobile-sub">Core Faculty</a>
+                            <?php endif; ?>
+                            <?php if (!empty($navFacultyCounts['associate'])): ?>
+                                <a href="associate-faculty.php" class="mobile-sub">Associate Faculty</a>
+                            <?php endif; ?>
+                            <?php if (!empty($navFacultyCounts['adjunct'])): ?>
+                                <a href="adjunct-faculty.php" class="mobile-sub">Adjunct / Visiting Faculty</a>
+                            <?php endif; ?>
+                            <?php if (!empty($navFacultyCounts['pop'])): ?>
+                                <a href="pop-faculty.php" class="mobile-sub">Professor of Practice (PoP)</a>
+                            <?php endif; ?>
+                        </div>
 
                         <!-- Students -->
                         <a class="mobile-sub" data-bs-toggle="collapse" href="#studentsMenu">

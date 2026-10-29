@@ -1,4 +1,20 @@
-<?php include 'header.php'; ?>
+<?php
+include 'header.php';
+
+$validTypes = ['all', 'core', 'associate', 'adjunct', 'pop'];
+$typeParam = isset($_GET['type']) ? strtolower(trim($_GET['type'])) : 'all';
+$facultyType = in_array($typeParam, $validTypes, true) ? $typeParam : 'all';
+
+$heroTitles = [
+    'all'       => 'Faculty',
+    'core'      => 'Core Faculty',
+    'associate' => 'Associate Faculty',
+    'adjunct'   => 'Adjunct / Visiting Faculty',
+    'pop'       => 'Professor of Practice (PoP)',
+];
+
+$currentTitle = $heroTitles[$facultyType] ?? 'Faculty';
+?>
 
 <!-- HERO SECTION -->
 <section class="hero">
@@ -6,10 +22,33 @@
 
     <div class="container">
         <div class="hero-content about-section">
-            <h2>Faculty</h2>
+            <h2><?= htmlspecialchars($currentTitle) ?></h2>
         </div>
     </div>
 </section>
+
+<!-- SEARCH BAR AT CENTER -->
+<div class="container live-search-container">
+    <div class="live-search-wrapper">
+        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        <input 
+            type="text" 
+            id="facultySearchInput" 
+            class="live-search-input" 
+            placeholder="Search by name, department, designation..." 
+            autocomplete="off"
+            aria-label="Search faculty"
+        >
+        <button type="button" id="facultySearchClear" class="search-clear-btn" aria-label="Clear search" style="display: none;">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    </div>
+    <div id="facultyGlobalNoResult" class="live-search-no-result" style="display: none;">
+        <i class="fa-solid fa-magnifying-glass" style="font-size: 26px; margin-bottom: 10px; display: block; color: #9CA3AF;"></i>
+        No faculty members found matching "<span id="searchQueryText"></span>".
+    </div>
+</div>
+
 <style>
     td>p>a {
         color: #000;
@@ -100,7 +139,7 @@
         line-height: 1.3;
         border: none;
         text-decoration: none;
-        text-align: center;
+        text-align: left;
     }
 
     .clusters-side-heading {
@@ -250,137 +289,133 @@ if (!function_exists('renderFacultyCard')) {
 }
 
 // Fetch Top Faculty Categories (SIDIS Faculty)
-$coreFaculty = $pdo->query("
-    SELECT * FROM faculty 
-    WHERE status = 1 AND top_order = 1 
-    ORDER BY id ASC
-")->fetchAll(PDO::FETCH_ASSOC);
+$coreFaculty = [];
+if ($facultyType === 'all' || $facultyType === 'core') {
+    $coreFaculty = $pdo->query("
+        SELECT * FROM faculty 
+        WHERE status = 1 AND top_order = 1 
+        ORDER BY id ASC
+    ")->fetchAll(PDO::FETCH_ASSOC);
+}
 
-$adjunctFaculty = $pdo->query("
-    SELECT * FROM faculty 
-    WHERE status = 1 AND top_order = 2 
-    ORDER BY id ASC
-")->fetchAll(PDO::FETCH_ASSOC);
+$adjunctFaculty = [];
+if ($facultyType === 'all' || $facultyType === 'adjunct') {
+    $adjunctFaculty = $pdo->query("
+        SELECT * FROM faculty 
+        WHERE status = 1 AND top_order = 2 
+        ORDER BY id ASC
+    ")->fetchAll(PDO::FETCH_ASSOC);
+}
 
-$popFaculty = $pdo->query("
-    SELECT * FROM faculty 
-    WHERE status = 1 AND top_order = 3 
-    ORDER BY id ASC
-")->fetchAll(PDO::FETCH_ASSOC);
+$popFaculty = [];
+if ($facultyType === 'all' || $facultyType === 'pop') {
+    $popFaculty = $pdo->query("
+        SELECT * FROM faculty 
+        WHERE status = 1 AND top_order = 3 
+        ORDER BY id ASC
+    ")->fetchAll(PDO::FETCH_ASSOC);
+}
 ?>
 
 <?php if (!empty($coreFaculty)): ?>
-<section class="faculty-top-section">
+<section class="faculty-top-section" id="core">
     <div class="container">
-        <h3 class="faculty-heading">
-            Core Faculty
-        </h3>
         <div class="faculty-top-cards">
             <?php foreach ($coreFaculty as $member) renderFacultyCard($member); ?>
         </div>
     </div>
 </section>
+<?php elseif ($facultyType === 'core'): ?>
+<section class="faculty-top-section" id="core">
+    <div class="container text-center py-5">
+        <p style="color: #666; font-size: 18px;">No Core Faculty members found.</p>
+    </div>
+</section>
 <?php endif; ?>
 
 <?php if (!empty($adjunctFaculty)): ?>
-<section class="faculty-top-section">
+<section class="faculty-top-section" id="adjunct">
     <div class="container">
-        <h3 class="faculty-heading">
-            Adjunct / Visiting Faculty
-        </h3>
         <div class="faculty-top-cards">
             <?php foreach ($adjunctFaculty as $member) renderFacultyCard($member); ?>
         </div>
     </div>
 </section>
+<?php elseif ($facultyType === 'adjunct'): ?>
+<section class="faculty-top-section" id="adjunct">
+    <div class="container text-center py-5">
+        <p style="color: #666; font-size: 18px;">No Adjunct / Visiting Faculty members found.</p>
+    </div>
+</section>
 <?php endif; ?>
 
 <?php if (!empty($popFaculty)): ?>
-<section class="faculty-top-section">
+<section class="faculty-top-section" id="pop">
     <div class="container">
-        <h3 class="faculty-heading">
-            Professor of Practice (PoP)
-        </h3>
         <div class="faculty-top-cards">
             <?php foreach ($popFaculty as $member) renderFacultyCard($member); ?>
         </div>
     </div>
 </section>
+<?php elseif ($facultyType === 'pop'): ?>
+<section class="faculty-top-section" id="pop">
+    <div class="container text-center py-5">
+        <p style="color: #666; font-size: 18px;">No Professor of Practice members found.</p>
+    </div>
+</section>
 <?php endif; ?>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <?php
+$clusters = [];
+$faculty = [];
 
-$clusterSql = "
-    SELECT
-        id,
-        cluster_name
-    FROM clusters
-    WHERE status = 1
-    ORDER BY id ASC
-";
+if ($facultyType === 'all' || $facultyType === 'associate') {
+    $clusterSql = "
+        SELECT
+            id,
+            cluster_name
+        FROM clusters
+        WHERE status = 1
+        ORDER BY id ASC
+    ";
 
-$clusterStmt = $pdo->prepare($clusterSql);
-$clusterStmt->execute();
+    $clusterStmt = $pdo->prepare($clusterSql);
+    $clusterStmt->execute();
+    $clusters = $clusterStmt->fetchAll();
 
-$clusters = $clusterStmt->fetchAll();
+    $facultySql = "
+        SELECT
+            f.id,
+            f.cluster_id,
+            f.name,
+            f.image,
+            f.department,
+            f.designation,
+            f.email,
+            f.personal_page,
+            f.top_order,
+            f.page_type,
+            f.about1,
+            f.resrch
+        FROM faculty f
+        WHERE f.status = 1
+            AND f.top_order = 0
+            AND f.cluster_id IS NOT NULL
+            AND f.cluster_id != ''
+        ORDER BY
+            f.name ASC
+    ";
 
-
-$facultySql = "
-    SELECT
-        f.id,
-        f.cluster_id,
-        f.name,
-        f.image,
-        f.department,
-        f.designation,
-        f.email,
-        f.personal_page,
-        f.top_order,
-        f.page_type,
-        f.about1,
-        f.resrch
-    FROM faculty f
-    WHERE f.status = 1
-        AND f.top_order = 0
-        AND f.cluster_id IS NOT NULL
-        AND f.cluster_id != ''
-    ORDER BY
-        f.name ASC
-";
-
-$facultyStmt = $pdo->prepare($facultySql);
-$facultyStmt->execute();
-
-$faculty = $facultyStmt->fetchAll();
-
+    $facultyStmt = $pdo->prepare($facultySql);
+    $facultyStmt->execute();
+    $faculty = $facultyStmt->fetchAll();
+}
 ?>
 
-<section class="faculty-section">
+<?php if ($facultyType === 'all' || $facultyType === 'associate'): ?>
+<section class="faculty-section" id="associate">
 
     <div class="container">
-
-        <h3 class="faculty-heading">
-            Associate Faculty
-        </h3>
 
         <div class="row">
 
@@ -444,106 +479,128 @@ $faculty = $facultyStmt->fetchAll();
     </div>
 
 </section>
+<?php endif; ?>
 
 <script>
+document.addEventListener('DOMContentLoaded', function () {
+    const searchInput     = document.getElementById('facultySearchInput');
+    const clearBtn        = document.getElementById('facultySearchClear');
+    const globalNoResult  = document.getElementById('facultyGlobalNoResult');
+    const searchQueryText = document.getElementById('searchQueryText');
+    const filterButtons   = document.querySelectorAll('.faculty-filter');
+    const facultyCards    = document.querySelectorAll('.faculty-card-wrapper');
+    const clusterNoResult = document.getElementById('facultyNoResult');
+    const topSections     = document.querySelectorAll('.faculty-top-section');
+    const associateSection= document.getElementById('associate');
 
-    document.addEventListener('DOMContentLoaded', function () {
+    let currentCluster = 'all';
 
-        const filterButtons = document.querySelectorAll('.faculty-filter');
+    function performSearch() {
+        const query = searchInput ? searchInput.value.trim().toLowerCase() : '';
 
-        const facultyCards = document.querySelectorAll('.faculty-card-wrapper');
+        // Show/hide clear button
+        if (clearBtn) {
+            clearBtn.style.display = query.length > 0 ? 'inline-flex' : 'none';
+        }
 
-        const noResult = document.getElementById('facultyNoResult');
+        let totalVisible = 0;
 
-        filterButtons.forEach(function (button) {
-
-            button.addEventListener('click', function (event) {
-
-                event.preventDefault();
-
-                const selectedCluster = this.getAttribute(
-                    'data-cluster-filter'
-                );
-
-                filterButtons.forEach(function (filterButton) {
-
-                    filterButton.classList.remove('active');
-
-                });
-
-                this.classList.add('active');
-
-                let visibleCards = 0;
-
-                facultyCards.forEach(function (card) {
-
-                    const facultyCluster = card.getAttribute(
-                        'data-cluster-id'
-                    );
-
-                    /*
-                    |--------------------------------------------------------------------------
-                    | Convert comma-separated cluster IDs into an array
-                    |
-                    | Example:
-                    | "1,2" -> ["1", "2"]
-                    | "1,3,5" -> ["1", "3", "5"]
-                    |--------------------------------------------------------------------------
-                    */
-
-                    const facultyClusters = facultyCluster
-                        ? facultyCluster.split(',').map(function (id) {
-                            return id.trim();
-                        })
-                        : [];
-
-
-                    /*
-                    |--------------------------------------------------------------------------
-                    | Show faculty
-                    |--------------------------------------------------------------------------
-                    */
-
-                    if (
-                        selectedCluster === 'all' ||
-                        facultyClusters.includes(selectedCluster)
-                    ) {
-
-                        card.style.display = '';
-
-                        visibleCards++;
-
-                    } else {
-
-                        card.style.display = 'none';
-
-                    }
-
-                });
-
-
-                /*
-                |--------------------------------------------------------------------------
-                | No result message
-                |--------------------------------------------------------------------------
-                */
-
-                if (visibleCards === 0) {
-
-                    noResult.style.display = 'block';
-
+        // 1. Top faculty cards (Core, Adjunct, PoP)
+        topSections.forEach(function (section) {
+            const cards = section.querySelectorAll('.faculty-card');
+            let sectionVisible = 0;
+            cards.forEach(function (card) {
+                const text = (card.textContent || '').toLowerCase();
+                if (!query || text.includes(query)) {
+                    card.style.display = '';
+                    sectionVisible++;
+                    totalVisible++;
                 } else {
-
-                    noResult.style.display = 'none';
-
+                    card.style.display = 'none';
                 }
-
             });
 
+            if (query && sectionVisible === 0) {
+                section.style.display = 'none';
+            } else {
+                section.style.display = '';
+            }
         });
 
-    });
+        // 2. Associate faculty cards
+        if (facultyCards.length > 0) {
+            let associateVisible = 0;
+            facultyCards.forEach(function (card) {
+                const text = (card.textContent || '').toLowerCase();
+                const facultyCluster = card.getAttribute('data-cluster-id') || '';
+                const facultyClusters = facultyCluster
+                    ? facultyCluster.split(',').map(function (id) { return id.trim(); })
+                    : [];
 
+                const matchesCluster = (currentCluster === 'all' || facultyClusters.includes(currentCluster));
+                const matchesQuery   = (!query || text.includes(query));
+
+                if (matchesCluster && matchesQuery) {
+                    card.style.display = '';
+                    associateVisible++;
+                    totalVisible++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            if (clusterNoResult) {
+                clusterNoResult.style.display = (associateVisible === 0 && !query) ? 'block' : 'none';
+            }
+
+            if (associateSection) {
+                if (query && associateVisible === 0) {
+                    associateSection.style.display = 'none';
+                } else {
+                    associateSection.style.display = '';
+                }
+            }
+        }
+
+        // 3. Global no result message
+        if (globalNoResult) {
+            if (query && totalVisible === 0) {
+                if (searchQueryText) searchQueryText.textContent = searchInput ? searchInput.value.trim() : '';
+                globalNoResult.style.display = 'block';
+            } else {
+                globalNoResult.style.display = 'none';
+            }
+        }
+    }
+
+    if (searchInput) {
+        searchInput.addEventListener('input', performSearch);
+    }
+
+    if (clearBtn) {
+        clearBtn.addEventListener('click', function () {
+            if (searchInput) {
+                searchInput.value = '';
+                performSearch();
+                searchInput.focus();
+            }
+        });
+    }
+
+    filterButtons.forEach(function (button) {
+        button.addEventListener('click', function (event) {
+            event.preventDefault();
+            currentCluster = this.getAttribute('data-cluster-filter') || 'all';
+
+            filterButtons.forEach(function (btn) {
+                btn.classList.remove('active');
+            });
+            this.classList.add('active');
+
+            performSearch();
+        });
+    });
+});
 </script>
 
 
@@ -566,7 +623,7 @@ $faculty = $facultyStmt->fetchAll();
 
 <style>
     .faculty-section {
-        padding: 25px 0 60px;
+        padding: 40px 0 60px;
         background: #ffffff;
     }
 
