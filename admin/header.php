@@ -5,6 +5,12 @@ require_once __DIR__ . '/../config.php';
 
 $current_page = basename($_SERVER['PHP_SELF']);
 
+// Sub-pages (e.g. add/edit forms) can set $navActivePage before including
+// this header to highlight their parent menu item.
+if (!empty($navActivePage)) {
+    $current_page = $navActivePage;
+}
+
 
 $navigation = [
 
@@ -39,6 +45,11 @@ $navigation = [
 
     'Clusters' => [
         'clusters.php' => 'Clusters',
+    ],
+
+    'Join Us' => [
+        'faculty_recruitment.php' => 'Faculty Recruitment',
+        'careers.php' => 'Careers',
     ],
 
     'Contact' => [

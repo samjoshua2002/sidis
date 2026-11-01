@@ -267,3 +267,62 @@ CREATE TABLE IF NOT EXISTS `counter_settings` (
 INSERT INTO `counter_settings` (`id`, `bg_image`)
 VALUES (1, 'counter.png')
 ON DUPLICATE KEY UPDATE `id` = `id`;
+
+
+-- ------------------------------------------------------------------------------
+-- STEP 8: Join Us -> Faculty Recruitment & Careers (single table, dynamic headings)
+--   page          : 'faculty' = Faculty Recruitment page, 'careers' = Careers page
+--   heading       : section heading (dark bar), e.g. 'SPECIALIZATION AREAS'
+--   heading_order : order of the heading sections on the page
+--   label/content : left / right column of each row
+--   link_url/link_text : optional button (e.g. Application Portal -> Click Here)
+-- ------------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `recruitment` (
+  `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `page` VARCHAR(30) NOT NULL DEFAULT 'faculty',
+  `heading` VARCHAR(255) NOT NULL,
+  `heading_order` INT(11) NOT NULL DEFAULT 0,
+  `label` VARCHAR(255) NOT NULL DEFAULT '',
+  `content` TEXT NULL,
+  `link_url` VARCHAR(500) NOT NULL DEFAULT '',
+  `link_text` VARCHAR(100) NOT NULL DEFAULT '',
+  `display_order` INT(11) NOT NULL DEFAULT 0,
+  `status` TINYINT(1) NOT NULL DEFAULT 1,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_recruitment_page` (`page`, `heading_order`, `display_order`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Initial Faculty Recruitment data
+INSERT INTO `recruitment` (`page`, `heading`, `heading_order`, `label`, `content`, `link_url`, `link_text`, `display_order`, `status`) VALUES
+('faculty', 'FACULTY RECRUITMENT DETAILS', 1, 'Advertisement', 'Advt.No.IITM/R/1/2026   Dt 27.02.2026', '', '', 1, 1),
+('faculty', 'SPECIALIZATION AREAS', 2, '1', 'Experimental high-energy nuclear and particle physics', '', '', 1, 1),
+('faculty', 'SPECIALIZATION AREAS', 2, '2', 'Experimental Quantum Optics', '', '', 2, 1),
+('faculty', 'SPECIALIZATION AREAS', 2, '3', 'Quantum Computing and Quantum Communications theory', '', '', 3, 1),
+('faculty', 'SPECIALIZATION AREAS', 2, 'Note', 'Candidates must clearly demonstrate their capability in the specialization area(s).', '', '', 4, 1),
+('faculty', 'More Details', 3, 'Application Portal', '', 'https://facapp.iitm.ac.in/', 'Click Here', 1, 1);
+
+
+-- ------------------------------------------------------------------------------
+-- STEP 9: Recruitment – main Title level + row Type (Text / Button)
+--   Front page structure:  title (e.g. 'IIT Madras – Faculty Recruitment')
+--                            -> heading (dark bar, e.g. 'SPECIALIZATION AREAS')
+--                              -> rows (label + text  OR  label + button)
+--   row_type : 'text'   = content shown in right column
+--              'button' = link_url / link_text shown as green button
+-- ------------------------------------------------------------------------------
+ALTER TABLE `recruitment`
+  ADD COLUMN `title` VARCHAR(255) NOT NULL DEFAULT '' AFTER `page`,
+  ADD COLUMN `title_order` INT(11) NOT NULL DEFAULT 0 AFTER `title`,
+  ADD COLUMN `row_type` ENUM('text','button') NOT NULL DEFAULT 'text' AFTER `label`,
+  DROP INDEX `idx_recruitment_page`,
+  ADD KEY `idx_recruitment_page` (`page`, `title_order`, `heading_order`, `display_order`);
+
+-- Existing faculty rows go under the current main title
+UPDATE `recruitment`
+SET `title` = 'IIT Madras – Faculty Recruitment', `title_order` = 1
+WHERE `page` = 'faculty' AND `title` = '';
+
+-- Rows that have a link become Button rows
+UPDATE `recruitment` SET `row_type` = 'button' WHERE `link_url` <> '';

@@ -1461,6 +1461,44 @@ INSERT INTO `counter_settings` (`id`, `bg_image`)
 VALUES (1, 'counter.png')
 ON DUPLICATE KEY UPDATE `id` = `id`;
 
+
+-- ------------------------------------------------------------------------------
+-- STEP 8: Join Us -> Faculty Recruitment & Careers (single table, dynamic headings)
+--   page          : 'faculty' = Faculty Recruitment page, 'careers' = Careers page
+--   heading       : section heading (dark bar), e.g. 'SPECIALIZATION AREAS'
+--   heading_order : order of the heading sections on the page
+--   label/content : left / right column of each row
+--   link_url/link_text : optional button (e.g. Application Portal -> Click Here)
+-- ------------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `recruitment` (
+  `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `page` VARCHAR(30) NOT NULL DEFAULT 'faculty',
+  `title` VARCHAR(255) NOT NULL DEFAULT '',
+  `title_order` INT(11) NOT NULL DEFAULT 0,
+  `heading` VARCHAR(255) NOT NULL,
+  `heading_order` INT(11) NOT NULL DEFAULT 0,
+  `label` VARCHAR(255) NOT NULL DEFAULT '',
+  `row_type` ENUM('text','button') NOT NULL DEFAULT 'text',
+  `content` TEXT NULL,
+  `link_url` VARCHAR(500) NOT NULL DEFAULT '',
+  `link_text` VARCHAR(100) NOT NULL DEFAULT '',
+  `display_order` INT(11) NOT NULL DEFAULT 0,
+  `status` TINYINT(1) NOT NULL DEFAULT 1,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_recruitment_page` (`page`, `title_order`, `heading_order`, `display_order`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Initial Faculty Recruitment data
+INSERT INTO `recruitment` (`page`, `title`, `title_order`, `heading`, `heading_order`, `label`, `row_type`, `content`, `link_url`, `link_text`, `display_order`, `status`) VALUES
+('faculty', 'IIT Madras – Faculty Recruitment', 1, 'FACULTY RECRUITMENT DETAILS', 1, 'Advertisement', 'text', 'Advt.No.IITM/R/1/2026   Dt 27.02.2026', '', '', 1, 1),
+('faculty', 'IIT Madras – Faculty Recruitment', 1, 'SPECIALIZATION AREAS', 2, '1', 'text', 'Experimental high-energy nuclear and particle physics', '', '', 1, 1),
+('faculty', 'IIT Madras – Faculty Recruitment', 1, 'SPECIALIZATION AREAS', 2, '2', 'text', 'Experimental Quantum Optics', '', '', 2, 1),
+('faculty', 'IIT Madras – Faculty Recruitment', 1, 'SPECIALIZATION AREAS', 2, '3', 'text', 'Quantum Computing and Quantum Communications theory', '', '', 3, 1),
+('faculty', 'IIT Madras – Faculty Recruitment', 1, 'SPECIALIZATION AREAS', 2, 'Note', 'text', 'Candidates must clearly demonstrate their capability in the specialization area(s).', '', '', 4, 1),
+('faculty', 'IIT Madras – Faculty Recruitment', 1, 'More Details', 3, 'Application Portal', 'button', '', 'https://facapp.iitm.ac.in/', 'Click Here', 1, 1);
+
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -222,7 +222,15 @@ try {
                             </ul>
                         </li> -->
 
-                    <li class="nav-item"><a class="nav-link" href="contact.php">Contact</a></li> 
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Join Us</a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="faculty-recruitment.php">Faculty Recruitment</a></li>
+                                <li><a class="dropdown-item" href="careers.php">Careers</a></li>
+                            </ul>
+                        </li>
+
+                    <li class="nav-item"><a class="nav-link" href="contact.php">Contact</a></li>
 
                     </ul>
                 </div>
@@ -338,6 +346,18 @@ try {
 
                 <li>
                     <a href="clusters.php" class="mobile-link">Clusters</a>
+                </li>
+
+                <!-- Join Us -->
+                <li>
+                    <a class="mobile-link" data-bs-toggle="collapse" href="#joinUsMenu">
+                        Join Us <span class="mobile-arrow">&#9662;</span>
+                    </a>
+
+                    <div class="collapse" id="joinUsMenu">
+                        <a href="faculty-recruitment.php" class="mobile-sub">Faculty Recruitment</a>
+                        <a href="careers.php" class="mobile-sub">Careers</a>
+                    </div>
                 </li>
 
 

@@ -57,6 +57,8 @@ $mtechCount = getTableCount($pdo, 'mtech_students');
 
 $clusterCount = getTableCount($pdo, 'clusters');
 
+$recruitmentCount = getTableCount($pdo, 'recruitment');
+
 ?>
 
 <style>
@@ -793,6 +795,31 @@ $clusterCount = getTableCount($pdo, 'clusters');
             </a>
 
 
+            <!-- JOIN US / RECRUITMENT -->
+
+            <a href="faculty_recruitment.php" class="stat-card">
+
+                <div class="stat-icon">
+
+                    <i class="fas fa-briefcase"></i>
+
+                </div>
+
+                <div class="stat-content">
+
+                    <strong>
+                        <?= $recruitmentCount ?>
+                    </strong>
+
+                    <span>
+                        Recruitment &amp; Careers Entries
+                    </span>
+
+                </div>
+
+            </a>
+
+
         </div>
 
     </div>
@@ -1077,6 +1104,36 @@ $clusterCount = getTableCount($pdo, 'clusters');
 
                 <span>
                     Manage address, email, phone and Google Maps.
+                </span>
+
+            </a>
+
+
+            <!-- JOIN US: FACULTY RECRUITMENT -->
+
+            <a href="faculty_recruitment.php" class="management-card">
+
+                <strong>
+                    Faculty Recruitment
+                </strong>
+
+                <span>
+                    Manage recruitment headings, specialization areas and application links.
+                </span>
+
+            </a>
+
+
+            <!-- JOIN US: CAREERS -->
+
+            <a href="careers.php" class="management-card">
+
+                <strong>
+                    Careers
+                </strong>
+
+                <span>
+                    Manage career openings, headings and apply links.
                 </span>
 
             </a>
