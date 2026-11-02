@@ -11,7 +11,7 @@ require_once __DIR__ . '/recruitment_helpers.php';
 
 $error = '';
 
-/* Page comes from the menu: Join Us > Faculty Recruitment / Careers */
+/* Page comes from the menu: Careers > Faculty / Postdoc / Staff Recruitment */
 $lockedPage = $_GET['page'] ?? 'faculty';
 if (!isset(RECRUITMENT_PAGES[$lockedPage])) {
     $lockedPage = 'faculty';

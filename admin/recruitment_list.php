@@ -1,10 +1,10 @@
 <?php
 /*
 |--------------------------------------------------------------------------
-| Shared list body for Join Us admin menus
+| Shared list body for Careers admin menus
 |--------------------------------------------------------------------------
 | Included by faculty_recruitment.php ($listPage = 'faculty')
-|         and careers.php             ($listPage = 'careers')
+|         postdoc_recruitment.php / staff_recruitment.php
 |
 | Shown grouped the same way as the website:  Title -> Table Heading -> Rows
 */
@@ -402,15 +402,6 @@ include 'header.php';
         </div>
     </div>
 
-
-    <?php if ($listPage === 'careers'): ?>
-        <div class="alert" style="background:#FFF8D6; border:1px solid #F4E796; color:#713F12;">
-            <i class="fas fa-person-digging"></i>
-            The website Careers page currently shows <strong>"Page Under Construction"</strong>.
-            Entries added here will not be visible until it is switched on in <code>careers.php</code>
-            (<code>$recruitmentUnderConstruction = false</code>).
-        </div>
-    <?php endif; ?>
 
 
     <!-- SUCCESS MESSAGE -->

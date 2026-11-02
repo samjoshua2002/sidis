@@ -1,7 +1,7 @@
 <?php
 /*
 |--------------------------------------------------------------------------
-| Join Us (Faculty Recruitment / Careers) — shared admin helpers
+| Careers (Faculty / Postdoc / Staff Recruitment) — shared admin helpers
 |--------------------------------------------------------------------------
 | Structure on the website:
 |   Title   (e.g. "IIT Madras – Faculty Recruitment")      title / title_order
@@ -12,13 +12,15 @@
 /* Pages stored in recruitment.page => label shown in admin */
 const RECRUITMENT_PAGES = [
     'faculty' => 'Faculty Recruitment',
-    'careers' => 'Careers',
+    'postdoc' => 'Postdoc Recruitment',
+    'staff'   => 'Staff Recruitment',
 ];
 
 /* Separate admin list page (sidebar menu item) for each recruitment.page */
 const RECRUITMENT_LIST_FILES = [
     'faculty' => 'faculty_recruitment.php',
-    'careers' => 'careers.php',
+    'postdoc' => 'postdoc_recruitment.php',
+    'staff'   => 'staff_recruitment.php',
 ];
 
 /* Row types */

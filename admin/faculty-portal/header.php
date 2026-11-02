@@ -17,6 +17,7 @@ if (!$currentFaculty) {
 $current_page = basename($_SERVER['PHP_SELF']);
 
 // Decode Helpers matching the admin chunking strategy
+if (!function_exists('decodeInput')) {
 function decodeInput($value) {
     if (empty($value)) return '';
     $decoded = base64_decode($value, true);
@@ -25,7 +26,9 @@ function decodeInput($value) {
     }
     return trim($value);
 }
+}
 
+if (!function_exists('reconstructChunks')) {
 function reconstructChunks($fieldName) {
     $countField = $fieldName . '_chunk_count';
     if (!isset($_POST[$countField]) || (int)$_POST[$countField] === 0) {
@@ -47,6 +50,7 @@ function reconstructChunks($fieldName) {
         }
     }
     return decodeInput($base64);
+}
 }
 
 $facPhoto = !empty($currentFaculty['image']) ? '../../images/faculty/' . $currentFaculty['image'] : '../../images/faculty/dummy.png';
@@ -123,8 +127,8 @@ if (!file_exists(__DIR__ . '/' . $facPhoto)) {
             align-items: center !important;
             justify-content: flex-start !important;
             gap: 12px !important;
-            padding: 11px 15px !important;
-            margin-bottom: 5px !important;
+            padding: 9px 15px !important;
+            margin-bottom: 2px !important;
             border-radius: 8px !important;
             color: #cbd5e1 !important;
             font-size: 13.5px !important;
@@ -407,7 +411,7 @@ if (!file_exists(__DIR__ . '/' . $facPhoto)) {
             color: #94a3b8;
             text-transform: uppercase;
             letter-spacing: 0.8px;
-            padding: 14px 15px 5px;
+            padding: 10px 15px 4px;
             display: block;
         }
 
@@ -543,7 +547,180 @@ if (!file_exists(__DIR__ . '/' . $facPhoto)) {
             transform: translateY(-1px);
             box-shadow: 0 4px 10px rgba(24, 76, 116, 0.2);
         }
+
+        /* =========================================================
+           SIDEBAR — minimize to icons only
+        ========================================================= */
+        .admin-sidebar { transition: width .22s ease; }
+        .admin-main    { transition: margin-left .22s ease; }
+
+        .sb-toggle {
+            width: 38px;
+            height: 38px;
+            border-radius: 9px;
+            border: 1px solid #e2e8f0;
+            background: #fff;
+            color: #184C74;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            flex-shrink: 0;
+            transition: background .2s ease, color .2s ease;
+        }
+
+        .sb-toggle:hover {
+            background: #184C74;
+            color: #fff;
+        }
+
+        /* Compact sidebar so the whole menu + Sign Out fits without scrolling */
+        .sidebar-logo {
+            padding: 13px 20px !important;
+        }
+
+        .admin-nav {
+            padding: 12px 14px !important;
+        }
+
+        .sidebar-bottom {
+            padding: 12px 16px 14px !important;
+            background: transparent !important;
+            border-top: 1px solid rgba(255, 255, 255, 0.12) !important;
+        }
+
+        /* Same look as the admin panel: "Welcome, <name>" + outlined Logout */
+        .fac-welcome {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.85);
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+
+        .fac-welcome strong {
+            display: block;
+            color: #fff;
+            font-size: 15px;
+            margin-top: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .btn-portal-logout {
+            background: transparent !important;
+            color: #fff !important;
+            border: 1px solid rgba(255, 255, 255, 0.35) !important;
+            border-radius: 5px !important;
+            padding: 9px 12px !important;
+            font-size: 13px !important;
+            font-weight: 500 !important;
+        }
+
+        .btn-portal-logout:hover {
+            background: rgba(255, 255, 255, 0.12) !important;
+            border-color: rgba(255, 255, 255, 0.5) !important;
+            color: #fff !important;
+        }
+
+        html.sb-collapsed .fac-welcome {
+            display: none !important;
+        }
+
+        /* Sign Out next to the profile chip (top bar) */
+        .btn-header-logout {
+            width: 38px;
+            height: 38px;
+            border-radius: 9px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+            text-decoration: none;
+            font-size: 15px;
+            flex-shrink: 0;
+            transition: background .2s ease, color .2s ease;
+        }
+
+        .btn-header-logout:hover {
+            background: #dc2626;
+            border-color: #dc2626;
+            color: #fff;
+        }
+
+        .preview-inner-btn .pv-left {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        html.sb-collapsed .admin-sidebar {
+            width: 76px !important;
+            overflow-x: hidden !important;
+        }
+
+        html.sb-collapsed .admin-main {
+            margin-left: 76px !important;
+        }
+
+        html.sb-collapsed .sidebar-logo {
+            padding: 18px 0 !important;
+        }
+
+        html.sb-collapsed .sidebar-brand-wrapper {
+            justify-content: center;
+            gap: 0;
+        }
+
+        html.sb-collapsed .sidebar-brand-text,
+        html.sb-collapsed .admin-nav .nav-link span,
+        html.sb-collapsed .sidebar-nav-heading,
+        html.sb-collapsed .user-info-text,
+        html.sb-collapsed .preview-inner-btn .pv-text,
+        html.sb-collapsed .preview-inner-btn .pv-arrow,
+        html.sb-collapsed .btn-portal-logout .logout-text {
+            display: none !important;
+        }
+
+        html.sb-collapsed .admin-nav {
+            padding: 14px 12px !important;
+        }
+
+        html.sb-collapsed .admin-nav .nav-link {
+            justify-content: center !important;
+            padding: 12px 0 !important;
+            gap: 0 !important;
+        }
+
+        html.sb-collapsed .admin-nav .nav-link i {
+            font-size: 17px;
+        }
+
+        html.sb-collapsed .preview-inner-btn {
+            justify-content: center !important;
+            padding: 11px 0 !important;
+        }
+
+        html.sb-collapsed .sidebar-bottom {
+            padding: 14px 12px !important;
+        }
+
+        html.sb-collapsed .user-info-row {
+            justify-content: center;
+        }
     </style>
+
+    <script>
+        /* Apply the saved sidebar state before the page paints (no flicker) */
+        try {
+            if (localStorage.getItem('sidis_faculty_sidebar') === 'collapsed') {
+                document.documentElement.classList.add('sb-collapsed');
+            }
+        } catch (e) {}
+    </script>
 </head>
 <body>
 
@@ -628,25 +805,22 @@ if (!file_exists(__DIR__ . '/' . $facPhoto)) {
                 <span>Publications</span>
             </a>
 
-            <div class="nav-divider"></div>
+            <div class="sidebar-nav-heading">Account</div>
 
-            <a href="../../innerfaculty.php?id=<?= $faculty_id ?>" target="_blank" class="preview-inner-btn">
-                <span><i class="fa-solid fa-globe" style="margin-right: 8px;"></i> Live Inner Profile</span>
-                <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 11px;"></i>
+            <a href="settings.php" class="nav-link <?= $current_page === 'settings.php' ? 'active' : '' ?>">
+                <i class="fa-solid fa-gear"></i>
+                <span>Settings</span>
             </a>
 
         </nav>
 
         <div class="sidebar-bottom">
-            <div class="user-info-row">
-                <img src="<?= htmlspecialchars($facPhoto) ?>" alt="">
-                <div class="user-info-text">
-                    <span class="user-label">Faculty Account</span>
-                    <span class="user-name" title="<?= htmlspecialchars($currentFaculty['name']) ?>"><?= htmlspecialchars($currentFaculty['name']) ?></span>
-                </div>
+            <div class="fac-welcome">
+                Welcome,
+                <strong title="<?= htmlspecialchars($currentFaculty['name']) ?>"><?= htmlspecialchars($currentFaculty['name']) ?></strong>
             </div>
-            <a href="logout.php" class="btn-portal-logout">
-                <i class="fa-solid fa-right-from-bracket"></i> Sign Out
+            <a href="logout.php" class="btn-portal-logout" data-tip="Logout">
+                <i class="fa-solid fa-right-from-bracket"></i> <span class="logout-text">Logout</span>
             </a>
         </div>
 
@@ -657,6 +831,9 @@ if (!file_exists(__DIR__ . '/' . $facPhoto)) {
 
         <header class="admin-header">
             <div class="header-left">
+                <button type="button" class="sb-toggle" id="sbToggle" aria-label="Minimize sidebar" title="Minimize sidebar">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
                 <div class="header-title-box">
                     <h2>School of Interdisciplinary Studies</h2>
                     <span class="header-subtitle">Faculty Management Portal &bull; IIT Madras</span>
@@ -679,3 +856,39 @@ if (!file_exists(__DIR__ . '/' . $facPhoto)) {
         </header>
 
         <main class="admin-content">
+
+            <script>
+                (function () {
+                    var root = document.documentElement;
+                    var KEY  = 'sidis_faculty_sidebar';
+
+                    /* Tooltip text = the link's visible label */
+                    document.querySelectorAll('.admin-sidebar .nav-link').forEach(function (a) {
+                        var label = a.querySelector('span');
+                        if (label) a.dataset.tip = label.textContent.trim();
+                    });
+
+                    function syncTips() {
+                        var collapsed = root.classList.contains('sb-collapsed');
+                        document.querySelectorAll('.admin-sidebar [data-tip]').forEach(function (el) {
+                            if (collapsed) el.setAttribute('title', el.dataset.tip);
+                            else el.removeAttribute('title');
+                        });
+                        var btn = document.getElementById('sbToggle');
+                        btn.title = collapsed ? 'Expand sidebar' : 'Minimize sidebar';
+                        btn.setAttribute('aria-label', btn.title);
+                        btn.innerHTML = collapsed
+                            ? '<i class="fa-solid fa-angles-right"></i>'
+                            : '<i class="fa-solid fa-bars"></i>';
+                    }
+
+                    document.getElementById('sbToggle').addEventListener('click', function () {
+                        var on = !root.classList.contains('sb-collapsed');
+                        root.classList.toggle('sb-collapsed', on);
+                        try { localStorage.setItem(KEY, on ? 'collapsed' : 'expanded'); } catch (e) {}
+                        syncTips();
+                    });
+
+                    syncTips();
+                })();
+            </script>

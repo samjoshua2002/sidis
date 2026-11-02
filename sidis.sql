@@ -1132,6 +1132,11 @@ CREATE TABLE `users` (
   `role` enum('admin','faculty') COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'admin',
   `faculty_id` int UNSIGNED DEFAULT NULL,
   `status` tinyint(1) NOT NULL DEFAULT '1',
+  `must_change_password` tinyint(1) NOT NULL DEFAULT '0',
+  `reset_requested_at` datetime DEFAULT NULL,
+  `reset_request_note` varchar(255) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+  `password_changed_at` datetime DEFAULT NULL,
+  `last_login_at` datetime DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -1498,6 +1503,31 @@ INSERT INTO `recruitment` (`page`, `title`, `title_order`, `heading`, `heading_o
 ('faculty', 'IIT Madras – Faculty Recruitment', 1, 'SPECIALIZATION AREAS', 2, '3', 'text', 'Quantum Computing and Quantum Communications theory', '', '', 3, 1),
 ('faculty', 'IIT Madras – Faculty Recruitment', 1, 'SPECIALIZATION AREAS', 2, 'Note', 'text', 'Candidates must clearly demonstrate their capability in the specialization area(s).', '', '', 4, 1),
 ('faculty', 'IIT Madras – Faculty Recruitment', 1, 'More Details', 3, 'Application Portal', 'button', '', 'https://facapp.iitm.ac.in/', 'Click Here', 1, 1);
+
+
+-- ------------------------------------------------------------------------------
+-- STEP 11 (optional): Sample data for Careers > Postdoc / Staff Recruitment
+--   Same `recruitment` table, separated by `page`. Edit or delete from the admin:
+--   Careers > Postdoc Recruitment / Staff Recruitment.
+--   NOTE: verify advertisement numbers, dates and links before going live.
+-- ------------------------------------------------------------------------------
+INSERT INTO `recruitment` (`page`, `title`, `title_order`, `heading`, `heading_order`, `label`, `row_type`, `content`, `link_url`, `link_text`, `display_order`, `status`) VALUES
+('postdoc', 'IIT Madras – Postdoctoral Recruitment', 1, 'POSTDOCTORAL FELLOWSHIP DETAILS', 1, 'Advertisement', 'text', 'Advt.No.IITM/PDF/1/2026   Dt 15.03.2026', '', '', 1, 1),
+('postdoc', 'IIT Madras – Postdoctoral Recruitment', 1, 'POSTDOCTORAL FELLOWSHIP DETAILS', 1, 'Duration', 'text', 'One year, extendable up to two years based on performance', '', '', 2, 1),
+('postdoc', 'IIT Madras – Postdoctoral Recruitment', 1, 'RESEARCH AREAS', 2, '1', 'text', 'Quantum Materials and Devices', '', '', 1, 1),
+('postdoc', 'IIT Madras – Postdoctoral Recruitment', 1, 'RESEARCH AREAS', 2, '2', 'text', 'Robotics and Cyber-Physical Systems', '', '', 2, 1),
+('postdoc', 'IIT Madras – Postdoctoral Recruitment', 1, 'RESEARCH AREAS', 2, '3', 'text', 'Computational Engineering and Data Science', '', '', 3, 1),
+('postdoc', 'IIT Madras – Postdoctoral Recruitment', 1, 'ELIGIBILITY', 3, 'Qualification', 'text', 'Ph.D. in a relevant discipline (thesis submitted candidates may also apply)', '', '', 1, 1),
+('postdoc', 'IIT Madras – Postdoctoral Recruitment', 1, 'ELIGIBILITY', 3, 'Note', 'text', 'Candidates should have a strong publication record in the chosen research area.', '', '', 2, 1),
+('postdoc', 'IIT Madras – Postdoctoral Recruitment', 1, 'More Details', 4, 'Application Portal', 'button', '', 'https://www.iitm.ac.in/', 'Click Here', 1, 1),
+
+('staff', 'IIT Madras – Staff Recruitment', 1, 'STAFF RECRUITMENT DETAILS', 1, 'Advertisement', 'text', 'Advt.No.IITM/SIDIS/S/1/2026   Dt 01.04.2026', '', '', 1, 1),
+('staff', 'IIT Madras – Staff Recruitment', 1, 'POSITIONS', 2, '1', 'text', 'Junior Technical Superintendent – 1 post', '', '', 1, 1),
+('staff', 'IIT Madras – Staff Recruitment', 1, 'POSITIONS', 2, '2', 'text', 'Junior Assistant – 2 posts', '', '', 2, 1),
+('staff', 'IIT Madras – Staff Recruitment', 1, 'POSITIONS', 2, '3', 'text', 'Project Associate (Contract) – 1 post', '', '', 3, 1),
+('staff', 'IIT Madras – Staff Recruitment', 1, 'IMPORTANT DATES', 3, 'Last date to apply', 'text', '30.04.2026, 5:00 PM', '', '', 1, 1),
+('staff', 'IIT Madras – Staff Recruitment', 1, 'IMPORTANT DATES', 3, 'Note', 'text', 'Only shortlisted candidates will be called for the written test / interview.', '', '', 2, 1),
+('staff', 'IIT Madras – Staff Recruitment', 1, 'More Details', 4, 'Application Portal', 'button', '', 'https://www.iitm.ac.in/', 'Click Here', 1, 1);
 
 COMMIT;
 

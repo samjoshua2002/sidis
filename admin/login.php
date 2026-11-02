@@ -16,7 +16,68 @@ if (isset($_SESSION['faculty_user_id'])) {
 $error = '';
 $activeTab = $_POST['login_type'] ?? 'faculty';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+/*
+|--------------------------------------------------------------------------
+| FORGOT PASSWORD -> request a reset from the administrator
+|--------------------------------------------------------------------------
+| No email/OTP: the request is stored on the user's row and shown to the
+| admin on Users & Faculty Logins. The reply is always the same, so this
+| form cannot be used to find out which usernames exist.
+*/
+$showForgot   = isset($_GET['forgot']) || (($_POST['form'] ?? '') === 'forgot');
+$forgotSent   = false;
+$forgotError  = '';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['form'] ?? '') === 'forgot') {
+
+    $reqUser = trim($_POST['req_username'] ?? '');
+
+    // note arrives as chunked Base64 (same as the other forms)
+    $reqNote = '';
+    $noteChunks = (int)($_POST['req_note_chunk_count'] ?? 0);
+    if ($noteChunks > 0 && $noteChunks <= 20) {
+        $b64 = '';
+        for ($i = 0; $i < $noteChunks; $i++) {
+            $b64 .= (string)($_POST['req_note_chunk_' . $i] ?? '');
+        }
+        $decoded = base64_decode($b64, true);
+        $reqNote = $decoded === false ? '' : trim($decoded);
+    }
+    $reqNote = mb_substr(preg_replace('/\s+/u', ' ', strip_tags($reqNote)), 0, 250);
+
+    // simple per-session throttle: 5 requests per hour
+    $now = time();
+    $_SESSION['reset_req_times'] = array_values(array_filter(
+        $_SESSION['reset_req_times'] ?? [],
+        function ($t) use ($now) { return $t > $now - 3600; }
+    ));
+
+    if ($reqUser === '') {
+        $forgotError = 'Please enter your username.';
+    } elseif (count($_SESSION['reset_req_times']) >= 5) {
+        $forgotError = 'Too many requests. Please try again later or contact the SIDIS office.';
+    } else {
+        $_SESSION['reset_req_times'][] = $now;
+        try {
+            // only active accounts; ignore repeats within 10 minutes
+            $stmt = $pdo->prepare("
+                UPDATE users
+                SET reset_requested_at = NOW(),
+                    reset_request_note = ?,
+                    updated_at = updated_at
+                WHERE username = ?
+                  AND status = 1
+                  AND (reset_requested_at IS NULL OR reset_requested_at < NOW() - INTERVAL 10 MINUTE)
+            ");
+            $stmt->execute([$reqNote, $reqUser]);
+        } catch (PDOException $e) {
+            error_log('Reset request error: ' . $e->getMessage());
+        }
+        $forgotSent = true;
+    }
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['form'] ?? '') !== 'forgot') {
     $username = trim($_POST['username'] ?? '');
     $password = $_POST['password'] ?? '';
     $loginType = $_POST['login_type'] ?? 'faculty';
@@ -25,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Please enter both your username and password.';
     } else {
         $stmt = $pdo->prepare("
-            SELECT id, username, password, role, faculty_id, status
+            SELECT id, username, password, role, faculty_id, status, must_change_password
             FROM users
             WHERE username = :username
             LIMIT 1
@@ -46,16 +107,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($user && $roleMatches && (int)$user['status'] === 1 && password_verify($password, $user['password'])) {
             session_regenerate_id(true);
 
+            try {
+                $pdo->prepare("UPDATE users SET last_login_at = NOW(), updated_at = updated_at WHERE id = ?")
+                    ->execute([(int)$user['id']]);
+            } catch (PDOException $e) {
+                error_log('Last login update error: ' . $e->getMessage());
+            }
+
+            $mustChange = (int)($user['must_change_password'] ?? 0) === 1;
+
             if ($user['role'] === 'faculty') {
                 $_SESSION['faculty_user_id'] = $user['id'];
                 $_SESSION['faculty_username'] = $user['username'];
                 $_SESSION['faculty_id'] = $user['faculty_id'];
+
+                if ($mustChange) {
+                    $_SESSION['faculty_must_change'] = 1;
+                    header('Location: faculty-portal/settings.php?do=password');
+                    exit;
+                }
 
                 header('Location: faculty-portal/index.php');
                 exit;
             } else {
                 $_SESSION['admin_id'] = $user['id'];
                 $_SESSION['admin_username'] = $user['username'];
+
+                if ($mustChange) {
+                    $_SESSION['admin_must_change'] = 1;
+                    header('Location: settings.php?do=password');
+                    exit;
+                }
 
                 header('Location: index.php');
                 exit;
@@ -298,6 +380,60 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             background-color: #123957;
         }
 
+        .forgot-row {
+            display: flex;
+            justify-content: flex-end;
+            margin: -10px 0 18px;
+        }
+
+        .forgot-link {
+            font-size: 13px;
+            color: #184C74;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .forgot-link:hover {
+            text-decoration: underline;
+        }
+
+        .info-alert {
+            background-color: #f0fdf4;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+            padding: 14px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-bottom: 22px;
+            display: flex;
+            gap: 10px;
+            line-height: 1.5;
+        }
+
+        .forgot-intro {
+            font-size: 14px;
+            color: #475569;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #184C74;
+            box-shadow: 0 0 0 3px rgba(24, 76, 116, 0.12);
+        }
+
         .back-link {
             display: block;
             text-align: center;
@@ -346,6 +482,60 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="form-panel">
         <div class="form-card">
 
+            <?php if ($showForgot): ?>
+
+            <!-- FORGOT PASSWORD: request a reset from the administrator -->
+            <div class="tab-title-line">
+                <div class="tab-title-bar"></div>
+                <div class="tab-title-text">Forgot password?</div>
+            </div>
+
+            <?php if ($forgotSent): ?>
+                <div class="info-alert">
+                    <i class="fa-solid fa-circle-check" style="margin-top:3px;"></i>
+                    <span>If that username exists, your request has been sent to the SIDIS administrator. They will contact you with a temporary password, which you will change after logging in.</span>
+                </div>
+                <a href="login.php" class="btn-submit" style="display:block; text-align:center; text-decoration:none;">
+                    <i class="fa-solid fa-arrow-left" style="margin-right: 6px;"></i> Back to Sign In
+                </a>
+            <?php else: ?>
+                <p class="forgot-intro">Enter your username and we'll notify the SIDIS administrator. They will reset your password and share a temporary one with you.</p>
+
+                <?php if ($forgotError !== ''): ?>
+                    <div class="error-alert">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                        <span><?= htmlspecialchars($forgotError) ?></span>
+                    </div>
+                <?php endif; ?>
+
+                <form method="POST" action="login.php?forgot=1" autocomplete="off" onsubmit="return prepareForgot()">
+                    <input type="hidden" name="form" value="forgot">
+
+                    <div class="form-group">
+                        <label for="req_username">Username</label>
+                        <div class="input-group">
+                            <i class="fa-solid fa-user"></i>
+                            <input type="text" name="req_username" id="req_username" placeholder="Your portal username" maxlength="100" required autofocus>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="req_note">Message to admin <span style="font-weight:400; color:#94a3b8;">(optional)</span></label>
+                        <textarea id="req_note" maxlength="250" placeholder="e.g. I forgot my password. Please call me on extension 1234."></textarea>
+                        <input type="hidden" name="req_note_chunk_count" id="req_note_chunk_count" value="0">
+                        <div id="req_note_chunks"></div>
+                    </div>
+
+                    <button type="submit" class="btn-submit">
+                        <i class="fa-solid fa-paper-plane" style="margin-right: 6px;"></i> Send Request
+                    </button>
+                </form>
+
+                <a href="login.php" class="back-link">&larr; Back to Sign In</a>
+            <?php endif; ?>
+
+            <?php else: ?>
+
             <!-- Tabs: Faculty Login / Admin Login -->
             <div class="tabs-header">
                 <button type="button" class="tab-btn <?= $activeTab === 'faculty' ? 'active' : '' ?>" onclick="switchTab('faculty')">
@@ -390,6 +580,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                 </div>
 
+                <div class="forgot-row">
+                    <a href="login.php?forgot=1" class="forgot-link">Forgot password?</a>
+                </div>
+
                 <button type="submit" class="btn-submit">
                     <i class="fa-solid fa-right-to-bracket" style="margin-right: 6px;"></i> Sign In
                 </button>
@@ -399,12 +593,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 &larr; Return to SIDIS Main Website
             </a>
 
+            <?php endif; ?>
+
         </div>
     </div>
 
 </div>
 
 <script>
+function prepareForgot() {
+    var note = document.getElementById('req_note');
+    var box = document.getElementById('req_note_chunks');
+    var b64 = note && note.value.trim() !== '' ? btoa(unescape(encodeURIComponent(note.value.trim()))) : '';
+    var count = Math.ceil(b64.length / 200);
+    document.getElementById('req_note_chunk_count').value = count;
+    box.innerHTML = '';
+    for (var i = 0; i < count; i++) {
+        var inp = document.createElement('input');
+        inp.type = 'hidden';
+        inp.name = 'req_note_chunk_' + i;
+        inp.value = b64.substring(i * 200, (i + 1) * 200);
+        box.appendChild(inp);
+    }
+    return true;
+}
+
 function switchTab(type) {
     document.getElementById('loginTypeInput').value = type;
     document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));

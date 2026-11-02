@@ -1,7 +1,7 @@
 <?php
 /*
 |--------------------------------------------------------------------------
-| Shared renderer for "Join Us" pages (Faculty Recruitment / Careers)
+| Shared renderer for Careers pages (Faculty / Postdoc / Staff Recruitment)
 |--------------------------------------------------------------------------
 |
 | Before including this file, the calling page must set:

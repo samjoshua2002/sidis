@@ -1,7 +1,7 @@
 <?php
 /*
 |--------------------------------------------------------------------------
-| Save drag & drop order (Join Us > Faculty Recruitment / Careers)
+| Save drag & drop order (Careers > Faculty / Postdoc / Staff Recruitment)
 |--------------------------------------------------------------------------
 | POST (form-encoded, integers only):
 |   page   = faculty | careers

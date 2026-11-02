@@ -67,7 +67,7 @@ $jsonFlags = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT;
 
 <form method="POST" action="<?= $h($formAction) ?>" id="recruitmentForm" onsubmit="return prepareSubmit()">
 
-    <!-- Page is fixed by the menu (Join Us > Faculty Recruitment / Careers) -->
+    <!-- Page is fixed by the menu (Careers > Faculty / Postdoc / Staff Recruitment) -->
     <input type="hidden" name="page" id="page" value="<?= $h($form['page']) ?>">
 
 

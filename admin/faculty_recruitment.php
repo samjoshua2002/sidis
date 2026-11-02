@@ -1,4 +1,4 @@
 <?php
-/* Join Us > Faculty Recruitment (admin list) */
+/* Careers > Faculty Recruitment (admin list) */
 $listPage = 'faculty';
 require __DIR__ . '/recruitment_list.php';

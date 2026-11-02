@@ -29,6 +29,31 @@ try {
     $navFacultyCounts['core'] = 1;
     $navFacultyCounts['associate'] = 1;
 }
+
+// Dynamic check: only show Careers pages that have active entries (recruitment.status = 1)
+$navCareerCounts = [
+    'faculty' => 0,
+    'postdoc' => 0,
+    'staff'   => 0,
+];
+
+try {
+    $navCareerStmt = $pdo->query("
+        SELECT page, COUNT(*) AS c
+        FROM recruitment
+        WHERE status = 1
+        GROUP BY page
+    ");
+    foreach ($navCareerStmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
+        if (isset($navCareerCounts[$row['page']])) {
+            $navCareerCounts[$row['page']] = (int)$row['c'];
+        }
+    }
+} catch (Exception $e) {
+    $navCareerCounts['faculty'] = 1;
+}
+
+$navHasCareers = array_sum($navCareerCounts) > 0;
 ?>
 
 <!DOCTYPE html>
@@ -222,13 +247,22 @@ try {
                             </ul>
                         </li> -->
 
+                        <?php if ($navHasCareers): ?>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Join Us</a>
+                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Careers</a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="faculty-recruitment.php">Faculty Recruitment</a></li>
-                                <li><a class="dropdown-item" href="careers.php">Careers</a></li>
+                                <?php if (!empty($navCareerCounts['faculty'])): ?>
+                                    <li><a class="dropdown-item" href="faculty-recruitment.php">Faculty Recruitment</a></li>
+                                <?php endif; ?>
+                                <?php if (!empty($navCareerCounts['postdoc'])): ?>
+                                    <li><a class="dropdown-item" href="postdoc-recruitment.php">Postdoc Recruitment</a></li>
+                                <?php endif; ?>
+                                <?php if (!empty($navCareerCounts['staff'])): ?>
+                                    <li><a class="dropdown-item" href="staff-recruitment.php">Staff Recruitment</a></li>
+                                <?php endif; ?>
                             </ul>
                         </li>
+                        <?php endif; ?>
 
                     <li class="nav-item"><a class="nav-link" href="contact.php">Contact</a></li>
 
@@ -348,17 +382,26 @@ try {
                     <a href="clusters.php" class="mobile-link">Clusters</a>
                 </li>
 
-                <!-- Join Us -->
+                <!-- Careers -->
+                <?php if ($navHasCareers): ?>
                 <li>
-                    <a class="mobile-link" data-bs-toggle="collapse" href="#joinUsMenu">
-                        Join Us <span class="mobile-arrow">&#9662;</span>
+                    <a class="mobile-link" data-bs-toggle="collapse" href="#careersMenu">
+                        Careers <span class="mobile-arrow">&#9662;</span>
                     </a>
 
-                    <div class="collapse" id="joinUsMenu">
-                        <a href="faculty-recruitment.php" class="mobile-sub">Faculty Recruitment</a>
-                        <a href="careers.php" class="mobile-sub">Careers</a>
+                    <div class="collapse" id="careersMenu">
+                        <?php if (!empty($navCareerCounts['faculty'])): ?>
+                            <a href="faculty-recruitment.php" class="mobile-sub">Faculty Recruitment</a>
+                        <?php endif; ?>
+                        <?php if (!empty($navCareerCounts['postdoc'])): ?>
+                            <a href="postdoc-recruitment.php" class="mobile-sub">Postdoc Recruitment</a>
+                        <?php endif; ?>
+                        <?php if (!empty($navCareerCounts['staff'])): ?>
+                            <a href="staff-recruitment.php" class="mobile-sub">Staff Recruitment</a>
+                        <?php endif; ?>
                     </div>
                 </li>
+                <?php endif; ?>
 
 
                 <!-- Research -->
