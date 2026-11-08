@@ -1,11 +1,11 @@
 <?php
 
-$env = parse_ini_file(__DIR__ . '/.env');
+$env = file_exists(__DIR__ . '/.env') ? parse_ini_file(__DIR__ . '/.env') : [];
 
-$dbHost = $env['DB_HOST'];
-$dbName = $env['DB_NAME'];
-$dbUser = $env['DB_USER'];
-$dbPass = $env['DB_PASS'];
+$dbHost = $env['DB_HOST'] ?? getenv('DB_HOST') ?: '127.0.0.1';
+$dbName = $env['DB_NAME'] ?? getenv('DB_NAME') ?: 'sidis';
+$dbUser = $env['DB_USER'] ?? getenv('DB_USER') ?: 'root';
+$dbPass = $env['DB_PASS'] ?? getenv('DB_PASS') ?: '';
 
 try {
     $pdo = new PDO(
