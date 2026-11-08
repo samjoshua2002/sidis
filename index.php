@@ -210,11 +210,13 @@ $newsEvents = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <!-- KEY STATISTICS / COUNTER SECTION -->
 <?php
+// The imported sidis.sql schema does not include the optional template_key column.
+// Keep the homepage compatible with both the imported and newer counter schemas.
 $counterStmt = $pdo->query("
-    SELECT id, cheading, cvalue, template_key 
-    FROM `counter` 
-    WHERE `status` = 1 
-    ORDER BY `display_order` ASC, `id` ASC 
+    SELECT id, cheading, cvalue
+    FROM `counter`
+    WHERE `status` = 1
+    ORDER BY `display_order` ASC, `id` ASC
     LIMIT 10
 ");
 $homeCounters = $counterStmt ? $counterStmt->fetchAll(PDO::FETCH_ASSOC) : [];
