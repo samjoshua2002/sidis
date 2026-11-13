@@ -1458,3 +1458,45 @@ textarea.form-control {
     }
 
 }
+
+/* =========================================================
+   FORM BUTTONS (Save + Cancel side by side)
+   - Save buttons reuse .btn-confirm-delete with a navy inline
+     background: give them a matching navy border (not red).
+   - Cancel is often an <a>: make it look like the button.
+========================================================= */
+
+.form-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.btn-confirm-delete[style*="184C74"],
+.btn-confirm-delete[style*="184c74"] {
+    border-color: #184C74;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-confirm-delete[style*="184C74"]:hover,
+.btn-confirm-delete[style*="184c74"]:hover {
+    border-color: #123957;
+    filter: brightness(0.9);
+}
+
+a.btn-cancel {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    box-sizing: border-box;
+}
+
+a.btn-cancel:hover {
+    color: #334155;
+    text-decoration: none;
+}

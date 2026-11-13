@@ -1529,6 +1529,45 @@ INSERT INTO `recruitment` (`page`, `title`, `title_order`, `heading`, `heading_o
 ('staff', 'IIT Madras – Staff Recruitment', 1, 'IMPORTANT DATES', 3, 'Note', 'text', 'Only shortlisted candidates will be called for the written test / interview.', '', '', 2, 1),
 ('staff', 'IIT Madras – Staff Recruitment', 1, 'More Details', 4, 'Application Portal', 'button', '', 'https://www.iitm.ac.in/', 'Click Here', 1, 1);
 
+
+-- ------------------------------------------------------------------------------
+-- STEP 12: Facilities > Central Facilities (equipment list)
+--   category : 'central' = Central Facilities page (more pages can be added later)
+--   image    : file name inside images/facilities/
+-- ------------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `facilities` (
+  `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `category` VARCHAR(30) NOT NULL DEFAULT 'central',
+  `name` VARCHAR(255) NOT NULL,
+  `description` TEXT NULL,
+  `image` VARCHAR(255) NOT NULL DEFAULT '',
+  `display_order` INT(11) NOT NULL DEFAULT 0,
+  `status` TINYINT(1) NOT NULL DEFAULT 1,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_facilities_category` (`category`, `status`, `display_order`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Sample data (edit/replace from Admin > Facilities > Central Facilities)
+-- Copy images/facilities/sample-automation-lab.png and sample-microscopy-lab.png to the server too.
+INSERT INTO `facilities` (`category`, `name`, `description`, `image`, `display_order`, `status`) VALUES
+('central', 'Equipment Name 1', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 'sample-automation-lab.png', 1, 1),
+('central', 'Equipment Name 2', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 'sample-microscopy-lab.png', 2, 1),
+('central', 'Equipment Name 3', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 'sample-microscopy-lab.png', 3, 1);
+
+
+-- ------------------------------------------------------------------------------
+-- STEP 13: Central Facilities – optional title link (external URL or PDF)
+--   link_type : 'none' | 'url' | 'pdf'
+--   link_url  : external link (when link_type = 'url')
+--   pdf_file  : file name inside images/facilities/docs/ (when link_type = 'pdf')
+-- ------------------------------------------------------------------------------
+ALTER TABLE `facilities`
+  ADD COLUMN `link_type` ENUM('none','url','pdf') NOT NULL DEFAULT 'none' AFTER `image`,
+  ADD COLUMN `link_url` VARCHAR(500) NOT NULL DEFAULT '' AFTER `link_type`,
+  ADD COLUMN `pdf_file` VARCHAR(255) NOT NULL DEFAULT '' AFTER `link_url`;
+
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

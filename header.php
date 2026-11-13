@@ -54,6 +54,29 @@ try {
 }
 
 $navHasCareers = array_sum($navCareerCounts) > 0;
+
+// Dynamic check: only show Facilities pages that have active entries (facilities.status = 1)
+$navFacilityCounts = [
+    'central' => 0,
+];
+
+try {
+    $navFacilityStmt = $pdo->query("
+        SELECT category, COUNT(*) AS c
+        FROM facilities
+        WHERE status = 1
+        GROUP BY category
+    ");
+    foreach ($navFacilityStmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
+        if (isset($navFacilityCounts[$row['category']])) {
+            $navFacilityCounts[$row['category']] = (int)$row['c'];
+        }
+    }
+} catch (Exception $e) {
+    $navFacilityCounts['central'] = 0;   // table not created yet -> hide menu
+}
+
+$navHasFacilities = array_sum($navFacilityCounts) > 0;
 ?>
 
 <!DOCTYPE html>
@@ -220,6 +243,17 @@ $navHasCareers = array_sum($navCareerCounts) > 0;
                         </li> -->
                         <li class="nav-item"><a class="nav-link" href="clusters.php">Clusters</a></li>
 
+                        <?php if ($navHasFacilities): ?>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Facilities</a>
+                            <ul class="dropdown-menu">
+                                <?php if (!empty($navFacilityCounts['central'])): ?>
+                                    <li><a class="dropdown-item" href="central-facilities.php">Central Facilities</a></li>
+                                <?php endif; ?>
+                            </ul>
+                        </li>
+                        <?php endif; ?>
+
                         <!-- <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Facilities</a>
                             <ul class="dropdown-menu">
@@ -381,6 +415,21 @@ $navHasCareers = array_sum($navCareerCounts) > 0;
                 <li>
                     <a href="clusters.php" class="mobile-link">Clusters</a>
                 </li>
+
+                <!-- Facilities -->
+                <?php if ($navHasFacilities): ?>
+                <li>
+                    <a class="mobile-link" data-bs-toggle="collapse" href="#facilitiesMenu">
+                        Facilities <span class="mobile-arrow">&#9662;</span>
+                    </a>
+
+                    <div class="collapse" id="facilitiesMenu">
+                        <?php if (!empty($navFacilityCounts['central'])): ?>
+                            <a href="central-facilities.php" class="mobile-sub">Central Facilities</a>
+                        <?php endif; ?>
+                    </div>
+                </li>
+                <?php endif; ?>
 
                 <!-- Careers -->
                 <?php if ($navHasCareers): ?>
